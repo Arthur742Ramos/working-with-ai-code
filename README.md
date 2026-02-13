@@ -25,7 +25,7 @@ ch02/          Chapter 2: Understanding the machinery and your first AI tool
 
 ```bash
 # Clone the repository
-git clone https://github.com/arthurfreitasramos/working-with-ai-code.git
+git clone https://github.com/Arthur742Ramos/working-with-ai-code.git
 cd working-with-ai-code
 
 # Create a virtual environment
