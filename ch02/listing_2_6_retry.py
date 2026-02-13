@@ -52,3 +52,5 @@ def generate_with_retry(diff: str,
                     f"{max_retries + 1} attempts: "
                     f"{e}"
                 )
+
+    raise ValueError("No attempts made")
