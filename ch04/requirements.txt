@@ -1,0 +1,6 @@
+anthropic
+openai
+hypothesis
+pytest
+mypy
+ruff
