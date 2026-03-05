@@ -1,15 +1,21 @@
-"""Listing 2.5: Complete PR generator with validation and formatting."""
+"""Listing 2.5: Complete PR generator with validation and formatting
+
+From "Working with AI as a Real Teammate" (Manning)
+Chapter 2
+"""
 
 import subprocess
 import json
 from jsonschema import validate, ValidationError
-from anthropic import Anthropic
-
+from llm_client import chat
 
 SCHEMA = {
     "type": "object",
     "properties": {
-        "title": {"type": "string"},
+        "title": {
+            "type": "string",
+            "maxLength": 72
+        },
         "summary": {
             "type": "array",
             "items": {"type": "string"},
@@ -26,13 +32,16 @@ SCHEMA = {
             "minItems": 2
         }
     },
-    "required": ["title", "summary", "tests", "risks"],
+    "required": ["title", "summary", "tests", 
+                 "risks"],
     "additionalProperties": False
 }
 
-SYSTEM_PROMPT = """You are a senior software engineer writing pull request
-descriptions. You ALWAYS respond with valid JSON matching the requested
-schema. No markdown, no explanation, just the JSON object."""
+SYSTEM_PROMPT = """You are a senior software 
+engineer writing pull request descriptions. 
+You ALWAYS respond with valid JSON matching 
+the requested schema. No markdown, no 
+explanation, just the JSON object."""
 
 
 def get_git_diff() -> str:
@@ -47,7 +56,8 @@ def get_git_diff() -> str:
 
 def build_prompt(diff: str) -> str:
     """Build the contract-based prompt."""
-    return f"""Task: produce JSON with fields title, summary, tests, risks.
+    return f"""Task: produce JSON with fields 
+title, summary, tests, risks.
 
 Constraints:
 - Use only the provided diff
@@ -69,29 +79,23 @@ Diff:
 
 def generate_pr_description(diff: str) -> dict:
     """Generate and validate PR description."""
-    client = Anthropic()
-
-    message = client.messages.create(
-        model="claude-sonnet-4",
-        max_tokens=1024,
+    response_text = chat(
         system=SYSTEM_PROMPT,
         messages=[
-            {"role": "user",
-             "content": build_prompt(diff)}
-        ]
+            {"role": "user", "content": build_prompt(diff)}
+        ],
+        max_tokens=1024
     )
-
-    response_text = message.content[0].text
-
+    
     try:
         data = json.loads(response_text)
     except json.JSONDecodeError as e:
         raise ValueError(f"Invalid JSON: {e}")
-
-    validate(instance=data, schema=SCHEMA)
-
-    if len(data["title"]) > 72:
-        data["title"] = data["title"][:69] + "..."
+    
+    try:
+        validate(instance=data, schema=SCHEMA)
+    except ValidationError as e:
+        raise ValueError(f"Schema validation failed: {e.message}")
 
     return data
 
@@ -120,9 +124,11 @@ if __name__ == "__main__":
         try:
             pr = generate_pr_description(diff)
             print(format_for_github(pr))
-
-            with open("pr_description.json", "w") as f:
+            
+            with open("pr_description.json", 
+                      "w") as f:
                 json.dump(pr, f, indent=2)
-            print("\n(JSON saved to pr_description.json)")
+            print("\n(JSON saved to "
+                  "pr_description.json)")
         except ValueError as e:
             print(f"Error: {e}")

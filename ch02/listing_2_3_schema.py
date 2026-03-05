@@ -1,9 +1,16 @@
-"""Listing 2.3: JSON schema for PR description validation."""
+"""Listing 2.3: JSON schema for PR description validation
+
+From "Working with AI as a Real Teammate" (Manning)
+Chapter 2
+"""
 
 SCHEMA = {
     "type": "object",
     "properties": {
-        "title": {"type": "string"},
+        "title": {
+            "type": "string",
+            "maxLength": 72
+        },
         "summary": {
             "type": "array",
             "items": {"type": "string"},
@@ -20,6 +27,7 @@ SCHEMA = {
             "minItems": 2
         }
     },
-    "required": ["title", "summary", "tests", "risks"],
+    "required": ["title", "summary", "tests",
+                 "risks"],
     "additionalProperties": False
 }

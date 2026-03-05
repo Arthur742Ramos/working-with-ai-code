@@ -1,3 +1,9 @@
+"""Listing 3.1: Branch A result: decorator-based rate limiter
+
+From "Working with AI as a Real Teammate" (Manning)
+Chapter 3
+"""
+
 import time
 from functools import wraps
 from collections import defaultdict
@@ -19,7 +25,7 @@ def rate_limit(
             request: Request,
             *args, **kwargs
         ):
-            user = request.state.user_id  #A
+            user = request.state.user_id
             now = time.monotonic()
             cutoff = now - window_seconds
 
@@ -30,7 +36,7 @@ def rate_limit(
             ]
 
             if len(_hits[user]) >= max_requests:
-                raise HTTPException(   #B
+                raise HTTPException(
                     status_code=429,
                     detail="Rate limit exceeded"
                 )
@@ -42,6 +48,6 @@ def rate_limit(
         return wrapper
     return decorator
 
-@rate_limit(max_requests=100)          #C
+@rate_limit(max_requests=100)
 async def get_users(request: Request):
     return {"users": []}

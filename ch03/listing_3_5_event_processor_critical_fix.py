@@ -1,3 +1,9 @@
+"""Listing 3.5: After fixing critical issues only
+
+From "Working with AI as a Real Teammate" (Manning)
+Chapter 3
+"""
+
 import json
 from datetime import datetime
 
@@ -8,7 +14,7 @@ def process_events(
     end_date
 ):
     """Process user events from JSON."""
-    with open(input_path) as f:           #A
+    with open(input_path) as f:
         data = json.load(f)
 
     results = []
@@ -34,7 +40,7 @@ def process_events(
             event["type"]
         )
 
-    avg = (                               #B
+    avg = (
         len(results) / len(users)
         if users
         else 0
@@ -47,7 +53,7 @@ def process_events(
         "avg_events": avg
     }
 
-    with open(output_path, "w") as out:   #C
+    with open(output_path, "w") as out:
         json.dump(summary, out, indent=2)
 
     return summary

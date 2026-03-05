@@ -1,3 +1,9 @@
+"""Listing 3.7: Final version with all issues resolved
+
+From "Working with AI as a Real Teammate" (Manning)
+Chapter 3
+"""
+
 import json
 import logging
 from datetime import datetime, timezone
@@ -44,7 +50,7 @@ def process_events(
     with open(input_path) as f:
         data = json.load(f)
 
-    if "events" not in data:              #A
+    if "events" not in data:
         raise ValueError(
             "Missing 'events' key in "
             "input data"
@@ -72,7 +78,7 @@ def process_events(
         if uid not in users:
             users[uid] = {
                 "count": 0,
-                "types": set(),           #B
+                "types": set(),
             }
         users[uid]["count"] += 1
         users[uid]["types"].add(
@@ -80,7 +86,7 @@ def process_events(
         )
 
     # Converting sets to sorted lists
-    for info in users.values():           #C
+    for info in users.values():
         info["types"] = sorted(
             info["types"]
         )
@@ -104,7 +110,7 @@ def process_events(
     with open(output_path, "w") as out:
         json.dump(summary, out, indent=2)
 
-    logger.info(                          #D
+    logger.info(
         "Processed %d events for %d users"
         " (%d skipped)",
         len(results),

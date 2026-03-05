@@ -1,19 +1,22 @@
-"""Listing 2.2: PR generator with system prompt and contract."""
+"""Listing 2.2: PR generator with system prompt and contract
 
-from anthropic import Anthropic
+From "Working with AI as a Real Teammate" (Manning)
+Chapter 2
+"""
 
+from llm_client import chat
 
-SYSTEM_PROMPT = """You are a senior software engineer writing pull request
-descriptions. Your descriptions are thorough, specific, and help reviewers
-understand exactly what changed and why. You always assess risks honestly."""
-
+SYSTEM_PROMPT = """You are a senior software
+engineer writing pull request descriptions. Your
+descriptions are thorough, specific, and help 
+reviewers understand exactly what changed and 
+why. You always assess risks honestly."""
 
 def generate_pr_description(diff: str) -> str:
     """Generate a structured PR description."""
-    client = Anthropic()
-
-    prompt = f"""Analyze the following git diff and produce a PR description
-with these exact sections:
+    prompt = f"""Analyze the following git diff
+and produce a PR description with these exact 
+sections:
 
 TITLE: A concise title (max 72 characters)
 
@@ -36,13 +39,8 @@ GIT DIFF:
 {diff}
 """
 
-    message = client.messages.create(
-        model="claude-sonnet-4",
-        max_tokens=1024,
+    return chat(
         system=SYSTEM_PROMPT,
-        messages=[
-            {"role": "user", "content": prompt}
-        ]
+        messages=[{"role": "user", "content": prompt}],
+        max_tokens=1024
     )
-
-    return message.content[0].text

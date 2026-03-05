@@ -1,3 +1,9 @@
+"""Listing 3.6: Robust timestamp parsing with fallback
+
+From "Working with AI as a Real Teammate" (Manning)
+Chapter 3
+"""
+
 import json
 import logging
 from datetime import datetime, timezone
@@ -10,14 +16,14 @@ def parse_timestamp(
     """Parse a timestamp, returning None
     on failure."""
     try:
-        dt = datetime.fromisoformat(raw)  #A
+        dt = datetime.fromisoformat(raw)
         if dt.tzinfo is None:
-            dt = dt.replace(              #B
+            dt = dt.replace(
                 tzinfo=timezone.utc
             )
         return dt
     except (ValueError, TypeError):
-        logger.warning(                   #C
+        logger.warning(
             "Skipping unparseable "
             "timestamp: %s", raw
         )

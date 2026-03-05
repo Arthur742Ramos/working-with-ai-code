@@ -1,8 +1,11 @@
-"""Listing 2.1: Naive PR generator -- no contract, no validation."""
+"""Listing 2.1: Naive PR generator: no contract, no validation
+
+From "Working with AI as a Real Teammate" (Manning)
+Chapter 2
+"""
 
 import subprocess
-from anthropic import Anthropic
-
+from llm_client import chat
 
 def get_git_diff() -> str:
     """Get the staged git diff."""
@@ -13,25 +16,17 @@ def get_git_diff() -> str:
     )
     return result.stdout
 
-
 def generate_pr_description(diff: str) -> str:
     """Generate a PR description using AI."""
-    client = Anthropic()
-
-    message = client.messages.create(
-        model="claude-sonnet-4",
-        max_tokens=1024,
-        messages=[
-            {
-                "role": "user",
-                "content": f"Write a PR description for "
-                           f"this diff:\n\n{diff}"
-            }
-        ]
+    prompt = (
+        "Write a PR description for this diff:\n\n"
+        f"{diff}"
     )
 
-    return message.content[0].text
-
+    return chat(
+        messages=[{"role": "user", "content": prompt}],
+        max_tokens=1024
+    )
 
 if __name__ == "__main__":
     diff = get_git_diff()

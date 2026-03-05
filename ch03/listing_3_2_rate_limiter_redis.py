@@ -1,12 +1,18 @@
+"""Listing 3.2: Branch B result: Redis-backed rate limiter
+
+From "Working with AI as a Real Teammate" (Manning)
+Chapter 3
+"""
+
 import time
 import redis.asyncio as redis
 from fastapi import HTTPException, Request
 
-_redis = redis.from_url(              #A
+_redis = redis.from_url(
     "redis://localhost:6379"
 )
 
-RATE_LIMIT_SCRIPT = """               #B
+RATE_LIMIT_SCRIPT = """
 local key = KEYS[1]
 local limit = tonumber(ARGV[1])
 local window = tonumber(ARGV[2])
@@ -29,7 +35,7 @@ async def check_rate_limit(
 ) -> bool:
     """Check and record a request."""
     now = time.time()
-    result = await _redis.eval(        #C
+    result = await _redis.eval(
         RATE_LIMIT_SCRIPT,
         1,
         f"rate:{user_id}",
@@ -50,4 +56,4 @@ async def rate_limit_middleware(
             status_code=429,
             detail="Rate limit exceeded"
         )
-    return await call_next(request)    #D
+    return await call_next(request)

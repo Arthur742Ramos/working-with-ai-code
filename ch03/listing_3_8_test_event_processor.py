@@ -1,3 +1,9 @@
+"""Listing 3.8: Test cases verifying each fix
+
+From "Working with AI as a Real Teammate" (Manning)
+Chapter 3
+"""
+
 import json
 import pytest
 from datetime import datetime, timezone
@@ -26,7 +32,7 @@ def test_empty_results_no_crash(
     out = tmp_path / "out.json"
     write_json(inp, {"events": []})
 
-    result = process_events(              #A
+    result = process_events(
         str(inp), str(out), START, END
     )
     assert result["total_events"] == 0
@@ -42,7 +48,7 @@ def test_bad_timestamp_skipped(
     out = tmp_path / "out.json"
     write_json(inp, {"events": [
         {
-            "timestamp": "not-a-date",    #B
+            "timestamp": "not-a-date",
             "user_id": "u1",
             "type": "click"
         }
@@ -70,7 +76,7 @@ def test_duplicate_types_collapsed(
         {
             "timestamp": "2024-06-02",
             "user_id": "u1",
-            "type": "click"               #C
+            "type": "click"
         },
     ]})
 
@@ -89,7 +95,7 @@ def test_missing_events_key_raises(
     ValueError."""
     inp = tmp_path / "in.json"
     out = tmp_path / "out.json"
-    write_json(inp, {"data": []})         #D
+    write_json(inp, {"data": []})
 
     with pytest.raises(ValueError):
         process_events(
@@ -104,7 +110,7 @@ def test_file_cleanup_on_error(
     error."""
     inp = tmp_path / "in.json"
     out = tmp_path / "out.json"
-    inp.write_text("{bad json")           #E
+    inp.write_text("{bad json")
 
     with pytest.raises(json.JSONDecodeError):
         process_events(
