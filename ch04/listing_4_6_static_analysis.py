@@ -1,4 +1,5 @@
 """Listing 4.6 Running mypy and ruff on AI-generated code."""
+import os
 import subprocess
 import tempfile
 
@@ -13,17 +14,21 @@ def static_analysis(
     ) as f:
         f.write(code)
         path = f.name
+    try:
+        mypy = subprocess.run(
+            ["mypy", "--ignore-missing-imports",
+             path],
+            capture_output=True,
+            text=True
+        )
 
-    mypy = subprocess.run(                # Type checking catches type mismatches
-        ["mypy", "--ignore-missing-imports",
-         path],
-        capture_output=True, text=True
-    )
-
-    ruff = subprocess.run(                # Linting catches style and logic issues
-        ["ruff", "check", path],
-        capture_output=True, text=True
-    )
+        ruff = subprocess.run(
+            ["ruff", "check", path],
+            capture_output=True,
+            text=True
+        )
+    finally:
+        os.unlink(path)
 
     return {
         "mypy_ok": mypy.returncode == 0,

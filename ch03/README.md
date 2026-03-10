@@ -7,5 +7,6 @@
 - **`listing_3_6_timestamp_parsing.py`** — Listing 3.6: Robust timestamp parsing with fallback
 - **`listing_3_7_event_processor_final.py`** — Listing 3.7: Final version with all issues resolved
 - **`listing_3_8_test_event_processor.py`** — Listing 3.8: Test cases verifying each fix
+- **`PROMPTS.md`** — Prompt blocks from the current manuscript draft
 
 See the [main README](../README.md) for setup instructions.

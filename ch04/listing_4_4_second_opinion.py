@@ -1,7 +1,8 @@
 """Listing 4.4 Getting a second opinion from a different model."""
 import json
-from anthropic import Anthropic
-from openai import OpenAI
+import os
+
+import httpx
 
 def get_second_opinion(
     code: str, concern: str
@@ -20,34 +21,53 @@ Respond with JSON:
     "reasoning": "brief explanation"
 }}"""
 
-    claude = Anthropic()                    # First opinion from Claude
-    claude_resp = claude.messages.create(
-        model="claude-sonnet-4",
-        max_tokens=1024,
-        messages=[
-            {"role": "user",
-             "content": review_prompt}
-        ]
+    def call_model(
+        api_url: str,
+        api_key: str,
+        model: str,
+        prompt: str
+    ) -> str:
+        """Send a prompt to any
+        chat-completions-compatible API."""
+        resp = httpx.post(
+            api_url,
+            headers={
+                "Authorization":
+                    f"Bearer {api_key}"
+            },
+            json={
+                "model": model,
+                "max_tokens": 1024,
+                "messages": [
+                    {"role": "user",
+                     "content": prompt}
+                ]
+            },
+            timeout=30.0
+        )
+        resp.raise_for_status()
+        return (
+            resp.json()["choices"][0]
+            ["message"]["content"]
+        )
+
+    model_a_resp = call_model(
+        os.environ["MODEL_A_API_URL"],
+        os.environ["MODEL_A_API_KEY"],
+        os.environ["MODEL_A_NAME"],
+        review_prompt
     )
 
-    gpt = OpenAI()                          # Second opinion from GPT-4o
-    gpt_resp = gpt.chat.completions.create(
-        model="gpt-4o",
-        max_tokens=1024,
-        messages=[
-            {"role": "user",
-             "content": review_prompt}
-        ]
+    model_b_resp = call_model(
+        os.environ["MODEL_B_API_URL"],
+        os.environ["MODEL_B_API_KEY"],
+        os.environ["MODEL_B_NAME"],
+        review_prompt
     )
 
     return {
-        "claude": json.loads(
-            claude_resp.content[0].text
-        ),
-        "gpt": json.loads(
-            gpt_resp.choices[0]
-            .message.content
-        )
+        "model_a": json.loads(model_a_resp),
+        "model_b": json.loads(model_b_resp)
         # Production code should add
         # validation here
     }

@@ -1,5 +1,4 @@
-anthropic
-openai
+httpx
 hypothesis
 pytest
 mypy

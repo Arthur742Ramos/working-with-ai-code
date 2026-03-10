@@ -1,4 +1,5 @@
 """Listing 4.5 A quick smoke test function for AI-generated code."""
+import os
 import subprocess
 import tempfile
 import sys
@@ -12,13 +13,21 @@ def smoke_test(code: str) -> dict:
     ) as f:
         f.write(code)
         f.flush()
-
-        result = subprocess.run(          # Running the code as a separate process
+    try:
+        result = subprocess.run(
             [sys.executable, f.name],
             capture_output=True,
             text=True,
-            timeout=10                    # Timeout prevents infinite loops
+            timeout=10
         )
+    except subprocess.TimeoutExpired:
+        return {
+            "success": False,
+            "stdout": "",
+            "stderr": "Timed out after 10 seconds"
+        }
+    finally:
+        os.unlink(f.name)
 
     return {
         "success": result.returncode == 0,

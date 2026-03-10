@@ -15,6 +15,7 @@ Code listings from the Manning book by Arthur Ramos.
 - [`listing_2_4_validation.py`](ch02/listing_2_4_validation.py) — Listing 2.4: Generation function with validation
 - [`listing_2_5_complete.py`](ch02/listing_2_5_complete.py) — Listing 2.5: Complete PR generator with validation and formatting
 - [`listing_2_6_retry.py`](ch02/listing_2_6_retry.py) — Listing 2.6: Retry logic with conversational error feedback
+- [`PROMPTS.md`](ch02/PROMPTS.md) — Prompt blocks from the current manuscript draft
 
 ### Chapter 3
 
@@ -25,6 +26,7 @@ Code listings from the Manning book by Arthur Ramos.
 - [`listing_3_6_timestamp_parsing.py`](ch03/listing_3_6_timestamp_parsing.py) — Listing 3.6: Robust timestamp parsing with fallback
 - [`listing_3_7_event_processor_final.py`](ch03/listing_3_7_event_processor_final.py) — Listing 3.7: Final version with all issues resolved
 - [`listing_3_8_test_event_processor.py`](ch03/listing_3_8_test_event_processor.py) — Listing 3.8: Test cases verifying each fix
+- [`PROMPTS.md`](ch03/PROMPTS.md) — Prompt blocks from the current manuscript draft
 
 ### Chapter 4
 
@@ -38,19 +40,35 @@ Code listings from the Manning book by Arthur Ramos.
 - [`listing_4_7_property_based_testing.py`](ch04/listing_4_7_property_based_testing.py) — Listing 4.7 Property-based testing for AI-generated code.
 - [`listing_4_8_existence_check.py`](ch04/listing_4_8_existence_check.py) — Listing 4.8 Quick existence check for recommended packages.
 - [`listing_4_9_validation_module.py`](ch04/listing_4_9_validation_module.py) — Listing 4.9 AI-generated validation module to be verified.
+- [`PROMPTS.md`](ch04/PROMPTS.md) — Prompt blocks from the current manuscript draft
 
 ## Running the Code
 
 ```bash
-pip install httpx jsonschema pytest
+pip install -r ch02/requirements.txt \
+    -r ch03/requirements.txt \
+    -r ch04/requirements.txt
 ```
 
-The code uses a provider-neutral HTTP adapter. Set these environment variables:
+Chapter 2 listings share a small provider-neutral client in
+[`llm_client.py`](llm_client.py). Set these environment variables:
 
 ```bash
 export AI_API_URL="https://YOUR_ENDPOINT/v1/chat/completions"
 export AI_MODEL="your-model-name"
 export AI_API_KEY="your-key-if-needed"
+```
+
+Chapter 4 listing 4.4 compares two models through the same generic API
+shape. Set these environment variables if you want to run it:
+
+```bash
+export MODEL_A_API_URL="https://ENDPOINT_A/v1/chat/completions"
+export MODEL_A_API_KEY="key-a"
+export MODEL_A_NAME="model-a"
+export MODEL_B_API_URL="https://ENDPOINT_B/v1/chat/completions"
+export MODEL_B_API_KEY="key-b"
+export MODEL_B_NAME="model-b"
 ```
 
 ## License

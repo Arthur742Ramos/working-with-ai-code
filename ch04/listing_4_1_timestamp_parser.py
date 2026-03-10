@@ -1,6 +1,6 @@
 """Listing 4.1 AI-generated timestamp parser — looks correct, misses edge cases."""
 import re
-from datetime import datetime, timezone
+from datetime import datetime
 
 def parse_iso_timestamp(s: str) -> datetime:
     """Parse ISO 8601 timestamp with tz."""

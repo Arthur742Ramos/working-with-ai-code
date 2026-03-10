@@ -6,5 +6,9 @@
 - **`listing_2_4_validation.py`** — Listing 2.4: Generation function with validation
 - **`listing_2_5_complete.py`** — Listing 2.5: Complete PR generator with validation and formatting
 - **`listing_2_6_retry.py`** — Listing 2.6: Retry logic with conversational error feedback
+- **`PROMPTS.md`** — Prompt blocks from the current manuscript draft
+
+These listings use the shared [`llm_client.py`](../llm_client.py)
+helper in the repository root.
 
 See the [main README](../README.md) for setup instructions.
