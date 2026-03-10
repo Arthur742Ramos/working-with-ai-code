@@ -1,0 +1,44 @@
+    users: dict[str, dict] = {}
+    for event in results:
+        user = event["user_id"]
+        if user not in users:
+            users[user] = {
+                "count": 0,
+                "types": set(),
+            }
+        users[user]["count"] += 1
+        users[user]["types"].add(
+            event["type"]
+        )
+
+    for info in users.values():
+        info["types"] = sorted(
+            info["types"]
+        )
+
+    avg = (
+        len(results) / len(users)
+        if users
+        else 0
+    )
+    summary = {
+        "total_events": len(results),
+        "unique_users": len(users),
+        "skipped_events": skipped,
+        "per_user": users,
+        "avg_events_per_user": round(
+            avg, 2
+        ),
+    }
+
+    with open(output_path, "w") as out:
+        json.dump(summary, out, indent=2)
+
+    logger.info(
+        "Processed %d events for %d users"
+        " (%d skipped)",
+        len(results),
+        len(users),
+        skipped,
+    )
+    return summary

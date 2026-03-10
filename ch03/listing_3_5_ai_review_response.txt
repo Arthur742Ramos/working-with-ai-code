@@ -1,0 +1,28 @@
+Issues found:
+
+1. [CRITICAL] Lines 6-7: File opened without
+   context manager. If json.load() raises an
+   exception, the file handle leaks.
+
+2. [CRITICAL] Line 34: Division by zero when
+   no users match the date filter
+   (len(users) == 0).
+
+3. [MAJOR] Lines 10-12: Timestamp parsing
+   assumes a single format with no timezone.
+   ISO 8601 timestamps with 'T' separator or
+   timezone offsets will raise ValueError.
+
+4. [MAJOR] Lines 36-37: Output file opened
+   without context manager. If json.dump()
+   fails, the file is not closed and partial
+   output may remain.
+
+5. [MAJOR] Line 24: Event types list grows
+   without bound and includes duplicates.
+   For users with many events, memory usage
+   is unbounded.
+
+6. [MINOR] No input validation on data
+   structure. Missing "events" key causes
+   an unhandled KeyError.

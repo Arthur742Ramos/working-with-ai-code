@@ -1,20 +1,19 @@
-"""Listing 3.6: Robust timestamp parsing with fallback
+"""Listing 3.7: Robust timestamp parsing with safe fallback.
 
 From "Working with AI as a Real Teammate" (Manning)
 Chapter 3
 """
 
-import json
 import logging
 from datetime import datetime, timezone
 
 logger = logging.getLogger(__name__)
 
+
 def parse_timestamp(
     raw: str,
 ) -> datetime | None:
-    """Parse a timestamp, returning None
-    on failure."""
+    """Parse a timestamp, returning None on failure."""
     try:
         dt = datetime.fromisoformat(raw)
         if dt.tzinfo is None:
@@ -24,7 +23,7 @@ def parse_timestamp(
         return dt
     except (ValueError, TypeError):
         logger.warning(
-            "Skipping unparseable "
-            "timestamp: %s", raw
+            "Skipping unparseable timestamp: %s",
+            raw,
         )
         return None

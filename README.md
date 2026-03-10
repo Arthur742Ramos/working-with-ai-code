@@ -13,19 +13,25 @@ Code listings from the Manning book by Arthur Ramos.
 - [`listing_2_2_contract.py`](ch02/listing_2_2_contract.py) — Listing 2.2: PR generator with system prompt and contract
 - [`listing_2_3_schema.py`](ch02/listing_2_3_schema.py) — Listing 2.3: JSON schema for PR description validation
 - [`listing_2_4_validation.py`](ch02/listing_2_4_validation.py) — Listing 2.4: Generation function with validation
-- [`listing_2_5_complete.py`](ch02/listing_2_5_complete.py) — Listing 2.5: Complete PR generator with validation and formatting
-- [`listing_2_6_retry.py`](ch02/listing_2_6_retry.py) — Listing 2.6: Retry logic with conversational error feedback
+- [`listing_2_5_constants.py`](ch02/listing_2_5_constants.py) — Listing 2.5: PR generator constants: schema and system prompt
+- [`listing_2_6_generation.py`](ch02/listing_2_6_generation.py) — Listing 2.6: Diff capture, prompt, and validated generation
+- [`listing_2_7_cli.py`](ch02/listing_2_7_cli.py) — Listing 2.7: GitHub formatting and CLI entry point
+- [`listing_2_8_retry.py`](ch02/listing_2_8_retry.py) — Listing 2.8: Retry logic with conversational error feedback
 - [`PROMPTS.md`](ch02/PROMPTS.md) — Prompt blocks from the current manuscript draft
 
 ### Chapter 3
 
 - [`listing_3_1_rate_limiter_decorator.py`](ch03/listing_3_1_rate_limiter_decorator.py) — Listing 3.1: Branch A result: decorator-based rate limiter
-- [`listing_3_2_rate_limiter_redis.py`](ch03/listing_3_2_rate_limiter_redis.py) — Listing 3.2: Branch B result: Redis-backed rate limiter
-- [`listing_3_3_event_processor_start.py`](ch03/listing_3_3_event_processor_start.py) — Listing 3.3: The starting code: event processor with hidden issues
-- [`listing_3_5_event_processor_critical_fix.py`](ch03/listing_3_5_event_processor_critical_fix.py) — Listing 3.5: After fixing critical issues only
-- [`listing_3_6_timestamp_parsing.py`](ch03/listing_3_6_timestamp_parsing.py) — Listing 3.6: Robust timestamp parsing with fallback
-- [`listing_3_7_event_processor_final.py`](ch03/listing_3_7_event_processor_final.py) — Listing 3.7: Final version with all issues resolved
-- [`listing_3_8_test_event_processor.py`](ch03/listing_3_8_test_event_processor.py) — Listing 3.8: Test cases verifying each fix
+- [`listing_3_2_rate_limit_script.py`](ch03/listing_3_2_rate_limit_script.py) — Listing 3.2: Branch B result, part 1: Redis sliding-window script
+- [`listing_3_3_rate_limit_middleware.py`](ch03/listing_3_3_rate_limit_middleware.py) — Listing 3.3: Branch B result, part 2: Python wrapper and middleware
+- [`listing_3_4_event_processor_start.py`](ch03/listing_3_4_event_processor_start.py) — Listing 3.4: The starting code: event processor with hidden issues
+- [`listing_3_5_ai_review_response.txt`](ch03/listing_3_5_ai_review_response.txt) — Listing 3.5: Typical AI review response
+- [`listing_3_6_event_processor_critical_fix.py`](ch03/listing_3_6_event_processor_critical_fix.py) — Listing 3.6: After fixing the critical issues
+- [`listing_3_7_timestamp_parsing.py`](ch03/listing_3_7_timestamp_parsing.py) — Listing 3.7: Robust timestamp parsing with safe fallback
+- [`listing_3_8_validation_and_filtering.txt`](ch03/listing_3_8_validation_and_filtering.txt) — Listing 3.8: Final version, part 1: validation and filtering
+- [`listing_3_9_aggregation_and_output.txt`](ch03/listing_3_9_aggregation_and_output.txt) — Listing 3.9: Final version, part 2: aggregation and output
+- [`listing_3_10_test_cases_part1.py`](ch03/listing_3_10_test_cases_part1.py) — Listing 3.10: Test cases, part 1
+- [`listing_3_11_test_cases_part2.py`](ch03/listing_3_11_test_cases_part2.py) — Listing 3.11: Test cases, part 2
 - [`PROMPTS.md`](ch03/PROMPTS.md) — Prompt blocks from the current manuscript draft
 
 ### Chapter 4

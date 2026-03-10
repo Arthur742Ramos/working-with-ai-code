@@ -1,0 +1,31 @@
+def process_events(
+    input_path: str,
+    output_path: str,
+    start_date: datetime,
+    end_date: datetime,
+) -> dict:
+    with open(input_path) as f:
+        data = json.load(f)
+
+    events = data.get("events")
+    if events is None:
+        raise ValueError(
+            "Missing 'events' key in "
+            "input data"
+        )
+    if not isinstance(events, list):
+        raise ValueError(
+            "'events' must be a list"
+        )
+
+    results = []
+    skipped = 0
+    for event in events:
+        ts = parse_timestamp(
+            event.get("timestamp", "")
+        )
+        if ts is None:
+            skipped += 1
+            continue
+        if start_date <= ts <= end_date:
+            results.append(event)
