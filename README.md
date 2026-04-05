@@ -36,7 +36,6 @@ Code listings from the Manning book by Arthur Ramos.
 
 ### Chapter 4
 
-- [`listing_4_10_validation_tests.py`](ch04/listing_4_10_validation_tests.py) — Listing 4.10 Behavior-focused tests for the validation module.
 - [`listing_4_1_timestamp_parser.py`](ch04/listing_4_1_timestamp_parser.py) — Listing 4.1 AI-generated timestamp parser — looks correct, misses edge cases.
 - [`listing_4_2_test_proves_nothing.py`](ch04/listing_4_2_test_proves_nothing.py) — Listing 4.2 A test that passes but proves nothing useful.
 - [`listing_4_3_test_verifies_behavior.py`](ch04/listing_4_3_test_verifies_behavior.py) — Listing 4.3 A test that verifies behavior.
@@ -46,7 +45,17 @@ Code listings from the Manning book by Arthur Ramos.
 - [`listing_4_7_property_based_testing.py`](ch04/listing_4_7_property_based_testing.py) — Listing 4.7 Property-based testing for AI-generated code.
 - [`listing_4_8_existence_check.py`](ch04/listing_4_8_existence_check.py) — Listing 4.8 Quick existence check for recommended packages.
 - [`listing_4_9_validation_module.py`](ch04/listing_4_9_validation_module.py) — Listing 4.9 AI-generated validation module to be verified.
+- [`listing_4_10_validation_tests.py`](ch04/listing_4_10_validation_tests.py) — Listing 4.10 Behavior-focused tests for the validation module.
 - [`PROMPTS.md`](ch04/PROMPTS.md) — Prompt blocks from the current manuscript draft
+
+### Chapter 5
+
+- [`listing_5_1_universal_task_template.md`](ch05/listing_5_1_universal_task_template.md) — Listing 5.1: The universal task template
+- [`listing_5_2_test_cases.py`](ch05/listing_5_2_test_cases.py) — Listing 5.2: Using test cases to constrain a function
+- [`listing_5_3_structured_json.md`](ch05/listing_5_3_structured_json.md) — Listing 5.3: Requesting structured JSON output
+- [`listing_5_4_transform_sql_to_orm.md`](ch05/listing_5_4_transform_sql_to_orm.md) — Listing 5.4: Transform pattern — SQL to ORM
+- [`listing_5_5_generate_api_endpoint.md`](ch05/listing_5_5_generate_api_endpoint.md) — Listing 5.5: Generate pattern — API endpoint with full contract
+- [`PROMPTS.md`](ch05/PROMPTS.md) — Prompt blocks from the current manuscript draft
 
 ## Running the Code
 
@@ -55,6 +64,9 @@ pip install -r ch02/requirements.txt \
     -r ch03/requirements.txt \
     -r ch04/requirements.txt
 ```
+
+Chapter 5 listings are mostly prompt templates (Markdown files) rather than
+runnable Python code.
 
 Chapter 2 listings share a small provider-neutral client in
 [`llm_client.py`](llm_client.py). Set these environment variables:
