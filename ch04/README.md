@@ -1,18 +1,24 @@
 # Chapter 4 — Code Listings
 
-- **`listing_4_10_validation_tests.py`** — Listing 4.10 Behavior-focused tests for the validation module.
-- **`listing_4_1_timestamp_parser.py`** — Listing 4.1 AI-generated timestamp parser — looks correct, misses edge cases.
-- **`listing_4_2_test_proves_nothing.py`** — Listing 4.2 A test that passes but proves nothing useful.
-- **`listing_4_3_test_verifies_behavior.py`** — Listing 4.3 A test that verifies behavior.
-- **`listing_4_4_second_opinion.py`** — Listing 4.4 Getting a second opinion from a different model.
-- **`listing_4_5_smoke_test.py`** — Listing 4.5 A quick smoke test function for AI-generated code.
-- **`listing_4_6_static_analysis.py`** — Listing 4.6 Running mypy and ruff on AI-generated code.
-- **`listing_4_7_property_based_testing.py`** — Listing 4.7 Property-based testing for AI-generated code.
-- **`listing_4_8_existence_check.py`** — Listing 4.8 Quick existence check for recommended packages.
-- **`listing_4_9_validation_module.py`** — Listing 4.9 AI-generated validation module to be verified.
-- **`PROMPTS.md`** — Prompt blocks from the current manuscript draft
+Spotting uncertainty and hallucinations: Surfacing hidden errors with
+self-critique and second-opinion patterns.
 
-Listing 4.4 uses provider-neutral environment variables for two
+| File | Listing | Description |
+|------|---------|-------------|
+| `listing_4_1_timestamp_parser.py` | 4.1 | AI-generated timestamp parser — looks correct, misses edge cases |
+| `listing_4_2_test_proves_nothing.py` | 4.2 | A test that passes but proves nothing useful |
+| `listing_4_3_test_verifies_behavior.py` | 4.3 | A test that verifies behavior |
+| `listing_4_4_call_model.py` | 4.4 | A reusable helper for querying any chat-completions API |
+| `listing_4_5_second_opinion.py` | 4.5 | Collecting two independent code reviews from different models |
+| `listing_4_6_smoke_test.py` | 4.6 | A quick smoke test function for AI-generated code |
+| `listing_4_7_static_analysis.py` | 4.7 | Running mypy and ruff on AI-generated code |
+| `listing_4_8_property_based_testing.py` | 4.8 | Property-based testing for AI-generated code |
+| `listing_4_9_existence_check.py` | 4.9 | Quick existence check for recommended packages |
+| `listing_4_10_validation_module.py` | 4.10–4.11 | AI-generated validation: email, password, username, and combined registration validator |
+| `listing_4_12_validation_tests.py` | 4.12 | Behavior-focused tests for the validation module |
+| `PROMPTS.md` | — | Prompt blocks from the current manuscript draft |
+
+Listing 4.5 uses provider-neutral environment variables for two
 chat-completions-compatible endpoints:
 
 - `MODEL_A_API_URL`, `MODEL_A_API_KEY`, `MODEL_A_NAME`

@@ -1,4 +1,4 @@
-"""Listing 4.7 Property-based testing for AI-generated code."""
+"""Listing 4.8 Property-based testing for AI-generated code."""
 from hypothesis import given, settings
 from hypothesis import strategies as st
 

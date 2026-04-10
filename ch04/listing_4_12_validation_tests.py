@@ -1,6 +1,6 @@
-"""Listing 4.10 Behavior-focused tests for the validation module."""
+"""Listing 4.12 Behavior-focused tests for the validation module."""
 import pytest
-from listing_4_9_validation_module import (
+from listing_4_10_validation_module import (
     validate_email,
     validate_password,
     validate_registration

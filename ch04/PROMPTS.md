@@ -95,3 +95,9 @@ My Django application is slow. How can I improve performance?
 ````text
 You said to "optimize the database queries." Which specific queries in the code I shared would you optimize, and how? Show me the before and after for each one.
 ````
+
+## Django QuerySet evaluation follow-up
+
+````text
+Can you explain exactly when the Django ORM evaluates a QuerySet? I'm using select_related with pagination and I'm not sure when the actual SQL runs.
+````

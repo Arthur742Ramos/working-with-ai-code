@@ -1,4 +1,4 @@
-"""Listing 4.6 Running mypy and ruff on AI-generated code."""
+"""Listing 4.7 Running mypy and ruff on AI-generated code."""
 import os
 import subprocess
 import tempfile

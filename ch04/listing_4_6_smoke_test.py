@@ -1,4 +1,4 @@
-"""Listing 4.5 A quick smoke test function for AI-generated code."""
+"""Listing 4.6 A quick smoke test function for AI-generated code."""
 import os
 import subprocess
 import tempfile

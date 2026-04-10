@@ -1,4 +1,4 @@
-"""Listing 4.8 Quick existence check for recommended packages."""
+"""Listing 4.9 Quick existence check for recommended packages."""
 import subprocess
 import sys
 

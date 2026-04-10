@@ -1,5 +1,5 @@
-"""Listing 4.9 AI-generated validation module to be verified."""
-"""User registration input validation."""
+"""Listings 4.10–4.11 AI-generated validation: data model, email, password,
+username checks, and combined registration validator."""
 import re
 from dataclasses import dataclass
 
