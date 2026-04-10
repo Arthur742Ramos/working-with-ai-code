@@ -1,4 +1,4 @@
-"""Listing 2.8: Retry logic with conversational error feedback.
+"""Listing 2.6: Retry logic with conversational error feedback
 
 From "Working with AI as a Real Teammate" (Manning)
 Chapter 2
@@ -9,8 +9,11 @@ import json
 from jsonschema import ValidationError, validate
 
 from llm_client import chat
-from listing_2_5_constants import SCHEMA, SYSTEM_PROMPT
-from listing_2_6_generation import build_prompt
+from listing_2_5_complete_pr_generator import (
+    SCHEMA,
+    SYSTEM_PROMPT,
+    build_prompt,
+)
 
 
 def generate_with_retry(
@@ -22,7 +25,7 @@ def generate_with_retry(
         {"role": "user", "content": build_prompt(diff)},
     ]
 
-    for attempt in range(max_retries + 1):
+    for attempt in range(max_retries + 1):          # Allow up to max_retries additional attempts
         response_text = chat(
             system=SYSTEM_PROMPT,
             messages=messages,
@@ -32,10 +35,10 @@ def generate_with_retry(
         try:
             data = json.loads(response_text)
             validate(instance=data, schema=SCHEMA)
-            return data
+            return data                             # Success: return validated data immediately
         except (json.JSONDecodeError, ValidationError) as exc:
             if attempt < max_retries:
-                messages.append(
+                messages.append(                    # Add failed response and error to conversation context
                     {
                         "role": "assistant",
                         "content": response_text,
@@ -51,6 +54,6 @@ def generate_with_retry(
                     }
                 )
             else:
-                raise ValueError(
+                raise ValueError(                   # Give up after exhausting retries
                     f"Failed after {max_retries + 1} attempts: {exc}"
                 ) from exc

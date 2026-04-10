@@ -1,12 +1,17 @@
-"""Listings 4.10–4.11 AI-generated validation: data model, email, password,
-username checks, and combined registration validator."""
+"""Listing 4.10: AI-generated validation: data model, email, and password checks
+
+From "Working with AI as a Real Teammate" (Manning)
+Chapter 4
+"""
 import re
 from dataclasses import dataclass
+
 
 @dataclass
 class ValidationResult:
     valid: bool
     errors: list[str]
+
 
 def validate_email(email: str) -> bool:
     """Validate email format."""
@@ -14,6 +19,7 @@ def validate_email(email: str) -> bool:
     pattern += r"[a-zA-Z0-9.-]+\."
     pattern += r"[a-zA-Z]{2,}$"
     return bool(re.match(pattern, email))
+
 
 def validate_password(
     password: str
@@ -29,40 +35,3 @@ def validate_password(
     if not re.search(r"[0-9]", password):
         errors.append("Need one digit")
     return errors
-
-def validate_username(
-    username: str
-) -> list[str]:
-    """Validate username format."""
-    errors = []
-    if len(username) < 3:
-        errors.append("Username too short")
-    if len(username) > 30:
-        errors.append("Username too long")
-    if not re.match(
-        r"^[a-zA-Z0-9_]+$", username
-    ):
-        errors.append(
-            "Only letters, numbers, _"
-        )
-    return errors
-
-def validate_registration(
-    email: str,
-    password: str,
-    username: str
-) -> ValidationResult:
-    """Validate full registration input."""
-    errors = []
-    if not validate_email(email):
-        errors.append("Invalid email format")
-    errors.extend(
-        validate_password(password)
-    )
-    errors.extend(
-        validate_username(username)
-    )
-    return ValidationResult(
-        valid=len(errors) == 0,
-        errors=errors
-    )

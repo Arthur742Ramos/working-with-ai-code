@@ -13,10 +13,8 @@ Code listings from the Manning book by Arthur Ramos.
 - [`listing_2_2_contract.py`](ch02/listing_2_2_contract.py) — Listing 2.2: PR generator with system prompt and contract
 - [`listing_2_3_schema.py`](ch02/listing_2_3_schema.py) — Listing 2.3: JSON schema for PR description validation
 - [`listing_2_4_validation.py`](ch02/listing_2_4_validation.py) — Listing 2.4: Generation function with validation
-- [`listing_2_5_constants.py`](ch02/listing_2_5_constants.py) — Listing 2.5: PR generator constants: schema and system prompt
-- [`listing_2_6_generation.py`](ch02/listing_2_6_generation.py) — Listing 2.6: Diff capture, prompt, and validated generation
-- [`listing_2_7_cli.py`](ch02/listing_2_7_cli.py) — Listing 2.7: GitHub formatting and CLI entry point
-- [`listing_2_8_retry.py`](ch02/listing_2_8_retry.py) — Listing 2.8: Retry logic with conversational error feedback
+- [`listing_2_5_complete_pr_generator.py`](ch02/listing_2_5_complete_pr_generator.py) — Listing 2.5: Complete PR generator with validation and formatting
+- [`listing_2_6_retry.py`](ch02/listing_2_6_retry.py) — Listing 2.6: Retry logic with conversational error feedback
 - [`PROMPTS.md`](ch02/PROMPTS.md) — Prompt blocks from the current manuscript draft
 
 ### Chapter 3
@@ -36,16 +34,18 @@ Code listings from the Manning book by Arthur Ramos.
 
 ### Chapter 4
 
-- [`listing_4_1_timestamp_parser.py`](ch04/listing_4_1_timestamp_parser.py) — Listing 4.1 AI-generated timestamp parser — looks correct, misses edge cases.
-- [`listing_4_2_test_proves_nothing.py`](ch04/listing_4_2_test_proves_nothing.py) — Listing 4.2 A test that passes but proves nothing useful.
-- [`listing_4_3_test_verifies_behavior.py`](ch04/listing_4_3_test_verifies_behavior.py) — Listing 4.3 A test that verifies behavior.
-- [`listing_4_4_second_opinion.py`](ch04/listing_4_4_second_opinion.py) — Listing 4.4 Getting a second opinion from a different model.
-- [`listing_4_5_smoke_test.py`](ch04/listing_4_5_smoke_test.py) — Listing 4.5 A quick smoke test function for AI-generated code.
-- [`listing_4_6_static_analysis.py`](ch04/listing_4_6_static_analysis.py) — Listing 4.6 Running mypy and ruff on AI-generated code.
-- [`listing_4_7_property_based_testing.py`](ch04/listing_4_7_property_based_testing.py) — Listing 4.7 Property-based testing for AI-generated code.
-- [`listing_4_8_existence_check.py`](ch04/listing_4_8_existence_check.py) — Listing 4.8 Quick existence check for recommended packages.
-- [`listing_4_9_validation_module.py`](ch04/listing_4_9_validation_module.py) — Listing 4.9 AI-generated validation module to be verified.
-- [`listing_4_10_validation_tests.py`](ch04/listing_4_10_validation_tests.py) — Listing 4.10 Behavior-focused tests for the validation module.
+- [`listing_4_1_timestamp_parser.py`](ch04/listing_4_1_timestamp_parser.py) — Listing 4.1: AI-generated timestamp parser — looks correct, misses edge cases
+- [`listing_4_2_test_proves_nothing.py`](ch04/listing_4_2_test_proves_nothing.py) — Listing 4.2: A test that passes but proves nothing useful
+- [`listing_4_3_test_verifies_behavior.py`](ch04/listing_4_3_test_verifies_behavior.py) — Listing 4.3: A test that verifies behavior
+- [`listing_4_4_call_model.py`](ch04/listing_4_4_call_model.py) — Listing 4.4: A reusable helper for querying any chat-completions API
+- [`listing_4_5_second_opinion.py`](ch04/listing_4_5_second_opinion.py) — Listing 4.5: Collecting two independent code reviews from different models
+- [`listing_4_6_smoke_test.py`](ch04/listing_4_6_smoke_test.py) — Listing 4.6: A quick smoke test function for AI-generated code
+- [`listing_4_7_static_analysis.py`](ch04/listing_4_7_static_analysis.py) — Listing 4.7: Running mypy and ruff on AI-generated code
+- [`listing_4_8_property_based_testing.py`](ch04/listing_4_8_property_based_testing.py) — Listing 4.8: Property-based testing for AI-generated code
+- [`listing_4_9_existence_check.py`](ch04/listing_4_9_existence_check.py) — Listing 4.9: Quick existence check for recommended packages
+- [`listing_4_10_validation_module.py`](ch04/listing_4_10_validation_module.py) — Listing 4.10: AI-generated validation: data model, email, and password checks
+- [`listing_4_11_validation_module_part2.py`](ch04/listing_4_11_validation_module_part2.py) — Listing 4.11: AI-generated validation: username check and combined registration validator
+- [`listing_4_12_validation_tests.py`](ch04/listing_4_12_validation_tests.py) — Listing 4.12: Behavior-focused tests for the validation module
 - [`PROMPTS.md`](ch04/PROMPTS.md) — Prompt blocks from the current manuscript draft
 
 ### Chapter 5

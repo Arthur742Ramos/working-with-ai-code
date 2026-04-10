@@ -14,7 +14,8 @@ self-critique and second-opinion patterns.
 | `listing_4_7_static_analysis.py` | 4.7 | Running mypy and ruff on AI-generated code |
 | `listing_4_8_property_based_testing.py` | 4.8 | Property-based testing for AI-generated code |
 | `listing_4_9_existence_check.py` | 4.9 | Quick existence check for recommended packages |
-| `listing_4_10_validation_module.py` | 4.10–4.11 | AI-generated validation: email, password, username, and combined registration validator |
+| `listing_4_10_validation_module.py` | 4.10 | AI-generated validation: data model, email, and password checks |
+| `listing_4_11_validation_module_part2.py` | 4.11 | AI-generated validation: username check and combined registration validator |
 | `listing_4_12_validation_tests.py` | 4.12 | Behavior-focused tests for the validation module |
 | `PROMPTS.md` | — | Prompt blocks from the current manuscript draft |
 

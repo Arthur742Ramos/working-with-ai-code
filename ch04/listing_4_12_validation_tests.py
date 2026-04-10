@@ -3,7 +3,10 @@ import pytest
 from listing_4_10_validation_module import (
     validate_email,
     validate_password,
-    validate_registration
+)
+from listing_4_11_validation_module_part2 import (
+    validate_registration,
+    validate_username,
 )
 
 class TestEmailValidation:
