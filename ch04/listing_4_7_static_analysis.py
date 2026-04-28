@@ -1,38 +1,38 @@
-"""Listing 4.7 Running mypy and ruff on AI-generated code."""
-import os
-import subprocess
-import tempfile
+from hypothesis import given, settings
+from hypothesis import strategies as st
 
-def static_analysis(
-    code: str
-) -> dict:
-    """Run type checking and linting."""
-    with tempfile.NamedTemporaryFile(
-        mode="w",
-        suffix=".py",
-        delete=False
-    ) as f:
-        f.write(code)
-        path = f.name
-    try:
-        mypy = subprocess.run(
-            ["mypy", "--ignore-missing-imports",
-             path],
-            capture_output=True,
-            text=True
-        )
+@given(                                   #A
+    price=st.decimals(
+        min_value=0,
+        max_value=10000,
+        places=2
+    ),
+    rate=st.decimals(
+        min_value=0,
+        max_value=1,
+        places=4
+    )
+)
+@settings(max_examples=500)
+def test_tax_is_never_negative(
+    price, rate
+):
+    """Tax should never be negative."""
+    result = calculate_tax(
+        float(price), float(rate)
+    )
+    assert result >= 0                    #B
 
-        ruff = subprocess.run(
-            ["ruff", "check", path],
-            capture_output=True,
-            text=True
-        )
-    finally:
-        os.unlink(path)
-
-    return {
-        "mypy_ok": mypy.returncode == 0,
-        "mypy_output": mypy.stdout,
-        "ruff_ok": ruff.returncode == 0,
-        "ruff_output": ruff.stdout
-    }
+@given(
+    price=st.decimals(
+        min_value=0,
+        max_value=10000,
+        places=2
+    )
+)
+def test_zero_rate_means_zero_tax(price):
+    """Zero tax rate means zero tax."""
+    result = calculate_tax(
+        float(price), 0.0
+    )
+    assert result == 0.0                  #C

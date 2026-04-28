@@ -1,5 +1,3 @@
-"""Listing 4.2 A test that passes but proves nothing useful."""
-
 def test_process_order():
     """Test order processing."""
     order = {
@@ -10,6 +8,6 @@ def test_process_order():
         "status": "pending"
     }
     result = process_order(order)
-    assert result is not None          # These assertions are nearly useless —
-    assert isinstance(result, dict)    # they pass for almost any return value
-    assert "status" in result          # they pass for almost any return value
+    assert result is not None          #A
+    assert isinstance(result, dict)    #A
+    assert "status" in result          #A

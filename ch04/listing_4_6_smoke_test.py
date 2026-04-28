@@ -1,36 +1,40 @@
-"""Listing 4.6 A quick smoke test function for AI-generated code."""
 import os
 import subprocess
 import tempfile
-import sys
 
-def smoke_test(code: str) -> dict:
-    """Run AI-generated code in isolation."""
+def static_analysis(
+    code: str
+) -> dict:
+    """Run type checking and linting."""
     with tempfile.NamedTemporaryFile(
         mode="w",
         suffix=".py",
         delete=False
     ) as f:
         f.write(code)
-        f.flush()
+        path = f.name
     try:
-        result = subprocess.run(
-            [sys.executable, f.name],
+        mypy = subprocess.run(            #A
+            [
+                "mypy",
+                "--ignore-missing-imports",
+                path
+            ],
             capture_output=True,
-            text=True,
-            timeout=10
+            text=True
         )
-    except subprocess.TimeoutExpired:
-        return {
-            "success": False,
-            "stdout": "",
-            "stderr": "Timed out after 10 seconds"
-        }
+
+        ruff = subprocess.run(            #B
+            ["ruff", "check", path],
+            capture_output=True,
+            text=True
+        )
     finally:
-        os.unlink(f.name)
+        os.unlink(path)                   #C
 
     return {
-        "success": result.returncode == 0,
-        "stdout": result.stdout,
-        "stderr": result.stderr
+        "mypy_ok": mypy.returncode == 0,
+        "mypy_output": mypy.stdout,
+        "ruff_ok": ruff.returncode == 0,
+        "ruff_output": ruff.stdout
     }

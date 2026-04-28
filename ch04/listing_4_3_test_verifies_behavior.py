@@ -1,5 +1,3 @@
-"""Listing 4.3 A test that verifies behavior."""
-
 def test_process_order_calculates_total():
     """Test that processing sums item prices."""
     order = {
@@ -11,6 +9,6 @@ def test_process_order_calculates_total():
         "status": "pending"
     }
     result = process_order(order)
-    assert result["status"] == "completed"  # Checks the specific status expected
-    assert result["total"] == 24.98         # Verifies the total is the sum of item prices
-    assert result["item_count"] == 2        # Confirms all items were counted
+    assert result["status"] == "completed"  #A
+    assert result["total"] == 24.98         #B
+    assert result["item_count"] == 2        #C

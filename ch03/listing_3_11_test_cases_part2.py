@@ -1,12 +1,3 @@
-"""Listing 3.11: Test cases, part 2.
-
-From "Working with AI as a Real Teammate" (Manning)
-Chapter 3
-"""
-
-import pytest
-
-
 def test_duplicate_types_collapse_to_one(
     tmp_path,
 ):

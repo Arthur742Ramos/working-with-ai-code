@@ -1,37 +1,46 @@
-"""Listing 4.10: AI-generated validation: data model, email, and password checks
+from validation import (
+    validate_email,
+    validate_password
+)
 
-From "Working with AI as a Real Teammate" (Manning)
-Chapter 4
-"""
-import re
-from dataclasses import dataclass
-
-
-@dataclass
-class ValidationResult:
-    valid: bool
-    errors: list[str]
-
-
-def validate_email(email: str) -> bool:
-    """Validate email format."""
-    pattern = r"^[a-zA-Z0-9._%+-]+@"     # Email regex handles common cases but not all valid addresses
-    pattern += r"[a-zA-Z0-9.-]+\."
-    pattern += r"[a-zA-Z]{2,}$"
-    return bool(re.match(pattern, email))
-
-
-def validate_password(
-    password: str
-) -> list[str]:
-    """Check password strength."""
-    errors = []
-    if len(password) < 8:
-        errors.append(
-            "Password must be 8+ characters"
+class TestEmailValidation:
+    def test_valid_email(self):
+        assert validate_email(
+            "user@example.com"
         )
-    if not re.search(r"[A-Z]", password):
-        errors.append("Need one uppercase")
-    if not re.search(r"[0-9]", password):
-        errors.append("Need one digit")
-    return errors
+
+    def test_missing_at(self):
+        assert not validate_email(
+            "userexample.com"
+        )
+
+    def test_plus_addressing(self):         #A
+        assert validate_email(
+            "user+tag@example.com"
+        )
+
+    def test_international_domain(self):    #B
+        assert validate_email(
+            "user@münchen.de"
+        )
+
+class TestPasswordValidation:
+    def test_short_password(self):
+        errors = validate_password("Ab1")
+        assert any(
+            "8+ characters" in e for e in errors
+        )
+
+    def test_no_uppercase(self):
+        errors = validate_password(
+            "abcdefg1"
+        )
+        assert any(
+            "uppercase" in e for e in errors
+        )
+
+    def test_strong_password(self):
+        errors = validate_password(
+            "Str0ngP@ss"
+        )
+        assert errors == []
