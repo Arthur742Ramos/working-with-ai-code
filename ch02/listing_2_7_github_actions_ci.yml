@@ -1,0 +1,23 @@
+# Listing 2.7: GitHub Actions job that runs the generator in CI
+#
+# From "Working with AI as a Real Teammate" (Manning)
+# Chapter 2
+#
+# The job runs the generator on every pull request and writes the result
+# back to the PR body. Because the generator writes the PR body to stdout
+# and its status lines to stderr, the `> body.md` redirect captures only
+# the description. The token comes from the runner's secrets.
+name: PR description
+on: [pull_request]
+jobs:
+  describe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: python pr_describe.py > body.md
+      - run: gh pr edit "$NUM" --body-file body.md
+        env:
+          NUM: ${{ github.event.number }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

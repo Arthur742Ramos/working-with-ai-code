@@ -2,16 +2,58 @@
 
 Prompt blocks extracted from the current manuscript source.
 
-## Role-driven code review
+## The perfect prompt missing the task
 
 ````text
-You are a senior software engineer reviewing code for production readiness. Focus on:
-- Error handling completeness
-- Edge cases and failure modes
-- Performance implications at scale
-- Security considerations
+You are a senior backend engineer.
 
-Review this function: [code]
+Constraints:
+- Python 3.11
+- No external dependencies
+- Maximum 50 lines
+- Type hints required
+
+Follow these examples for the output format:
+
+Input: "alpha"
+Output: {"valid": true, "value": "alpha", "errors": []}
+
+Input: ""
+Output: {"valid": false, "value": null, "errors": ["empty"]}
+
+Input: "beta"
+Output: {"valid": true, "value": "beta", "errors": []}
+
+Steps:
+1. Validate the input.
+2. Transform it.
+3. Return the result.
+````
+
+## Review as a security auditor
+
+`````text
+You are a senior security auditor. Review this function for security vulnerabilities only. List the top issues, each with a severity and a one-line fix.
+
+```python
+def list_active_users(conn, sort_field):
+    query = (
+        "SELECT id, email, created_at FROM users "
+        f"WHERE active = 1 ORDER BY {sort_field}"
+    )
+    rows = conn.execute(query).fetchall()
+    return [
+        {"id": row[0], "email": row[1],
+         "created_at": row[2]}
+        for row in rows
+    ]
+```
+`````
+
+## Review as a performance engineer
+
+````text
+You are a senior performance engineer. Review the same `list_active_users` for performance and scalability issues only. List the top issues, each with a one-line fix.
 ````
 
 ## Constrained code generation
@@ -22,7 +64,7 @@ Write a Python function to validate email addresses.
 Constraints:
 - Python 3.11, standard library only (no external dependencies)
 - Return a dataclass with fields: is_valid, reason, normalized_address
-- Maximum 30 lines including docstring
+- Normalize valid addresses: trim surrounding whitespace, lowercase the domain
 - Handle edge cases: empty string, missing @, multiple @ symbols
 - Raise ValueError for non-string input
 ````
@@ -41,9 +83,9 @@ Output: "As a user, I want the dashboard to load in under 2 seconds so that I ca
 Now convert: "We need better error messages"
 ````
 
-## Explain pattern — stack trace analysis
+## Explain category: stack trace analysis
 
-````text
+`````text
 Explain this stack trace to a developer who is not familiar with this codebase. Focus on the root cause, not every frame:
 
 ```
@@ -54,13 +96,14 @@ Traceback (most recent call last):
     validated = self.schema.load(data)
   File "venv/lib/marshmallow/schema.py", line 722, in load
     return self._do_load(data, many=many, partial=partial)
-marshmallow.exceptions.ValidationError: {'email': ['Not a valid email address.']}
+marshmallow.exceptions.ValidationError:
+    {'email': ['Not a valid email address.']}
 ```
-````
+`````
 
-## Critique pattern — targeted code review
+## Critique category: targeted code review
 
-````text
+`````text
 Review this function for bugs that would cause incorrect behavior at runtime. Focus on logic errors, not style.
 
 ```python
@@ -73,12 +116,12 @@ def calculate_discount(price, quantity):
         discount = 0.05
     return price * quantity * (1 - discount)
 ```
-````
+`````
 
-## Explain the existing code (pattern chaining step 1)
+## Explain the existing code
 
-````text
-What does this function do? Walk me through the logic step by step.
+`````text
+Explain what the deduplicate_users function in dedup.py does, step by step. Do not change anything yet.
 
 ```python
 def deduplicate_users(users):
@@ -90,48 +133,52 @@ def deduplicate_users(users):
             unique.append(user)
     return unique
 ```
-````
+`````
 
-## Critique for the specific failure (pattern chaining step 2)
-
-````text
-Users report duplicates despite this function running. What could cause deduplication to fail? Consider: case sensitivity, whitespace, unicode normalization, and timing issues.
-````
-
-## Generate a fixed version (pattern chaining step 3)
+## Critique for the specific failure
 
 ````text
-Write a corrected version that normalizes emails before comparison. Lowercase the entire address and strip whitespace. Keep the same interface.
+Users still report duplicates in production even though this runs on every import. What could make deduplication fail on real data? Consider case sensitivity, whitespace, and unicode normalization. Don't change code yet, just diagnose.
 ````
 
-## Transform tests to cover the fix (pattern chaining step 4)
+## Reproduce the bug as a failing test
 
 ````text
-Convert these unittest test cases to pytest. Add cases for mixed-case emails and whitespace.
+Before changing the function, reproduce the case-sensitivity bug as a test: add a pytest test asserting that `Bob@Example.com` and `bob@example.com` collapse to one user. Run pytest and show me the output. Do not modify dedup.py yet.
 ````
 
-## Data migration with full building blocks
+## Generate the fix
 
 ````text
-Role: Database engineer who prioritizes data integrity over speed. This migration runs on production data that cannot be recovered if corrupted.
+Apply the fix for the in-batch case: normalize each email by stripping whitespace and lowercasing before the membership check. Keep the same signature and return shape. Edit dedup.py directly, then re-run pytest.
+````
 
-Task: Migrate user records from legacy schema to new schema.
+## Transform tests and run them
+
+````text
+Convert the remaining unittest test in test_dedup.py to pytest style, and add one test for surrounding whitespace. Then run pytest and show me the output.
+````
+
+## Bare migration prompt
+
+````text
+Write a Python script to migrate the legacy_users table into the new accounts schema. The two schemas are in schema_legacy.sql and schema_new.sql.
+````
+
+## Data migration with the full template
+
+````text
+Role: data engineer who prioritizes data integrity over speed. This runs on production data that cannot be recovered if corrupted.
+
+Read schema_legacy.sql and schema_new.sql, then write migrate.py (Python 3, sqlite3) that migrates legacy_users into accounts.
 
 Constraints:
-- Python 3.11 with psycopg2
-- Must be idempotent (safe to run multiple times)
-- Log every transformation for audit
-- Validate data before writing
-- Batch size of 1000 rows maximum
+- Idempotent: safe to run multiple times (upsert on id)
+- Transform each field: created "MM/DD/YYYY" to ISO 8601; type "1" to individual, "2" to business; strip and lowercase email; strip name
+- Validate every row; skip and report rows that fail
+- Write one audit row for every field whose value changed shape
+- Wrap the run in a transaction; roll back on any error
+- Support a --dry-run flag that does all the work, then rolls back, printing a summary
 
-Example transformation (one row):
-Old: {"created": "03/15/2024", "name": "Jane Doe", "type": "1"}
-New: {"created_at": "2024-03-15T00:00:00Z", "full_name": "Jane Doe", "account_type": "individual"}
-
-Steps:
-1. Read and validate source data
-2. Transform each field
-3. Validate against new schema
-4. Write with transaction rollback on error
-5. Log summary statistics
+Steps: read the schemas, write migrate.py, then run it with --dry-run and show me the summary plus three sample audit rows.
 ````

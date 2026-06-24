@@ -1,5 +1,12 @@
+"""Listing 4.7: Quick existence check for recommended packages
+
+From "Working with AI as a Real Teammate" (Manning)
+Chapter 4
+"""
+
 import subprocess
 import sys
+
 
 def check_package_exists(
     name: str
@@ -11,4 +18,4 @@ def check_package_exists(
         capture_output=True,
         text=True
     )
-    return result.returncode == 0         #A
+    return result.returncode == 0

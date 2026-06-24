@@ -32,12 +32,6 @@ I need a Python function that retries failed HTTP requests with exponential back
 Good start. But this retries on client errors like 400 and 404, which will never succeed on retry. Only retry on transient errors: timeouts, 429, and 5xx status codes.
 ````
 
-## Adding retry logging
-
-````text
-Now add logging so I can see each retry attempt with the error details and which attempt number it is.
-````
-
 ## Requesting progress summary
 
 ````text
@@ -82,7 +76,7 @@ I will confirm or correct, then we continue.
 ## Confirming implementation plan
 
 ````text
-We are about to implement the caching approach. Before we start, confirm my understanding: we are using Redis with a five-minute TTL, invalidating on writes to the users table, and falling back to the database on cache miss. Correct?
+We are about to implement the caching approach. Before we start, confirm my understanding: we are using Redis with a five-minute time-to-live (TTL), invalidating on writes to the users table, and falling back to the database on cache miss. Correct?
 ````
 
 ## Exploring caching tradeoffs
@@ -103,18 +97,6 @@ I am exploring options for improving query performance on a users table with 10M
 I need per-user rate limiting on a FastAPI endpoint. Explore a decorator-based approach using an in-memory store. Single server for now. Target: 100 requests per minute per user.
 ````
 
-## Identifying the current user
-
-````text
-How does the decorator know who the current user is?
-````
-
-## Handling stale timestamps
-
-````text
-How do we stop old timestamps from piling up?
-````
-
 ## Probing design limitations
 
 ````text
@@ -125,18 +107,6 @@ What is the real limitation of this design?
 
 ````text
 I need per-user rate limiting on a FastAPI endpoint. Explore a Redis-backed approach. The system runs on three servers behind a load balancer. Target: 100 requests per minute per user.
-````
-
-## Choosing a window strategy
-
-````text
-Fixed window or sliding window?
-````
-
-## Ensuring atomic operations
-
-````text
-How do we keep the check and the write together?
 ````
 
 ## Handling Redis downtime
@@ -175,16 +145,10 @@ We spent 20 messages discussing slow queries. We looked at indexes on columns us
 We found that a slow query was caused by a missing WHERE clause that triggered a full table scan. I want to audit three other queries for the same pattern. Here are the queries: [paste the three queries]. For each one, check whether the WHERE clause adequately constrains the scan.
 ````
 
-## Asking what context is needed
-
-````text
-I need to add rate limiting to an API endpoint. Before I share code, what information would help you give good advice?
-````
-
 ## Providing full stack details
 
 ````text
-I have a FastAPI app on Python 3.11 with three servers behind an AWS ALB. We use Redis 7 for caching, PostgreSQL 15 for persistence, and Celery for background tasks. The API handles 2,000 RPS at peak. I need rate limiting — per-user, 100 requests per minute, with a 429 response. Here is our middleware stack, our auth flow, and the deployment config: [200 lines of code]
+I have a FastAPI app on Python 3.11 with three servers behind an AWS ALB. We use Redis 7 for caching, PostgreSQL 15 for persistence, and Celery for background tasks. The API handles 2,000 RPS at peak. I need rate limiting: per-user, 100 requests per minute, with a 429 response. Here is our middleware stack, our auth flow, and the deployment config: [200 lines of code]
 ````
 
 ## Letting the AI ask first
@@ -221,38 +185,38 @@ Here are the three queries: [paste them]
 Review this Python module for production readiness. Focus on: (1) resource management, (2) error handling, (3) data integrity, (4) edge cases. List each issue with its line and severity (critical / major / minor).
 ````
 
-## Fixing critical issues only
+## Fixing the ship-blockers only
 
 ````text
-Fix only the two critical issues: the file handle leaks and the division by zero. Keep all other code unchanged. Show the complete updated function.
+Fix only the issues you said you'd fix before anything ships: the division-by-zero crash and the two file-handle leaks. Keep all other code unchanged for now. Edit event_processor.py and show me what changed.
 ````
 
 ## Checkpointing before deeper changes
 
 ````text
-Before we continue, summarize: what have we fixed, what remains, and what order should we address the remaining issues?
+Before we continue, checkpoint for me: what have we fixed, what remains, and what order should we address the remaining issues in?
 ````
 
 ## Hardening timestamp parsing
 
 ````text
-Fix the timestamp parsing. Support ISO 8601 formats including the T separator and timezone offsets. Use `datetime.fromisoformat` (Python 3.11+). If a timestamp cannot be parsed, skip the event and log a warning instead of crashing.
+Let's settle the timezone/type contract next, since it decides which events get selected. Harden the timestamp parsing: support ISO 8601 including the T separator and timezone offsets, using `datetime.fromisoformat`. If a timestamp cannot be parsed, skip that event and log a warning instead of crashing the batch.
 ````
 
 ## Questioning timezone defaults
 
 ````text
-Is treating naive timestamps as UTC the right default? Our event data comes from servers in multiple timezones.
+Is treating naive timestamps as UTC the right default? Our event data comes from servers in multiple timezones. Just discuss, do not edit the file yet.
 ````
 
-## Fixing duplicates and validation
+## Finishing the robustness pass
 
 ````text
-Two more changes: (1) Store unique event types per user using a set, converting to a sorted list for the JSON output. (2) Add input validation — if the "events" key is missing or not a list, raise a ValueError with a clear message.
+We audited the emitters and confirmed they all log UTC, so keep the documented naive-assumed-UTC contract. Now finish the robustness pass with three changes: (1) store each user's event types as a set, converted to a sorted list for the JSON output, so duplicates collapse; (2) validate the input shape: if the 'events' key is missing or is not a list, raise ValueError with a clear message; (3) guard the stats loop so an event missing 'user_id' or 'type' is skipped and counted, add a skipped_events count to the summary, and log a one-line info summary at the end.
 ````
 
 ## Requesting self-critique and tests
 
 ````text
-Critique the final version. What edge cases or failure modes remain? Then propose five test cases that would verify the fixes we made.
+Critique the final version: what edge cases or failure modes remain after our fixes? Then write a focused pytest suite in test_event_processor.py covering the fixes we made, and run it with `pytest -q`.
 ````

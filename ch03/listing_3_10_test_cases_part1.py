@@ -1,4 +1,4 @@
-"""Listing 3.10: Test cases, part 1.
+"""Listing 3.10: Generated tests, part 1: harness and filtering
 
 From "Working with AI as a Real Teammate" (Manning)
 Chapter 3
@@ -6,55 +6,42 @@ Chapter 3
 
 import json
 from datetime import datetime, timezone
-from pathlib import Path
 
 import pytest
 
 from event_processor import process_events
 
-START = datetime(
-    2024, 1, 1, tzinfo=timezone.utc
-)
-END = datetime(
-    2024, 12, 31, tzinfo=timezone.utc
-)
+UTC = timezone.utc
+JAN15 = datetime(2024, 1, 15, tzinfo=UTC)
+JAN16 = datetime(2024, 1, 16, tzinfo=UTC)
 
 
-def write_json(path: Path, data: dict):
-    path.write_text(json.dumps(data))
-
-
-def test_empty_results_no_crash(
-    tmp_path,
-):
+def _run(tmp_path, events,
+         start=JAN15, end=JAN16):
     inp = tmp_path / "in.json"
+    inp.write_text(
+        json.dumps({"events": events}),
+        encoding="utf-8",
+    )
     out = tmp_path / "out.json"
-    write_json(inp, {"events": []})
-
-    result = process_events(
-        str(inp), str(out), START, END
-    )
-    assert result["total_events"] == 0
-    assert result["avg_events_per_user"] == 0
-
-
-def test_bad_timestamp_is_skipped(
-    tmp_path,
-):
-    inp = tmp_path / "in.json"
-    out = tmp_path / "out.json"
-    write_json(
-        inp,
-        {"events": [
-            {
-                "timestamp": "not-a-date",
-                "user_id": "u1",
-                "type": "click",
-            }
-        ]},
+    return process_events(
+        str(inp), str(out), start, end
     )
 
-    result = process_events(
-        str(inp), str(out), START, END
-    )
-    assert result["skipped_events"] == 1
+
+def test_empty_input_zero_average(tmp_path):
+    summary = _run(tmp_path, [])
+    assert summary["total_events"] == 0
+    assert summary["avg_events"] == 0
+
+
+def test_bad_timestamp_is_skipped(tmp_path):
+    events = [
+        {"user_id": "u1", "type": "click",
+         "timestamp": "2024-01-15T10:00:00Z"},
+        {"user_id": "u2", "type": "view",
+         "timestamp": "not-a-date"},
+    ]
+    summary = _run(tmp_path, events)
+    assert summary["total_events"] == 1
+    assert "u2" not in summary["per_user"]

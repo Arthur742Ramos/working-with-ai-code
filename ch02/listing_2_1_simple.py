@@ -1,4 +1,4 @@
-"""Listing 2.1: Naive PR generator: no contract, no validation
+"""Listing 2.1: Simple PR generator: no contract, no validation
 
 From "Working with AI as a Real Teammate" (Manning)
 Chapter 2
@@ -6,6 +6,7 @@ Chapter 2
 
 import subprocess
 from llm_client import chat
+
 
 def get_git_diff() -> str:
     """Get the staged git diff."""
@@ -15,6 +16,7 @@ def get_git_diff() -> str:
         text=True
     )
     return result.stdout
+
 
 def generate_pr_description(diff: str) -> str:
     """Generate a PR description using AI."""
@@ -27,6 +29,7 @@ def generate_pr_description(diff: str) -> str:
         messages=[{"role": "user", "content": prompt}],
         max_tokens=1024
     )
+
 
 if __name__ == "__main__":
     diff = get_git_diff()

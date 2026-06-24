@@ -1,4 +1,4 @@
-<!-- Listing 5.4: Transform pattern — SQL to ORM
+<!-- Listing 5.4: Transform category: SQL to ORM
 
 From "Working with AI as a Real Teammate" (Manning)
 Chapter 5

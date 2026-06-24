@@ -1,7 +1,14 @@
+"""Listing 4.5: A quick smoke test function for AI-generated code
+
+From "Working with AI as a Real Teammate" (Manning)
+Chapter 4
+"""
+
 import os
 import subprocess
 import tempfile
 import sys
+
 
 def smoke_test(code: str) -> dict:
     """Run AI-generated code in isolation."""
@@ -13,11 +20,11 @@ def smoke_test(code: str) -> dict:
         f.write(code)
         f.flush()
     try:
-        result = subprocess.run(          #A
+        result = subprocess.run(
             [sys.executable, f.name],
             capture_output=True,
             text=True,
-            timeout=10                    #B
+            timeout=10
         )
     except subprocess.TimeoutExpired:
         return {
@@ -26,7 +33,7 @@ def smoke_test(code: str) -> dict:
             "stderr": "Timed out after 10 seconds"
         }
     finally:
-        os.unlink(f.name)                 #C
+        os.unlink(f.name)
 
     return {
         "success": result.returncode == 0,

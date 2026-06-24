@@ -8,14 +8,15 @@ from llm_client import chat
 
 SYSTEM_PROMPT = """You are a senior software
 engineer writing pull request descriptions. Your
-descriptions are thorough, specific, and help 
-reviewers understand exactly what changed and 
+descriptions are thorough, specific, and help
+reviewers understand exactly what changed and
 why. You always assess risks honestly."""
+
 
 def generate_pr_description(diff: str) -> str:
     """Generate a structured PR description."""
     prompt = f"""Analyze the following git diff
-and produce a PR description with these exact 
+and produce a PR description with these exact
 sections:
 
 TITLE: A concise title (max 72 characters)

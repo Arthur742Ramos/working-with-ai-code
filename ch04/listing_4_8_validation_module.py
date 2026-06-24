@@ -1,18 +1,19 @@
-"""User registration input validation."""
-import re
-from dataclasses import dataclass
+"""Listing 4.8: AI-generated validation module to be verified
 
-@dataclass
-class ValidationResult:
-    valid: bool
-    errors: list[str]
+From "Working with AI as a Real Teammate" (Manning)
+Chapter 4
+"""
+
+import re
+
 
 def validate_email(email: str) -> bool:
     """Validate email format."""
-    pattern = r"^[a-zA-Z0-9._%+-]+@"     #A
+    pattern = r"^[a-zA-Z0-9._%+-]+@"
     pattern += r"[a-zA-Z0-9.-]+\."
     pattern += r"[a-zA-Z]{2,}$"
     return bool(re.match(pattern, email))
+
 
 def validate_password(
     password: str
@@ -28,6 +29,7 @@ def validate_password(
     if not re.search(r"[0-9]", password):
         errors.append("Need one digit")
     return errors
+
 
 def validate_username(
     username: str
@@ -45,23 +47,3 @@ def validate_username(
             "Only letters, numbers, _"
         )
     return errors
-
-def validate_registration(
-    email: str,
-    password: str,
-    username: str
-) -> ValidationResult:
-    """Validate full registration input."""
-    errors = []
-    if not validate_email(email):
-        errors.append("Invalid email format")
-    errors.extend(
-        validate_password(password)
-    )
-    errors.extend(
-        validate_username(username)
-    )
-    return ValidationResult(
-        valid=len(errors) == 0,
-        errors=errors
-    )

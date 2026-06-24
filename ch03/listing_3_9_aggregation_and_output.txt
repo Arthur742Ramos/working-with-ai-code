@@ -1,5 +1,11 @@
-    users: dict[str, dict] = {}
+    users = {}
+    skipped_events = 0
     for event in results:
+        if (not isinstance(event, dict)
+                or "user_id" not in event
+                or "type" not in event):
+            skipped_events += 1
+            continue
         user = event["user_id"]
         if user not in users:
             users[user] = {
@@ -11,34 +17,28 @@
             event["type"]
         )
 
-    for info in users.values():
-        info["types"] = sorted(
-            info["types"]
+    for stats in users.values():
+        stats["types"] = sorted(
+            stats["types"]
         )
 
-    avg = (
-        len(results) / len(users)
-        if users
-        else 0
-    )
+    counted = len(results) - skipped_events
     summary = {
-        "total_events": len(results),
+        "total_events": counted,
         "unique_users": len(users),
-        "skipped_events": skipped,
         "per_user": users,
-        "avg_events_per_user": round(
-            avg, 2
+        "skipped_events": skipped_events,
+        "avg_events": (
+            counted / len(users)
+            if users else 0
         ),
     }
 
-    with open(output_path, "w") as out:
-        json.dump(summary, out, indent=2)
-
     logger.info(
-        "Processed %d events for %d users"
-        " (%d skipped)",
-        len(results),
-        len(users),
-        skipped,
+        "Summary: %d counted, %d skipped, "
+        "%d users",
+        counted, skipped_events, len(users),
     )
+    with open(output_path, "w") as out:
+        json.dump(summary, out)
     return summary

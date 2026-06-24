@@ -1,7 +1,14 @@
+"""Listing 4.6: Property-based testing for AI-generated code
+
+From "Working with AI as a Real Teammate" (Manning)
+Chapter 4
+"""
+
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
-@given(                                   #A
+
+@given(
     price=st.decimals(
         min_value=0,
         max_value=10000,
@@ -21,7 +28,8 @@ def test_tax_is_never_negative(
     result = calculate_tax(
         float(price), float(rate)
     )
-    assert result >= 0                    #B
+    assert result >= 0
+
 
 @given(
     price=st.decimals(
@@ -35,4 +43,4 @@ def test_zero_rate_means_zero_tax(price):
     result = calculate_tax(
         float(price), 0.0
     )
-    assert result == 0.0                  #C
+    assert result == 0.0

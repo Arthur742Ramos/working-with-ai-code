@@ -1,4 +1,3 @@
-httpx
 hypothesis
 pytest
 mypy
