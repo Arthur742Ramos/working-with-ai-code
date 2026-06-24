@@ -1,28 +1,28 @@
-Issues found:
+Critical
+  1. ZeroDivisionError on empty results
+     (lines 38-40): 0/0 whenever no events
+     fall in the date range. A quiet day
+     crashes the job.
 
-1. [CRITICAL] Lines 6-7: File opened without
-   context manager. If json.load() raises an
-   exception, the file handle leaks.
+Major
+  2. Input file never closed (lines 7-8):
+     no context manager, so json.load leaks
+     the handle.
+  3. Output file leaks on failure and is
+     truncated on partial write (lines
+     43-45): "w" empties it before json.dump.
+  4. Missing encoding="utf-8" on both open()
+     calls: on Windows the default is cp1252,
+     so non-ASCII data breaks.
+  5. One malformed event aborts the whole
+     batch; nothing validates data["events"];
+     strptime returns a naive datetime that
+     breaks against aware bounds.
 
-2. [CRITICAL] Line 34: Division by zero when
-   no users match the date filter
-   (len(users) == 0).
+Minor: unhandled FileNotFoundError; whole
+file loaded into memory; types accumulates
+duplicates; no logging.
 
-3. [MAJOR] Lines 10-12: Timestamp parsing
-   assumes a single format with no timezone.
-   ISO 8601 timestamps with 'T' separator or
-   timezone offsets will raise ValueError.
-
-4. [MAJOR] Lines 36-37: Output file opened
-   without context manager. If json.dump()
-   fails, the file is not closed and partial
-   output may remain.
-
-5. [MAJOR] Line 24: Event types list grows
-   without bound and includes duplicates.
-   For users with many events, memory usage
-   is unbounded.
-
-6. [MINOR] No input validation on data
-   structure. Missing "events" key causes
-   an unhandled KeyError.
+The two I'd fix before anything ships: #1
+(crashes on ordinary empty input) and #2/#3
+(descriptor leaks and corruptible output).

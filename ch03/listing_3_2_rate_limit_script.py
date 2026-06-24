@@ -1,4 +1,4 @@
-"""Listing 3.2: Branch B result, part 1: Redis sliding-window script.
+"""Listing 3.2: Branch B result, part 1: Redis sliding-window script
 
 From "Working with AI as a Real Teammate" (Manning)
 Chapter 3

@@ -8,36 +8,6 @@ Prompt blocks extracted from the current manuscript source.
 I need a Python library to validate email addresses according to RFC 5321. What do you recommend?
 ````
 
-## HTTPX JSON POST request
-
-````text
-How do I make an HTTP POST request with a JSON body and a 10-second timeout in Python using httpx?
-````
-
-## SQLAlchemy pool default question
-
-````text
-What is the default maximum connection pool size for SQLAlchemy when using PostgreSQL?
-````
-
-## Current UTC time in Python
-
-````text
-How do I get the current UTC time in Python?
-````
-
-## Slow orders query explanation
-
-````text
-This query is slow on a table with 5 million rows:
-```sql
-SELECT * FROM orders
-WHERE customer_id = 42 AND status = 'pending'
-ORDER BY created_at DESC LIMIT 10;
-```
-I have an index on `(status, created_at)`. Why is it still doing a sequential scan?
-````
-
 ## Devil's advocate critique
 
 ````text
@@ -66,9 +36,9 @@ For each category, either identify a specific concern or explain why it does not
 You recommended using Redis for caching. Now argue the case for NOT using Redis. What are the strongest reasons to choose a different approach?
 ````
 
-## Known-answer regression check
+## Regression check against known answers
 
-````text
+`````text
 Here is a working function that I know is correct:
 
 ```python
@@ -82,7 +52,7 @@ Your proposed refactored version should produce identical results for these inpu
 - calculate_tax(0.01, 0.10) -> 0.0
 
 Walk through each case with your version and confirm the output matches.
-````
+`````
 
 ## Broad Django performance request
 
@@ -96,8 +66,32 @@ My Django application is slow. How can I improve performance?
 You said to "optimize the database queries." Which specific queries in the code I shared would you optimize, and how? Show me the before and after for each one.
 ````
 
-## Django QuerySet evaluation follow-up
+## Handing the agent the incident
 
 ````text
-Can you explain exactly when the Django ORM evaluates a QuerySet? I'm using select_related with pagination and I'm not sure when the actual SQL runs.
+We have a SEV-2 on order-service. The `/orders/{id}/summary` endpoint is intermittently slow and throwing 500s since 14:30. No deploy went out; the only change was a bulk product-catalog import last night. The brief is in `code/ch04/incident_demo/incident.md`. Reproduce it locally and find the cause or causes before proposing anything.
+````
+
+## Chase the deterministic failure first
+
+````text
+Start with the 500s, since they are deterministic. Why does the same order fail every time?
+````
+
+## Now the latency tail
+
+````text
+That explains the 500s. Now the tail: why only large orders, and why does it seem to warm up after a restart?
+````
+
+## The smallest correct fix, as a diff
+
+````text
+Propose the minimal correct fix for both causes. Implement it as a diff against the original `server.py` without editing the shipped file, and prove the diff applies cleanly.
+````
+
+## Prove it on the numbers, and be honest
+
+````text
+Now verify it actually moves the numbers. Re-run the same load test against the fixed copy, show me before and after, and be honest if the tail did not move as much as you expected.
 ````

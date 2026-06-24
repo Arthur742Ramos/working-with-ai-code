@@ -1,4 +1,4 @@
-<!-- Listing 5.5: Generate pattern — API endpoint with full contract
+<!-- Listing 5.5: Generate category: API endpoint with full contract
 
 From "Working with AI as a Real Teammate" (Manning)
 Chapter 5

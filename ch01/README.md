@@ -1,6 +1,8 @@
-# Chapter 1: Working with AI -- from magic to tool
+# Chapter 1: From magic to tool
 
-This chapter introduces the 3C Loop (Contract, Conversation, Checks) and does not include runnable code listings. Instead, it provides prompt examples that illustrate the difference between vague prompts and contract-style prompts.
+This chapter introduces the 3C Loop (Contract, Conversation, Checks) and does not include numbered code listings. Instead, it uses prompt examples that illustrate the difference between vague prompts and contract-style prompts, then traces two complete 3C Loop conversations.
+
+See [`PROMPTS.md`](PROMPTS.md) for the conversation prompts used in the worked examples (the Alembic migration and the rate-limiting walkthrough).
 
 ## Key Prompts
 
@@ -39,6 +41,7 @@ Include both upgrade and downgrade functions.
 ## Concepts Introduced
 
 - The myth of magic prompts
-- Prompts as contracts (role, task, constraints, context)
+- Prompts as contracts (task, constraints, context, output format)
 - The 3C Loop: Contract, Conversation, Checks
-- Judgment as the scarce skill
+- Just-enough machinery: next-token prediction, context windows, temperature, hallucination
+- Judgment as the scarce skill AI will not replace

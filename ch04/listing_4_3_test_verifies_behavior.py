@@ -1,3 +1,10 @@
+"""Listing 4.3: A test that verifies behavior
+
+From "Working with AI as a Real Teammate" (Manning)
+Chapter 4
+"""
+
+
 def test_process_order_calculates_total():
     """Test that processing sums item prices."""
     order = {
@@ -9,6 +16,6 @@ def test_process_order_calculates_total():
         "status": "pending"
     }
     result = process_order(order)
-    assert result["status"] == "completed"  #A
-    assert result["total"] == 24.98         #B
-    assert result["item_count"] == 2        #C
+    assert result["status"] == "completed"
+    assert result["total"] == 24.98
+    assert result["item_count"] == 2

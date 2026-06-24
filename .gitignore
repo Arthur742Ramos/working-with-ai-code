@@ -4,3 +4,4 @@ __pycache__/
 venv/
 pr_description.json
 .mypy_cache/
+.impeccable/

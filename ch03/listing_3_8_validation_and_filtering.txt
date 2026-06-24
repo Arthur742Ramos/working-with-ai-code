@@ -1,31 +1,36 @@
-def process_events(
-    input_path: str,
-    output_path: str,
-    start_date: datetime,
-    end_date: datetime,
-) -> dict:
+def process_events(input_path, output_path,
+                   start_date, end_date):
+    """Process events; see the module
+    docstring for the timezone contract."""
     with open(input_path) as f:
         data = json.load(f)
 
-    events = data.get("events")
-    if events is None:
+    if not isinstance(data, dict) or \
+            "events" not in data:
         raise ValueError(
-            "Missing 'events' key in "
-            "input data"
+            "input must be an object with "
+            "an 'events' key"
         )
-    if not isinstance(events, list):
+    if not isinstance(data["events"], list):
         raise ValueError(
             "'events' must be a list"
         )
 
+    start_date = _to_utc(start_date)
+    end_date = _to_utc(end_date)
+
     results = []
-    skipped = 0
-    for event in events:
-        ts = parse_timestamp(
-            event.get("timestamp", "")
-        )
-        if ts is None:
-            skipped += 1
+    for event in data["events"]:
+        ts = (event.get("timestamp")
+              if isinstance(event, dict)
+              else event)
+        try:
+            event_date = _parse_timestamp(ts)
+        except (ValueError, TypeError) as exc:
+            logger.warning(
+                "Skipping unparseable "
+                "timestamp %r: %s", ts, exc
+            )
             continue
-        if start_date <= ts <= end_date:
+        if start_date <= event_date <= end_date:
             results.append(event)

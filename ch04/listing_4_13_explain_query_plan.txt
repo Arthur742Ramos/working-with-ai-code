@@ -1,0 +1,7 @@
+$ sqlite3 shop.db
+> EXPLAIN QUERY PLAN
+    SELECT code, name, price FROM products
+    WHERE code = ?;
+SCAN products
+> .indexes products
+(no index on products.code)

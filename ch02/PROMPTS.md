@@ -25,6 +25,14 @@ Review this code in three steps:
 3. Finally, propose fixes for each issue, explaining why each fix works
 ````
 
+## Ask for a PR description
+
+````text
+Write a PR description for this diff:
+
+[the staged git diff]
+````
+
 ## Retry: JSON parse error
 
 ````text
@@ -34,5 +42,5 @@ That JSON was invalid: Expecting value: line 1 column 1 (char 0). Fix it to matc
 ## Retry: schema validation error
 
 ````text
-That JSON was invalid: ['Validates registration input'] is too short. Fix it to match the schema.
+That JSON was invalid: ['Test invalid email'] is too short. Fix it to match the schema.
 ````
