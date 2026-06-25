@@ -74,17 +74,41 @@ examples, and [`ch01/README.md`](ch01/README.md) for the index.
 - [`listing_5_7_target_schema.sql`](ch05/listing_5_7_target_schema.sql) — Listing 5.7: Target schema (`accounts` and audit)
 - [`PROMPTS.md`](ch05/PROMPTS.md) — Prompt blocks from the current manuscript draft
 
+### Chapter 6
+
+- [`importer.py`](ch06/importer.py) — Listings 6.1–6.3: Parsing rows and deriving a stable idempotency key; Building requests and retrying transient failures; Running a dry import
+- [`test_importer.py`](ch06/test_importer.py) — The chapter 6 pytest suite: one test per slice's inspection question
+- [`PROMPTS.md`](ch06/PROMPTS.md) — Prompt blocks from the current manuscript draft
+
+### Chapter 7
+
+- [`validator.py`](ch07/validator.py) — Listing 7.1: The coder's validator implementation
+- [`test_validator.py`](ch07/test_validator.py) — Listing 7.2: Adversarial tests for the validator
+- [`cli.py`](ch07/cli.py) — Listing 7.3: A thin CLI runner for the validator
+- [`listing_7_4_tool_use_loop.py`](ch07/listing_7_4_tool_use_loop.py) — Listing 7.4: A minimal tool-use loop
+- [`PROMPTS.md`](ch07/PROMPTS.md) — Prompt blocks from the current manuscript draft
+
+Chapters 6 and 7 are runnable projects with passing pytest suites:
+`cd ch06 && python3 -m pytest -q` prints `6 passed`, and
+`cd ch07 && python3 -m pytest -q` prints `8 passed`.
+
 ## Running the Code
 
 ```bash
 pip install -r ch02/requirements.txt \
     -r ch03/requirements.txt \
-    -r ch04/requirements.txt
+    -r ch04/requirements.txt \
+    -r ch06/requirements.txt \
+    -r ch07/requirements.txt
 ```
 
 Chapter 1 has no listings. Chapter 5 listings are mostly prompt templates
 (Markdown files) and SQL schemas rather than runnable Python code, so that
 chapter has no `requirements.txt`.
+
+Chapters 6 and 7 are self-contained, runnable projects. Each needs only
+`pytest`; from the chapter directory, run `python3 -m pytest -q` (`6 passed`
+for ch06, `8 passed` for ch07).
 
 Chapter 2 listings share a small provider-neutral client in
 [`llm_client.py`](llm_client.py). Set these environment variables:
