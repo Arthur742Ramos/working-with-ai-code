@@ -1,4 +1,4 @@
-"""Listing 7.4: A minimal tool-use loop.
+"""Listing 7.5: A minimal tool-use loop.
 
 This is an illustrative snippet, not a runnable program. It references
 names that are intentionally undefined here (`chat`, `run`, `MAX_STEPS`,
