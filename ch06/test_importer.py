@@ -33,6 +33,15 @@ def test_parse_rejects_missing_fields():
     raise AssertionError("expected ValueError for missing source_id")
 
 
+def test_parse_strips_whitespace_and_lowercases_email():
+    row = parse_customer(
+        {"source_id": " C-1 ", "email": " X@Y.CO ", "name": " Ann "}
+    )
+    assert row.source_id == "C-1"
+    assert row.email == "x@y.co"
+    assert row.name == "Ann"
+
+
 def test_key_is_stable_for_same_source_id():
     a = parse_customer({"source_id": "C-1", "email": "x@y.co", "name": "X"})
     b = parse_customer({"source_id": "C-1", "email": "z@y.co", "name": "X"})
