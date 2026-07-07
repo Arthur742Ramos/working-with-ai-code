@@ -88,9 +88,18 @@ examples, and [`ch01/README.md`](ch01/README.md) for the index.
 - [`listing_7_5_tool_use_loop.py`](ch07/listing_7_5_tool_use_loop.py) — Listing 7.5: A minimal tool-use loop
 - [`PROMPTS.md`](ch07/PROMPTS.md) — Prompt blocks from the current manuscript draft
 
-Chapters 6 and 7 are runnable projects with passing pytest suites:
-`cd ch06 && python3 -m pytest -q` prints `6 passed`, and
-`cd ch07 && python3 -m pytest -q` prints `8 passed`.
+### Chapter 8
+
+- [`allocation.py`](ch08/allocation.py) — Listing 8.1: Proportional money allocation; floors each share, then hands the leftover cents to the largest fractional parts so the shares sum to exactly `total`
+- [`sanity.py`](ch08/sanity.py) — Listing 8.2: Cheap, implementation-independent checks (`conserves` and `is_fair`)
+- [`test_allocation.py`](ch08/test_allocation.py) — Listing 8.3: Adversarial tests, one per category the tester and red-team prompts named
+- [`test_golden.py`](ch08/test_golden.py) — Listing 8.4: A frozen golden set, evaluation made executable
+- [`PROMPTS.md`](ch08/PROMPTS.md) — Prompt blocks from the current manuscript draft
+
+Chapters 6, 7, and 8 are runnable projects with passing pytest suites:
+`cd ch06 && python3 -m pytest -q` prints `6 passed`,
+`cd ch07 && python3 -m pytest -q` prints `8 passed`, and
+`cd ch08 && python3 -m pytest -q` prints `9 passed`.
 
 ## Running the Code
 
@@ -99,16 +108,17 @@ pip install -r ch02/requirements.txt \
     -r ch03/requirements.txt \
     -r ch04/requirements.txt \
     -r ch06/requirements.txt \
-    -r ch07/requirements.txt
+    -r ch07/requirements.txt \
+    -r ch08/requirements.txt
 ```
 
 Chapter 1 has no listings. Chapter 5 listings are mostly prompt templates
 (Markdown files) and SQL schemas rather than runnable Python code, so that
 chapter has no `requirements.txt`.
 
-Chapters 6 and 7 are self-contained, runnable projects. Each needs only
-`pytest`; from the chapter directory, run `python3 -m pytest -q` (`6 passed`
-for ch06, `8 passed` for ch07).
+Chapters 6, 7, and 8 are self-contained, runnable projects. Each needs
+only `pytest`; from the chapter directory, run `python3 -m pytest -q`
+(`6 passed` for ch06, `8 passed` for ch07, `9 passed` for ch08).
 
 Chapter 2 listings share a small provider-neutral client in
 [`llm_client.py`](llm_client.py). Set these environment variables:
