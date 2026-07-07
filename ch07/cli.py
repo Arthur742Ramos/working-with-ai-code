@@ -1,4 +1,4 @@
-"""Thin CLI runner for the validator (listing 7.3).
+"""Thin CLI runner for the validator (listing 7.4).
 
 Parses arguments, loads the schema and config JSON files, calls
 `validate`, prints one line per error in dotted-path format, and exits 0

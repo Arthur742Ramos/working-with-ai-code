@@ -83,9 +83,9 @@ examples, and [`ch01/README.md`](ch01/README.md) for the index.
 ### Chapter 7
 
 - [`validator.py`](ch07/validator.py) — Listing 7.1: The coder's validator implementation
-- [`test_validator.py`](ch07/test_validator.py) — Listing 7.2: Adversarial tests for the validator
-- [`cli.py`](ch07/cli.py) — Listing 7.3: A thin CLI runner for the validator
-- [`listing_7_4_tool_use_loop.py`](ch07/listing_7_4_tool_use_loop.py) — Listing 7.4: A minimal tool-use loop
+- [`test_validator.py`](ch07/test_validator.py) — Listings 7.2 and 7.3: Adversarial tests for the validator (core cases and boundary cases)
+- [`cli.py`](ch07/cli.py) — Listing 7.4: A thin CLI runner for the validator
+- [`listing_7_5_tool_use_loop.py`](ch07/listing_7_5_tool_use_loop.py) — Listing 7.5: A minimal tool-use loop
 - [`PROMPTS.md`](ch07/PROMPTS.md) — Prompt blocks from the current manuscript draft
 
 Chapters 6 and 7 are runnable projects with passing pytest suites:
