@@ -118,14 +118,14 @@ examples, and [`ch01/README.md`](ch01/README.md) for the index.
 - [`manual_check.py`](ch10/manual_check.py): Listing 10.4, deterministic handler-to-SQLite output
 - [`AGENTS.md`](ch10/AGENTS.md): Path-scoped rules for coding agents
 - [`PROMPTS.md`](ch10/PROMPTS.md): Prompt blocks from the current manuscript draft
-- [`captures/README.md`](ch10/captures/README.md): Optional controlled red-to-green reproduction
+- [`captures/README.md`](ch10/captures/README.md): Optional controlled red-to-green reproductions
 
 Chapters 6 through 10 are runnable projects with passing pytest suites:
 `cd ch06 && python3 -m pytest -q` prints `7 passed`,
 `cd ch07 && python3 -m pytest -q` prints `8 passed`,
 `cd ch08 && python3 -m pytest -q` and
 `cd ch09 && python3 -m pytest -q` each print `9 passed`, and
-`cd ch10 && python3 -m pytest -q` prints `47 passed`. Chapter 9's
+`cd ch10 && python3 -m pytest -q` prints `49 passed`. Chapter 9's
 deterministic red-to-green commands are documented in
 [`ch09/README.md`](ch09/README.md).
 
@@ -149,7 +149,7 @@ chapter has no `requirements.txt`.
 Chapters 6 through 10 are self-contained, runnable projects. Each needs
 only `pytest`; from the chapter directory, run `python3 -m pytest -q`.
 Chapter 9 documents its red-to-green exercise in `ch09/README.md`.
-Chapter 10 requires CPython 3.11 or newer and reports `47 passed` on
+Chapter 10 requires CPython 3.11 or newer and reports `49 passed` on
 the published snapshot.
 
 Chapter 2 listings share a small provider-neutral client in
