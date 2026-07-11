@@ -96,10 +96,24 @@ examples, and [`ch01/README.md`](ch01/README.md) for the index.
 - [`test_golden.py`](ch08/test_golden.py) — Listing 8.4: A frozen golden set, evaluation made executable
 - [`PROMPTS.md`](ch08/PROMPTS.md) — Prompt blocks from the current manuscript draft
 
-Chapters 6, 7, and 8 are runnable projects with passing pytest suites:
+### Chapter 9
+
+- [`AGENTS.md`](ch09/AGENTS.md) - Repository-level instructions that define the approved outbound HTTP boundary
+- [`alerts.py`](ch09/alerts.py) - The house-correct alert feature that uses `http_client.call`
+- [`http_client.py`](ch09/http_client.py) - The injectable, fail-closed house HTTP client with auth and bounded retries
+- [`test_alerts.py`](ch09/test_alerts.py) - Behavior checks for routing, auth, and failure responses
+- [`test_house_rules.py`](ch09/test_house_rules.py) - Executable AST guard against direct HTTP transports
+- [`test_http_client.py`](ch09/test_http_client.py) - Credential, retry, and no-network checks
+- [`fixtures/direct_requests/alerts.py`](ch09/fixtures/direct_requests/alerts.py) - Deterministic red-state fixture for the coding-agent session
+- [`PROMPTS.md`](ch09/PROMPTS.md) - The context-aware coding-agent prompt
+
+Chapters 6, 7, 8, and 9 are runnable projects with passing pytest suites:
 `cd ch06 && python3 -m pytest -q` prints `6 passed`,
 `cd ch07 && python3 -m pytest -q` prints `8 passed`, and
-`cd ch08 && python3 -m pytest -q` prints `9 passed`.
+`cd ch08 && python3 -m pytest -q` and
+`cd ch09 && python3 -m pytest -q` each print `9 passed`. Chapter 9's
+deterministic red-to-green commands are documented in
+[`ch09/README.md`](ch09/README.md).
 
 ## Running the Code
 
@@ -109,16 +123,18 @@ pip install -r ch02/requirements.txt \
     -r ch04/requirements.txt \
     -r ch06/requirements.txt \
     -r ch07/requirements.txt \
-    -r ch08/requirements.txt
+    -r ch08/requirements.txt \
+    -r ch09/requirements.txt
 ```
 
 Chapter 1 has no listings. Chapter 5 listings are mostly prompt templates
 (Markdown files) and SQL schemas rather than runnable Python code, so that
 chapter has no `requirements.txt`.
 
-Chapters 6, 7, and 8 are self-contained, runnable projects. Each needs
+Chapters 6, 7, 8, and 9 are self-contained, runnable projects. Each needs
 only `pytest`; from the chapter directory, run `python3 -m pytest -q`
-(`6 passed` for ch06, `8 passed` for ch07, `9 passed` for ch08).
+(`6 passed` for ch06, `8 passed` for ch07, and `9 passed` for both ch08 and
+ch09; see the chapter 9 README for its red-to-green exercise).
 
 Chapter 2 listings share a small provider-neutral client in
 [`llm_client.py`](llm_client.py). Set these environment variables:
