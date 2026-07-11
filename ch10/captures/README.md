@@ -15,8 +15,7 @@ Use a clean clone or disposable branch. From the companion repository root:
 ```bash
 git switch -c ch10-controlled-service
 
-git apply --unidiff-zero \
-  ch10/captures/service-slice-before.patch
+git apply --unidiff-zero ch10/captures/service-slice-before.patch
 cd ch10
 python3 -m venv .venv
 .venv/bin/python -m pip install -r requirements.txt
@@ -51,5 +50,18 @@ git restore tests/test_service.py
 git status --short
 ```
 
-On native Windows PowerShell, use `.venv\Scripts\python` in place of
-`.venv/bin/python`. The Git commands are unchanged.
+On native Windows PowerShell, use the Windows launcher and virtual-environment
+path:
+
+```powershell
+git switch -c ch10-controlled-service
+git apply --unidiff-zero ch10/captures/service-slice-before.patch
+cd ch10
+py -3 -m venv .venv
+.venv\Scripts\python -m pip install -r requirements.txt
+.venv\Scripts\python -m pytest -q tests/test_service.py
+git restore reminders/service.py
+.venv\Scripts\python -m pytest -q tests/test_service.py
+git restore tests/test_service.py
+git status --short
+```
