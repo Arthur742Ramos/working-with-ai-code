@@ -67,8 +67,8 @@ The minimal fix is the same change made in the final `alerts.py`:
 ...
 -    response = requests.post(ALERTS_URL, json={"text": message})
 -    return response.status_code < 400
-+    resp = call("POST", ALERTS_URL, json={"text": message})
-+    return resp.status < 400
++    response = call("POST", ALERTS_URL, json={"text": message})
++    return response.status < 400
 ```
 
 For the captured session, those three lines were changed in the fixture, the
