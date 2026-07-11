@@ -7,5 +7,5 @@ ALERTS_URL = "https://alerts.example.com/api/v1/send"
 
 def send_alert(message: str) -> bool:
     """Post one alert and report whether the endpoint accepted it."""
-    response = call("POST", ALERTS_URL, json={"text": message})
-    return response.status < 400
+    resp = call("POST", ALERTS_URL, json={"text": message})
+    return resp.status < 400
