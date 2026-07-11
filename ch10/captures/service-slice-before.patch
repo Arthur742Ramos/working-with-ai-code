@@ -1,0 +1,135 @@
+diff --git a/ch10/reminders/service.py b/ch10/reminders/service.py
+index eedfa8d..fc6b73d 100644
+--- a/ch10/reminders/service.py
++++ b/ch10/reminders/service.py
+@@ -1,12 +1,7 @@
+-from dataclasses import replace
+-from datetime import datetime, timedelta, timezone
++from datetime import datetime, timezone
+ from typing import Protocol
+ 
+-from reminders.domain import (
+-    Reminder,
+-    ReminderStatus,
+-    normalize_utc,
+-)
++from reminders.domain import Reminder
+ 
+ 
+ ALLOWED_MINUTES = frozenset({5, 15, 30, 60})
+@@ -38,15 +33,6 @@ class ReminderRepository(Protocol):
+     def save(self, reminder: Reminder) -> Reminder: ...
+ 
+ 
+-class SnoozeService(Protocol):
+-    def execute(
+-        self,
+-        user_id: str,
+-        reminder_id: str,
+-        minutes: int,
+-    ) -> Reminder: ...
+-
+-
+ class SystemClock:
+     def now(self) -> datetime:
+         return datetime.now(timezone.utc)
+@@ -67,24 +53,4 @@ class SnoozeReminderService:
+         reminder_id: str,
+         minutes: int,
+     ) -> Reminder:
+-        if (
+-            type(minutes) is not int
+-            or minutes not in ALLOWED_MINUTES
+-        ):
+-            raise InvalidSnoozeDuration(minutes)
+-
+-        reminder = self._repository.get_for_user(
+-            reminder_id,
+-            user_id,
+-        )
+-        if reminder is None:
+-            raise ReminderNotFound(reminder_id)
+-        if reminder.status is ReminderStatus.COMPLETED:
+-            raise ReminderCompleted(reminder_id)
+-
+-        now = normalize_utc(self._clock.now())
+-        updated = replace(
+-            reminder,
+-            snoozed_until=now + timedelta(minutes=minutes),
+-        )
+-        return self._repository.save(updated)
++        raise NotImplementedError("service slice not implemented")
+diff --git a/ch10/tests/test_service.py b/ch10/tests/test_service.py
+index 37312dc..0e7b943 100644
+--- a/ch10/tests/test_service.py
++++ b/ch10/tests/test_service.py
+@@ -80,35 +80,6 @@ def test_snooze_uses_current_time_and_saves_once() -> None:
+     assert clock.calls == 1
+ 
+ 
+-@pytest.mark.parametrize(
+-    ("minutes", "expected"),
+-    [
+-        (5, "2030-01-02T12:05:00+00:00"),
+-        (15, "2030-01-02T12:15:00+00:00"),
+-        (30, "2030-01-02T12:30:00+00:00"),
+-        (60, "2030-01-02T13:00:00+00:00"),
+-    ],
+-)
+-def test_each_allowed_duration_succeeds(
+-    minutes: int,
+-    expected: str,
+-) -> None:
+-    repository = FakeRepository([make_reminder()])
+-    service = SnoozeReminderService(
+-        repository,
+-        FrozenClock(NOW),
+-    )
+-
+-    result = service.execute(
+-        "user-7",
+-        "rem-1",
+-        minutes,
+-    )
+-
+-    assert result.snoozed_until is not None
+-    assert result.snoozed_until.isoformat() == expected
+-
+-
+ def test_repeat_snooze_replaces_previous_value() -> None:
+     original = make_reminder(
+         snoozed_until=datetime(
+@@ -144,26 +115,6 @@ def test_repeat_snooze_replaces_previous_value() -> None:
+     )
+ 
+ 
+-def test_each_execution_reads_fresh_time() -> None:
+-    repository = FakeRepository([make_reminder()])
+-    clock = FrozenClock(NOW)
+-    service = SnoozeReminderService(repository, clock)
+-
+-    first = service.execute("user-7", "rem-1", 15)
+-    clock.value = datetime(
+-        2030, 1, 2, 13, tzinfo=timezone.utc,
+-    )
+-    second = service.execute("user-7", "rem-1", 15)
+-
+-    assert first.snoozed_until == datetime(
+-        2030, 1, 2, 12, 15, tzinfo=timezone.utc,
+-    )
+-    assert second.snoozed_until == datetime(
+-        2030, 1, 2, 13, 15, tzinfo=timezone.utc,
+-    )
+-    assert clock.calls == 2
+-
+-
+ def test_missing_reminder_does_not_save() -> None:
+     repository = FakeRepository([])
+     service = SnoozeReminderService(
+@@ -263,6 +214,3 @@ def test_clock_value_is_normalized_to_utc() -> None:
+         15,
+         tzinfo=timezone.utc,
+     )
+-    assert result.snoozed_until.isoformat() == (
+-        "2030-01-02T12:15:00+00:00"
+-    )

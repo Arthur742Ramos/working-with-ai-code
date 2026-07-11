@@ -115,9 +115,10 @@ examples, and [`ch01/README.md`](ch01/README.md) for the index.
 - [`tests/test_sqlite_repository.py`](ch10/tests/test_sqlite_repository.py): Listing 10.3, a check that crosses the real SQLite row boundary
 - [`reminders/handler.py`](ch10/reminders/handler.py): Request validation and domain-outcome mapping
 - [`reminders/repository.py`](ch10/reminders/repository.py): Named row access and owner-scoped writes
-- [`manual_check.py`](ch10/manual_check.py): Deterministic handler-to-SQLite flow
+- [`manual_check.py`](ch10/manual_check.py): Listing 10.4, deterministic handler-to-SQLite output
 - [`AGENTS.md`](ch10/AGENTS.md): Path-scoped rules for coding agents
 - [`PROMPTS.md`](ch10/PROMPTS.md): Prompt blocks from the current manuscript draft
+- [`captures/README.md`](ch10/captures/README.md): Optional controlled red-to-green reproduction
 
 Chapters 6 through 10 are runnable projects with passing pytest suites:
 `cd ch06 && python3 -m pytest -q` prints `7 passed`,

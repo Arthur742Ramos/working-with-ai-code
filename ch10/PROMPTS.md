@@ -38,7 +38,7 @@ base revision, checkpoint revision, changed paths, observed checks,
 unresolved issues, and next allowed action. Do not push or publish.
 ````
 
-## Captured controlled reproduction: diagnose the SQLite row failure
+## Diagnose the SQLite row failure
 
 ````text
 The failing test is
@@ -49,7 +49,7 @@ and run only the failing test. Report the one-line cause and a one-line
 fix plan. Do not edit yet.
 ````
 
-## Captured controlled reproduction: approve the row-access repair
+## Approve the one-line repair
 
 ````text
 Approved. Apply only that row-access fix. Run the targeted integration
@@ -60,9 +60,9 @@ Show the exact diff and genuine outputs.
 ## Captured review: inspect the hosted pull request diff
 
 ````text
-Review https://github.com/Arthur742Ramos/working-with-ai-code/pull/6
-in read-only mode. Resolve and record the current head SHA before
-reviewing. Stop and report if the head changes before you finish.
+Review the frozen hosted pull request at head commit `64b9a61` in
+read-only mode. Confirm and record the head commit before reviewing.
+Stop and report if the head changes before you finish.
 Check contract fidelity, module boundaries, test discrimination,
 reader setup, and unsupported delivery claims. Do not edit files,
 weaken tests, push, merge, or expand scope.

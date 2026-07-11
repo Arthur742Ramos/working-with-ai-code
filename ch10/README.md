@@ -27,7 +27,8 @@ environment path:
 ```powershell
 git clone https://github.com/Arthur742Ramos/working-with-ai-code.git
 cd working-with-ai-code/ch10
-py -3.11 -m venv .venv
+py -3 --version
+py -3 -m venv .venv
 .venv\Scripts\python -m pip install -r requirements.txt
 .venv\Scripts\python -m pytest -q
 .venv\Scripts\python manual_check.py
@@ -65,11 +66,15 @@ simultaneous state changes.
 - Listing 10.3:
   [`tests/test_sqlite_repository.py`](tests/test_sqlite_repository.py) crosses
   the real SQLite row boundary.
+- Listing 10.4: [`manual_check.py`](manual_check.py) produces the deterministic
+  response-and-storage output printed in the chapter.
 
 ## Supporting files
 
 - [`AGENTS.md`](AGENTS.md) gives a coding agent the path-scoped operating rules.
 - [`PROMPTS.md`](PROMPTS.md) contains the chapter's prompt blocks.
+- [`captures/README.md`](captures/README.md) reproduces the controlled service
+  red-to-green path from a clean snapshot.
 - [`reminders/domain.py`](reminders/domain.py) defines the immutable domain value.
 - [`reminders/handler.py`](reminders/handler.py) validates transport data and maps
   domain outcomes.
@@ -96,6 +101,13 @@ Run a focused real-row check with:
 
 ```bash
 .venv/bin/python -m pytest -q \
+  tests/test_sqlite_repository.py::test_get_for_user_maps_unsnoozed_reminder
+```
+
+On native Windows PowerShell:
+
+```powershell
+& .\.venv\Scripts\python.exe -m pytest -q `
   tests/test_sqlite_repository.py::test_get_for_user_maps_unsnoozed_reminder
 ```
 
