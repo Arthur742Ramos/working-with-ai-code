@@ -2,23 +2,23 @@
 
 import os
 from dataclasses import dataclass
-from typing import Callable, Mapping, Optional
+from typing import Callable, Optional
 
 
-@dataclass(frozen=True)
+@dataclass
 class Response:
     status: int
     body: dict
 
 
-TRANSIENT_STATUSES = frozenset({429, 502, 503, 504})
-Transport = Callable[[str, str, Mapping[str, str], dict], Response]
+TRANSIENT = {429, 502, 503, 504}
+Transport = Callable[[str, str, dict, dict], Response]
 
 
 def _unconfigured_transport(
     method: str,
     url: str,
-    headers: Mapping[str, str],
+    headers: dict,
     body: dict,
 ) -> Response:
     raise RuntimeError(
@@ -29,10 +29,10 @@ def _unconfigured_transport(
 _transport: Transport = _unconfigured_transport
 
 
-def set_transport(transport: Transport) -> None:
+def set_transport(fn: Transport) -> None:
     """Set the single transport used by the approved client."""
     global _transport
-    _transport = transport
+    _transport = fn
 
 
 def reset_transport() -> None:
@@ -45,7 +45,7 @@ def call(
     url: str,
     *,
     json: Optional[dict] = None,
-    headers: Optional[Mapping[str, str]] = None,
+    headers: Optional[dict] = None,
     max_retries: int = 2,
 ) -> Response:
     """Apply auth and retry transient responses through one transport."""
@@ -63,7 +63,7 @@ def call(
     response = _transport(method, url, request_headers, body)
     attempts = 0
     while (
-        response.status in TRANSIENT_STATUSES
+        response.status in TRANSIENT
         and attempts < max_retries
     ):
         attempts += 1
