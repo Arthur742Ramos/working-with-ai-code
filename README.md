@@ -5,9 +5,9 @@ Code listings from the Manning book by Arthur Ramos.
 Each chapter directory mirrors that chapter's printed listings as
 standalone, reader-facing files, alongside a `README.md` index, a
 `PROMPTS.md` of the chapter's prompt blocks, and (where the code uses
-third-party packages) a `requirements.txt`. Code is provider-neutral:
-the listings import the shared [`llm_client.py`](llm_client.py) helper
-rather than any vendor SDK.
+third-party packages) a `requirements.txt`. Listings that call a model
+use the provider-neutral [`llm_client.py`](llm_client.py) helper.
+Runnable teaching projects may have no AI provider dependency at all.
 
 ## Chapters
 
@@ -107,11 +107,25 @@ examples, and [`ch01/README.md`](ch01/README.md) for the index.
 - [`fixtures/direct_requests/alerts.py`](ch09/fixtures/direct_requests/alerts.py) - Deterministic red-state fixture for the coding-agent session
 - [`PROMPTS.md`](ch09/PROMPTS.md) - The context-aware coding-agent prompt
 
-Chapters 6, 7, 8, and 9 are runnable projects with passing pytest suites:
-`cd ch06 && python3 -m pytest -q` prints `6 passed`,
-`cd ch07 && python3 -m pytest -q` prints `8 passed`, and
+### Chapter 10
+
+- [`ch10/README.md`](ch10/README.md): Setup, listing index, evidence ledger, and known limits
+- [`reminders/service.py`](ch10/reminders/service.py): Listing 10.1, snooze policy behind injected clock and repository ports
+- [`tests/test_service.py`](ch10/tests/test_service.py): Listing 10.2, service policy checked with a fake repository and frozen clock
+- [`tests/test_sqlite_repository.py`](ch10/tests/test_sqlite_repository.py): Listing 10.3, a check that crosses the real SQLite row boundary
+- [`reminders/handler.py`](ch10/reminders/handler.py): Request validation and domain-outcome mapping
+- [`reminders/repository.py`](ch10/reminders/repository.py): Named row access and owner-scoped writes
+- [`manual_check.py`](ch10/manual_check.py): Listing 10.4, deterministic handler-to-SQLite output
+- [`AGENTS.md`](ch10/AGENTS.md): Path-scoped rules for coding agents
+- [`PROMPTS.md`](ch10/PROMPTS.md): Prompt blocks from the current manuscript draft
+- [`captures/README.md`](ch10/captures/README.md): Optional controlled red-to-green reproduction
+
+Chapters 6 through 10 are runnable projects with passing pytest suites:
+`cd ch06 && python3 -m pytest -q` prints `7 passed`,
+`cd ch07 && python3 -m pytest -q` prints `8 passed`,
 `cd ch08 && python3 -m pytest -q` and
-`cd ch09 && python3 -m pytest -q` each print `9 passed`. Chapter 9's
+`cd ch09 && python3 -m pytest -q` each print `9 passed`, and
+`cd ch10 && python3 -m pytest -q` prints `47 passed`. Chapter 9's
 deterministic red-to-green commands are documented in
 [`ch09/README.md`](ch09/README.md).
 
@@ -124,17 +138,19 @@ pip install -r ch02/requirements.txt \
     -r ch06/requirements.txt \
     -r ch07/requirements.txt \
     -r ch08/requirements.txt \
-    -r ch09/requirements.txt
+    -r ch09/requirements.txt \
+    -r ch10/requirements.txt
 ```
 
 Chapter 1 has no listings. Chapter 5 listings are mostly prompt templates
 (Markdown files) and SQL schemas rather than runnable Python code, so that
 chapter has no `requirements.txt`.
 
-Chapters 6, 7, 8, and 9 are self-contained, runnable projects. Each needs
-only `pytest`; from the chapter directory, run `python3 -m pytest -q`
-(`6 passed` for ch06, `8 passed` for ch07, and `9 passed` for both ch08 and
-ch09; see the chapter 9 README for its red-to-green exercise).
+Chapters 6 through 10 are self-contained, runnable projects. Each needs
+only `pytest`; from the chapter directory, run `python3 -m pytest -q`.
+Chapter 9 documents its red-to-green exercise in `ch09/README.md`.
+Chapter 10 requires CPython 3.11 or newer and reports `47 passed` on
+the published snapshot.
 
 Chapter 2 listings share a small provider-neutral client in
 [`llm_client.py`](llm_client.py). Set these environment variables:

@@ -5,3 +5,5 @@ venv/
 pr_description.json
 .mypy_cache/
 .impeccable/
+.venv/
+.pytest_cache/
