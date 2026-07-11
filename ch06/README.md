@@ -26,7 +26,7 @@ Run the suite:
 cd ch06 && python3 -m pytest -q
 ```
 
-Expected: `6 passed`. The only dependency is `pytest`
+Expected: `7 passed`. The only dependency is `pytest`
 (see [`requirements.txt`](requirements.txt)).
 
 See the [main README](../README.md) for setup instructions.

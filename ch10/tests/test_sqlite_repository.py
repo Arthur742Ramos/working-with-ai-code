@@ -1,0 +1,222 @@
+import sqlite3
+from collections.abc import Callable
+from dataclasses import replace
+from datetime import datetime, timezone
+
+import pytest
+
+from reminders.domain import Reminder, ReminderStatus
+from reminders.repository import (
+    ReminderWriteError,
+    SQLiteReminderRepository,
+)
+
+
+Seed = Callable[..., None]
+DUE = datetime(2030, 1, 2, 13, tzinfo=timezone.utc)
+SNOOZED = datetime(
+    2030, 1, 2, 12, 15, tzinfo=timezone.utc,
+)
+
+
+def test_get_for_user_maps_unsnoozed_reminder(
+    connection: sqlite3.Connection,
+    seed_reminder: Seed,
+) -> None:
+    seed_reminder()
+    repository = SQLiteReminderRepository(connection)
+
+    result = repository.get_for_user(
+        "rem-1",
+        "user-7",
+    )
+
+    assert result == Reminder(
+        id="rem-1",
+        user_id="user-7",
+        due_at=DUE,
+        status=ReminderStatus.PENDING,
+        snoozed_until=None,
+    )
+
+
+def test_get_for_user_is_owner_scoped(
+    connection: sqlite3.Connection,
+    seed_reminder: Seed,
+) -> None:
+    seed_reminder(user_id="user-8")
+    repository = SQLiteReminderRepository(connection)
+
+    result = repository.get_for_user(
+        "rem-1",
+        "user-7",
+    )
+
+    assert result is None
+
+
+def test_snooze_timestamp_round_trips(
+    connection: sqlite3.Connection,
+    seed_reminder: Seed,
+) -> None:
+    seed_reminder()
+    repository = SQLiteReminderRepository(connection)
+    original = repository.get_for_user(
+        "rem-1",
+        "user-7",
+    )
+    assert original is not None
+    updated = replace(
+        original,
+        snoozed_until=datetime(
+            2030,
+            1,
+            2,
+            12,
+            15,
+            tzinfo=timezone.utc,
+        ),
+    )
+
+    repository.save(updated)
+    reloaded = repository.get_for_user(
+        "rem-1",
+        "user-7",
+    )
+
+    assert reloaded == updated
+
+
+def test_unknown_status_is_rejected(
+    connection: sqlite3.Connection,
+    seed_reminder: Seed,
+) -> None:
+    connection.execute(
+        "PRAGMA ignore_check_constraints = ON"
+    )
+    seed_reminder(status="paused")
+    connection.execute(
+        "PRAGMA ignore_check_constraints = OFF"
+    )
+    repository = SQLiteReminderRepository(connection)
+
+    with pytest.raises(ValueError, match="paused"):
+        repository.get_for_user("rem-1", "user-7")
+
+
+def test_naive_stored_timestamp_is_rejected(
+    connection: sqlite3.Connection,
+    seed_reminder: Seed,
+) -> None:
+    seed_reminder(
+        due_at="2030-01-02T13:00:00"
+    )
+    repository = SQLiteReminderRepository(connection)
+
+    with pytest.raises(ValueError, match="timezone-aware"):
+        repository.get_for_user("rem-1", "user-7")
+
+
+def test_save_updates_only_the_owner_row(
+    connection: sqlite3.Connection,
+    seed_reminder: Seed,
+) -> None:
+    seed_reminder()
+    repository = SQLiteReminderRepository(connection)
+    reminder = Reminder(
+        id="rem-1",
+        user_id="user-7",
+        due_at=datetime(
+            2030,
+            1,
+            2,
+            13,
+            tzinfo=timezone.utc,
+        ),
+        status=ReminderStatus.PENDING,
+        snoozed_until=datetime(
+            2030,
+            1,
+            2,
+            12,
+            15,
+            tzinfo=timezone.utc,
+        ),
+    )
+
+    result = repository.save(reminder)
+
+    assert result is reminder
+    row = connection.execute(
+        """
+        SELECT snoozed_until
+        FROM reminders
+        WHERE id = ? AND user_id = ?
+        """,
+        ("rem-1", "user-7"),
+    ).fetchone()
+    assert row["snoozed_until"] == (
+        "2030-01-02T12:15:00+00:00"
+    )
+
+
+def test_save_rejects_another_users_row(
+    connection: sqlite3.Connection,
+    seed_reminder: Seed,
+) -> None:
+    original = "2030-01-02T14:00:00+00:00"
+    seed_reminder(
+        user_id="user-8",
+        snoozed_until=original,
+    )
+    repository = SQLiteReminderRepository(connection)
+    wrong_owner = Reminder(
+        id="rem-1",
+        user_id="user-7",
+        due_at=DUE,
+        status=ReminderStatus.PENDING,
+        snoozed_until=SNOOZED,
+    )
+
+    with pytest.raises(ReminderWriteError):
+        repository.save(wrong_owner)
+
+    row = connection.execute(
+        """
+        SELECT user_id, snoozed_until
+        FROM reminders
+        WHERE id = ?
+        """,
+        ("rem-1",),
+    ).fetchone()
+    assert row["user_id"] == "user-8"
+    assert row["snoozed_until"] == original
+
+
+def test_zero_row_update_fails_closed(
+    connection: sqlite3.Connection,
+) -> None:
+    repository = SQLiteReminderRepository(connection)
+    reminder = Reminder(
+        id="missing",
+        user_id="user-7",
+        due_at=datetime(
+            2030,
+            1,
+            2,
+            13,
+            tzinfo=timezone.utc,
+        ),
+        status=ReminderStatus.PENDING,
+        snoozed_until=datetime(
+            2030,
+            1,
+            2,
+            12,
+            15,
+            tzinfo=timezone.utc,
+        ),
+    )
+
+    with pytest.raises(ReminderWriteError):
+        repository.save(reminder)
