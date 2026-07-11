@@ -14,7 +14,7 @@ whose outputs differ between plausible interpretations. Do not choose
 for the team. Do not propose an architecture. Do not write code.
 ````
 
-## Captured controlled implementation: inspect instructions and workspace
+## Controlled implementation: inspect instructions and workspace
 
 ````text
 Work only in this controlled service-slice repository. Do not edit.
@@ -27,7 +27,7 @@ plan, the check you would rerun, and the stop condition. Do not use the
 network, install packages, commit, push, or open a pull request.
 ````
 
-## Captured controlled implementation: execute the approved service slice
+## Controlled implementation: execute the approved service slice
 
 ````text
 Approved. Implement the accepted snooze policy by editing only
@@ -60,7 +60,9 @@ Show the exact diff and genuine outputs.
 ## Captured hosted review: inspect the frozen pull request diff
 
 ````text
-Review the frozen Chapter 10 companion pull request in read-only mode.
+Review https://github.com/Arthur742Ramos/working-with-ai-code/pull/6
+in read-only mode. Resolve and record the current head SHA before
+reviewing. Stop and report if the head changes before you finish.
 Check contract fidelity, module boundaries, test discrimination,
 reader setup, and unsupported delivery claims. Do not edit files,
 weaken tests, push, merge, or expand scope.

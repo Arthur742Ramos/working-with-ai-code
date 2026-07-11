@@ -55,6 +55,24 @@ def test_get_for_user_is_owner_scoped(
     assert result is None
 
 
+def test_get_for_user_is_reminder_id_scoped(
+    connection: sqlite3.Connection,
+    seed_reminder: Seed,
+) -> None:
+    seed_reminder(
+        reminder_id="rem-1",
+        user_id="user-7",
+    )
+    repository = SQLiteReminderRepository(connection)
+
+    result = repository.get_for_user(
+        "rem-2",
+        "user-7",
+    )
+
+    assert result is None
+
+
 def test_snooze_timestamp_round_trips(
     connection: sqlite3.Connection,
     seed_reminder: Seed,
@@ -190,6 +208,40 @@ def test_save_rejects_another_users_row(
         ("rem-1",),
     ).fetchone()
     assert row["user_id"] == "user-8"
+    assert row["snoozed_until"] == original
+
+
+def test_save_rejects_another_reminder_id(
+    connection: sqlite3.Connection,
+    seed_reminder: Seed,
+) -> None:
+    original = "2030-01-02T14:00:00+00:00"
+    seed_reminder(
+        reminder_id="rem-1",
+        user_id="user-7",
+        snoozed_until=original,
+    )
+    repository = SQLiteReminderRepository(connection)
+    wrong_id = Reminder(
+        id="rem-2",
+        user_id="user-7",
+        due_at=DUE,
+        status=ReminderStatus.PENDING,
+        snoozed_until=SNOOZED,
+    )
+
+    with pytest.raises(ReminderWriteError):
+        repository.save(wrong_id)
+
+    row = connection.execute(
+        """
+        SELECT id, snoozed_until
+        FROM reminders
+        WHERE id = ?
+        """,
+        ("rem-1",),
+    ).fetchone()
+    assert row["id"] == "rem-1"
     assert row["snoozed_until"] == original
 
 

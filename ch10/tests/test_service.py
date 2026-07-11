@@ -80,6 +80,35 @@ def test_snooze_uses_current_time_and_saves_once() -> None:
     assert clock.calls == 1
 
 
+@pytest.mark.parametrize(
+    ("minutes", "expected"),
+    [
+        (5, "2030-01-02T12:05:00+00:00"),
+        (15, "2030-01-02T12:15:00+00:00"),
+        (30, "2030-01-02T12:30:00+00:00"),
+        (60, "2030-01-02T13:00:00+00:00"),
+    ],
+)
+def test_each_allowed_duration_succeeds(
+    minutes: int,
+    expected: str,
+) -> None:
+    repository = FakeRepository([make_reminder()])
+    service = SnoozeReminderService(
+        repository,
+        FrozenClock(NOW),
+    )
+
+    result = service.execute(
+        "user-7",
+        "rem-1",
+        minutes,
+    )
+
+    assert result.snoozed_until is not None
+    assert result.snoozed_until.isoformat() == expected
+
+
 def test_repeat_snooze_replaces_previous_value() -> None:
     original = make_reminder(
         snoozed_until=datetime(
@@ -113,6 +142,26 @@ def test_repeat_snooze_replaces_previous_value() -> None:
         45,
         tzinfo=timezone.utc,
     )
+
+
+def test_each_execution_reads_fresh_time() -> None:
+    repository = FakeRepository([make_reminder()])
+    clock = FrozenClock(NOW)
+    service = SnoozeReminderService(repository, clock)
+
+    first = service.execute("user-7", "rem-1", 15)
+    clock.value = datetime(
+        2030, 1, 2, 13, tzinfo=timezone.utc,
+    )
+    second = service.execute("user-7", "rem-1", 15)
+
+    assert first.snoozed_until == datetime(
+        2030, 1, 2, 12, 15, tzinfo=timezone.utc,
+    )
+    assert second.snoozed_until == datetime(
+        2030, 1, 2, 13, 15, tzinfo=timezone.utc,
+    )
+    assert clock.calls == 2
 
 
 def test_missing_reminder_does_not_save() -> None:
@@ -213,4 +262,7 @@ def test_clock_value_is_normalized_to_utc() -> None:
         12,
         15,
         tzinfo=timezone.utc,
+    )
+    assert result.snoozed_until.isoformat() == (
+        "2030-01-02T12:15:00+00:00"
     )

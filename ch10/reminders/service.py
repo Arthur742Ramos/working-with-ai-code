@@ -38,6 +38,15 @@ class ReminderRepository(Protocol):
     def save(self, reminder: Reminder) -> Reminder: ...
 
 
+class SnoozeService(Protocol):
+    def execute(
+        self,
+        user_id: str,
+        reminder_id: str,
+        minutes: int,
+    ) -> Reminder: ...
+
+
 class SystemClock:
     def now(self) -> datetime:
         return datetime.now(timezone.utc)

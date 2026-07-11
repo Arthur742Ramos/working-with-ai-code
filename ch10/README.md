@@ -1,17 +1,15 @@
 # Chapter 10: Code Listings
 
 This directory contains the runnable reminder-snooze example from Chapter 10,
-"Software engineering: from idea to running code." The same files are available
-in the public companion repository:
-
-https://github.com/Arthur742Ramos/working-with-ai-code/tree/main/ch10
+"Software engineering: from idea to running code."
 
 The project takes one vague ticket through accepted behavior, module boundaries,
 focused checks, a controlled SQLite failure, and a review-ready local change.
 
 ## Get the code
 
-From a terminal with CPython 3.11 or newer:
+The first recipe uses macOS, Linux, or Windows Subsystem for Linux (WSL)
+with CPython 3.11 or newer:
 
 ```bash
 git clone \
@@ -23,7 +21,19 @@ python3 -m venv .venv
 .venv/bin/python manual_check.py
 ```
 
-The full suite should report `36 passed`. Production code uses only the Python
+On native Windows PowerShell, use the Python launcher and the Windows virtual
+environment path:
+
+```powershell
+git clone https://github.com/Arthur742Ramos/working-with-ai-code.git
+cd working-with-ai-code/ch10
+py -3.11 -m venv .venv
+.venv\Scripts\python -m pip install -r requirements.txt
+.venv\Scripts\python -m pytest -q
+.venv\Scripts\python manual_check.py
+```
+
+The full suite should report `44 passed`. Production code uses only the Python
 standard library. [`requirements.txt`](requirements.txt) declares `pytest` for
 the tests.
 
@@ -95,8 +105,11 @@ The organic build failure was a false-green ownership test. Its name claimed
 that an update was owner-scoped, but both fixtures used the same owner. An
 ID-only mutation therefore left 35 tests green. The permanent
 `test_save_rejects_another_users_row` crosses the ownership boundary, expects
-`ReminderWriteError`, and verifies that storage remains unchanged. The final
-suite contains 36 tests.
+`ReminderWriteError`, and verifies that storage remains unchanged. That repair
+raised the suite from 35 tests to 36. A later read-only pull-request review found
+missing discriminators for accepted durations, UTC representation, fresh clock
+reads, authenticated identities, and reminder IDs. The current suite has 44
+tests.
 
 The `sqlite3.Row.get` failure in the chapter is a controlled reproduction. The
 capture temporarily replaces `row["snoozed_until"]` with the plausible but

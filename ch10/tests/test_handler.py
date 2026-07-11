@@ -37,10 +37,12 @@ class StubService:
         return self.result
 
 
-def snoozed_reminder() -> Reminder:
+def snoozed_reminder(
+    user_id: str = "user-7",
+) -> Reminder:
     return Reminder(
         id="rem-1",
-        user_id="user-7",
+        user_id=user_id,
         due_at=datetime(
             2030,
             1,
@@ -60,10 +62,15 @@ def snoozed_reminder() -> Reminder:
     )
 
 
-def test_success_uses_trusted_request_identity() -> None:
-    service = StubService(result=snoozed_reminder())
+@pytest.mark.parametrize("user_id", ["user-7", "user-8"])
+def test_success_uses_trusted_request_identity(
+    user_id: str,
+) -> None:
+    service = StubService(
+        result=snoozed_reminder(user_id)
+    )
     request = Request(
-        user_id="user-7",
+        user_id=user_id,
         reminder_id="rem-1",
         body={"minutes": 15},
     )
@@ -77,7 +84,7 @@ def test_success_uses_trusted_request_identity() -> None:
             "2030-01-02T12:15:00+00:00"
         ),
     }
-    assert service.calls == [("user-7", "rem-1", 15)]
+    assert service.calls == [(user_id, "rem-1", 15)]
 
 
 @pytest.mark.parametrize(

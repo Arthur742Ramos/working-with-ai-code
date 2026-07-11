@@ -5,7 +5,7 @@ from reminders.service import (
     InvalidSnoozeDuration,
     ReminderCompleted,
     ReminderNotFound,
-    SnoozeReminderService,
+    SnoozeService,
 )
 
 
@@ -31,7 +31,7 @@ def _invalid_duration() -> Response:
 
 def handle_snooze(
     request: Request,
-    service: SnoozeReminderService,
+    service: SnoozeService,
 ) -> Response:
     if not isinstance(request.body, Mapping):
         return _invalid_duration()
