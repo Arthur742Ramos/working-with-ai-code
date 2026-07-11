@@ -71,8 +71,9 @@ The minimal fix is the same change made in the final `alerts.py`:
 +    return response.status < 400
 ```
 
-To verify the corrected source against the same guard without modifying the
-repository:
+For the captured session, those three lines were changed in the fixture, the
+same guard went green, and the checked-in failing fixture was then restored.
+To verify the corrected source without modifying the repository:
 
 ```bash
 tmpdir="$(mktemp -d)"
