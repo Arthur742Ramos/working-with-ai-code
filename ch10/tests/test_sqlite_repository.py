@@ -1,7 +1,9 @@
 import sqlite3
 from collections.abc import Callable
+from contextlib import closing
 from dataclasses import replace
 from datetime import datetime, timezone
+from pathlib import Path
 
 import pytest
 
@@ -9,6 +11,7 @@ from reminders.domain import Reminder, ReminderStatus
 from reminders.repository import (
     ReminderWriteError,
     SQLiteReminderRepository,
+    create_schema,
 )
 
 
@@ -127,6 +130,58 @@ def test_snooze_timestamp_round_trips(
     )
 
     assert reloaded == updated
+
+
+def test_save_commits_for_another_connection(
+    tmp_path: Path,
+) -> None:
+    database = tmp_path / "reminders.db"
+    with closing(sqlite3.connect(database)) as writer:
+        create_schema(writer)
+        writer.execute(
+            """
+            INSERT INTO reminders (
+                id,
+                user_id,
+                due_at,
+                status,
+                snoozed_until
+            ) VALUES (?, ?, ?, ?, ?)
+            """,
+            (
+                "rem-1",
+                "user-7",
+                DUE.isoformat(),
+                "pending",
+                None,
+            ),
+        )
+        writer.commit()
+        repository = SQLiteReminderRepository(writer)
+        original = repository.get_for_user(
+            "rem-1",
+            "user-7",
+        )
+        assert original is not None
+        updated = replace(
+            original,
+            snoozed_until=SNOOZED,
+        )
+
+        repository.save(updated)
+
+        with closing(sqlite3.connect(database)) as reader:
+            row = reader.execute(
+                """
+                SELECT snoozed_until
+                FROM reminders
+                WHERE id = ? AND user_id = ?
+                """,
+                ("rem-1", "user-7"),
+            ).fetchone()
+
+    assert row is not None
+    assert row[0] == SNOOZED.isoformat()
 
 
 def test_unknown_status_is_rejected(

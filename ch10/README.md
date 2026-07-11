@@ -34,7 +34,7 @@ py -3 -m venv .venv
 .venv\Scripts\python manual_check.py
 ```
 
-The full suite should report `47 passed`. Production code uses only the Python
+The full suite should report `49 passed`. Production code uses only the Python
 standard library. [`requirements.txt`](requirements.txt) declares `pytest` for
 the tests.
 
@@ -73,8 +73,8 @@ simultaneous state changes.
 
 - [`AGENTS.md`](AGENTS.md) gives a coding agent the path-scoped operating rules.
 - [`PROMPTS.md`](PROMPTS.md) contains the chapter's prompt blocks.
-- [`captures/README.md`](captures/README.md) reproduces the controlled service
-  red-to-green path from a clean snapshot.
+- [`captures/README.md`](captures/README.md) reproduces both controlled
+  red-to-green paths from a clean snapshot.
 - [`reminders/domain.py`](reminders/domain.py) defines the immutable domain value.
 - [`reminders/handler.py`](reminders/handler.py) validates transport data and maps
   domain outcomes.
@@ -121,8 +121,9 @@ identifier-only mutation therefore left 35 tests green. The permanent
 raised the suite from 35 tests to 36. A later read-only pull-request review found missing discriminators for accepted
 durations, UTC representation, fresh clock reads, authenticated identities, and
 reminder IDs, raising the suite to 44. A final rereview added checks for a NULL
-primary key, a varied full-flow tuple, and an extra unapproved integer. The
-current suite has 47 tests.
+primary key, a varied full-flow tuple, and an extra unapproved integer. A later
+manuscript gate added cross-connection commit and validation-order cases. The
+current suite has 49 tests.
 
 The `sqlite3.Row.get` failure in the chapter is a controlled reproduction. The
 capture temporarily replaces `row["snoozed_until"]` with the plausible but
@@ -133,9 +134,11 @@ repository in the controlled failing state.
 ## Hosted evidence limit
 
 A local green run and an inspected diff can make a branch ready to publish for
-review. They do not prove that a hosted pull request has passed continuous
-integration or human review. The chapter records those delivery states
-separately and never calls this example merge-ready without those artifacts.
+review. They do not prove that a hosted pull request has passed any configured
+continuous integration or human review. No hosted check or GitHub approval was
+recorded. The repository owner merged only after the blockers were fixed and the
+changed head was rereviewed. Retained records do not establish which protection
+requirements applied at merge time.
 
 ## Known limit
 

@@ -1,5 +1,5 @@
 diff --git a/ch10/reminders/service.py b/ch10/reminders/service.py
-index eedfa8d..fc6b73d 100644
+index eedfa8d..3fb92e8 100644
 --- a/ch10/reminders/service.py
 +++ b/ch10/reminders/service.py
 @@ -1,2 +1 @@
@@ -13,17 +13,7 @@ index eedfa8d..fc6b73d 100644
 -    normalize_utc,
 -)
 +from reminders.domain import Reminder
-@@ -41,9 +35,0 @@ class ReminderRepository(Protocol):
--class SnoozeService(Protocol):
--    def execute(
--        self,
--        user_id: str,
--        reminder_id: str,
--        minutes: int,
--    ) -> Reminder: ...
--
--
-@@ -70,21 +56 @@ class SnoozeReminderService:
+@@ -70,21 +65 @@ class SnoozeReminderService:
 -        if (
 -            type(minutes) is not int
 -            or minutes not in ALLOWED_MINUTES
@@ -47,7 +37,7 @@ index eedfa8d..fc6b73d 100644
 -        return self._repository.save(updated)
 +        raise NotImplementedError("service slice not implemented")
 diff --git a/ch10/tests/test_service.py b/ch10/tests/test_service.py
-index 07b1284..0e7b943 100644
+index 3875eb9..0e7b943 100644
 --- a/ch10/tests/test_service.py
 +++ b/ch10/tests/test_service.py
 @@ -83,29 +82,0 @@ def test_snooze_uses_current_time_and_saves_once() -> None:
@@ -101,10 +91,23 @@ index 07b1284..0e7b943 100644
 -    assert clock.calls == 2
 -
 -
-@@ -216 +167 @@ def test_completed_reminder_does_not_save() -> None:
+@@ -180,12 +130,0 @@ def test_missing_reminder_does_not_save() -> None:
+-def test_invalid_duration_is_rejected_before_lookup() -> None:
+-    repository = FakeRepository([])
+-    clock = FrozenClock(NOW)
+-    service = SnoozeReminderService(repository, clock)
+-
+-    with pytest.raises(InvalidSnoozeDuration):
+-        service.execute("user-7", "missing", 10)
+-
+-    assert repository.saved == []
+-    assert clock.calls == 0
+-
+-
+@@ -228 +167 @@ def test_completed_reminder_does_not_save() -> None:
 -    [True, 15.0, "15", None, 0, 10, 45, 61],
 +    [True, 15.0, "15", None, 0, 10, 61],
-@@ -266,3 +216,0 @@ def test_clock_value_is_normalized_to_utc() -> None:
+@@ -278,3 +216,0 @@ def test_clock_value_is_normalized_to_utc() -> None:
 -    assert result.snoozed_until.isoformat() == (
 -        "2030-01-02T12:15:00+00:00"
 -    )

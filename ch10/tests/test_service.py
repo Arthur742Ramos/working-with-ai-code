@@ -177,6 +177,18 @@ def test_missing_reminder_does_not_save() -> None:
     assert repository.saved == []
 
 
+def test_invalid_duration_is_rejected_before_lookup() -> None:
+    repository = FakeRepository([])
+    clock = FrozenClock(NOW)
+    service = SnoozeReminderService(repository, clock)
+
+    with pytest.raises(InvalidSnoozeDuration):
+        service.execute("user-7", "missing", 10)
+
+    assert repository.saved == []
+    assert clock.calls == 0
+
+
 def test_other_users_reminder_looks_missing() -> None:
     repository = FakeRepository(
         [make_reminder(user_id="user-8")]
