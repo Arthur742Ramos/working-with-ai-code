@@ -34,7 +34,7 @@ py -3 -m venv .venv
 .venv\Scripts\python manual_check.py
 ```
 
-The full suite should report `44 passed`. Production code uses only the Python
+The full suite should report `47 passed`. Production code uses only the Python
 standard library. [`requirements.txt`](requirements.txt) declares `pytest` for
 the tests.
 
@@ -115,13 +115,14 @@ On native Windows PowerShell:
 
 The organic build failure was a false-green ownership test. Its name claimed
 that an update was owner-scoped, but both fixtures used the same owner. An
-ID-only mutation therefore left 35 tests green. The permanent
+identifier-only mutation therefore left 35 tests green. The permanent
 `test_save_rejects_another_users_row` crosses the ownership boundary, expects
 `ReminderWriteError`, and verifies that storage remains unchanged. That repair
-raised the suite from 35 tests to 36. A later read-only pull-request review found
-missing discriminators for accepted durations, UTC representation, fresh clock
-reads, authenticated identities, and reminder IDs. The current suite has 44
-tests.
+raised the suite from 35 tests to 36. A later read-only pull-request review found missing discriminators for accepted
+durations, UTC representation, fresh clock reads, authenticated identities, and
+reminder IDs, raising the suite to 44. A final rereview added checks for a NULL
+primary key, a varied full-flow tuple, and an extra unapproved integer. The
+current suite has 47 tests.
 
 The `sqlite3.Row.get` failure in the chapter is a controlled reproduction. The
 capture temporarily replaces `row["snoozed_until"]` with the plausible but

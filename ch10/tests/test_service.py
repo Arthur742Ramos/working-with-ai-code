@@ -213,7 +213,7 @@ def test_completed_reminder_does_not_save() -> None:
 
 @pytest.mark.parametrize(
     "minutes",
-    [True, 15.0, "15", None, 0, 10, 61],
+    [True, 15.0, "15", None, 0, 10, 45, 61],
 )
 def test_invalid_duration_does_not_save(
     minutes: object,

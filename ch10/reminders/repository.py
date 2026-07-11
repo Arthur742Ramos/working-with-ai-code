@@ -17,7 +17,7 @@ def create_schema(connection: sqlite3.Connection) -> None:
         connection.execute(
             """
             CREATE TABLE IF NOT EXISTS reminders (
-                id TEXT PRIMARY KEY,
+                id TEXT PRIMARY KEY NOT NULL,
                 user_id TEXT NOT NULL,
                 due_at TEXT NOT NULL,
                 status TEXT NOT NULL CHECK (

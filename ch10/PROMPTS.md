@@ -57,10 +57,10 @@ test, then the full suite. Do not refactor yet and do not change tests.
 Show the exact diff and genuine outputs.
 ````
 
-## Captured review: inspect the hosted pull request diff
+## Illustrative read-only review contract
 
 ````text
-Review the frozen hosted pull request at head commit `64b9a61` in
+Review the frozen hosted pull request at the recorded head commit in
 read-only mode. Confirm and record the head commit before reviewing.
 Stop and report if the head changes before you finish.
 Check contract fidelity, module boundaries, test discrimination,

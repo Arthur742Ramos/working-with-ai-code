@@ -2,25 +2,18 @@ diff --git a/ch10/reminders/service.py b/ch10/reminders/service.py
 index eedfa8d..fc6b73d 100644
 --- a/ch10/reminders/service.py
 +++ b/ch10/reminders/service.py
-@@ -1,12 +1,7 @@
+@@ -1,2 +1 @@
 -from dataclasses import replace
 -from datetime import datetime, timedelta, timezone
 +from datetime import datetime, timezone
- from typing import Protocol
- 
+@@ -5,5 +4 @@ from typing import Protocol
 -from reminders.domain import (
 -    Reminder,
 -    ReminderStatus,
 -    normalize_utc,
 -)
 +from reminders.domain import Reminder
- 
- 
- ALLOWED_MINUTES = frozenset({5, 15, 30, 60})
-@@ -38,15 +33,6 @@ class ReminderRepository(Protocol):
-     def save(self, reminder: Reminder) -> Reminder: ...
- 
- 
+@@ -41,9 +35,0 @@ class ReminderRepository(Protocol):
 -class SnoozeService(Protocol):
 -    def execute(
 -        self,
@@ -30,13 +23,7 @@ index eedfa8d..fc6b73d 100644
 -    ) -> Reminder: ...
 -
 -
- class SystemClock:
-     def now(self) -> datetime:
-         return datetime.now(timezone.utc)
-@@ -67,24 +53,4 @@ class SnoozeReminderService:
-         reminder_id: str,
-         minutes: int,
-     ) -> Reminder:
+@@ -70,21 +56 @@ class SnoozeReminderService:
 -        if (
 -            type(minutes) is not int
 -            or minutes not in ALLOWED_MINUTES
@@ -60,13 +47,10 @@ index eedfa8d..fc6b73d 100644
 -        return self._repository.save(updated)
 +        raise NotImplementedError("service slice not implemented")
 diff --git a/ch10/tests/test_service.py b/ch10/tests/test_service.py
-index 37312dc..0e7b943 100644
+index 07b1284..0e7b943 100644
 --- a/ch10/tests/test_service.py
 +++ b/ch10/tests/test_service.py
-@@ -80,35 +80,6 @@ def test_snooze_uses_current_time_and_saves_once() -> None:
-     assert clock.calls == 1
- 
- 
+@@ -83,29 +82,0 @@ def test_snooze_uses_current_time_and_saves_once() -> None:
 -@pytest.mark.parametrize(
 -    ("minutes", "expected"),
 -    [
@@ -96,13 +80,7 @@ index 37312dc..0e7b943 100644
 -    assert result.snoozed_until.isoformat() == expected
 -
 -
- def test_repeat_snooze_replaces_previous_value() -> None:
-     original = make_reminder(
-         snoozed_until=datetime(
-@@ -144,26 +115,6 @@ def test_repeat_snooze_replaces_previous_value() -> None:
-     )
- 
- 
+@@ -147,20 +117,0 @@ def test_repeat_snooze_replaces_previous_value() -> None:
 -def test_each_execution_reads_fresh_time() -> None:
 -    repository = FakeRepository([make_reminder()])
 -    clock = FrozenClock(NOW)
@@ -123,13 +101,10 @@ index 37312dc..0e7b943 100644
 -    assert clock.calls == 2
 -
 -
- def test_missing_reminder_does_not_save() -> None:
-     repository = FakeRepository([])
-     service = SnoozeReminderService(
-@@ -263,6 +214,3 @@ def test_clock_value_is_normalized_to_utc() -> None:
-         15,
-         tzinfo=timezone.utc,
-     )
+@@ -216 +167 @@ def test_completed_reminder_does_not_save() -> None:
+-    [True, 15.0, "15", None, 0, 10, 45, 61],
++    [True, 15.0, "15", None, 0, 10, 61],
+@@ -266,3 +216,0 @@ def test_clock_value_is_normalized_to_utc() -> None:
 -    assert result.snoozed_until.isoformat() == (
 -        "2030-01-02T12:15:00+00:00"
 -    )

@@ -70,6 +70,35 @@ def test_owner_snoozes_pending_reminder(
     )
 
 
+def test_second_identity_id_and_duration_compose(
+    connection: sqlite3.Connection,
+    seed_reminder: Seed,
+) -> None:
+    seed_reminder(
+        reminder_id="rem-2",
+        user_id="user-8",
+    )
+    service = make_service(connection)
+    request = Request(
+        "user-8",
+        "rem-2",
+        {"minutes": 60},
+    )
+
+    response = handle_snooze(request, service)
+
+    assert response.status == 200
+    assert response.body == {
+        "id": "rem-2",
+        "snoozed_until": (
+            "2030-01-02T13:00:00+00:00"
+        ),
+    }
+    assert stored_snooze(connection, "rem-2") == (
+        "2030-01-02T13:00:00+00:00"
+    )
+
+
 def test_completed_reminder_stays_unchanged(
     connection: sqlite3.Connection,
     seed_reminder: Seed,

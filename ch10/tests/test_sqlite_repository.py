@@ -19,6 +19,30 @@ SNOOZED = datetime(
 )
 
 
+def test_schema_rejects_null_reminder_id(
+    connection: sqlite3.Connection,
+) -> None:
+    with pytest.raises(sqlite3.IntegrityError):
+        connection.execute(
+            """
+            INSERT INTO reminders (
+                id,
+                user_id,
+                due_at,
+                status,
+                snoozed_until
+            ) VALUES (?, ?, ?, ?, ?)
+            """,
+            (
+                None,
+                "user-7",
+                "2030-01-02T13:00:00+00:00",
+                "pending",
+                None,
+            ),
+        )
+
+
 def test_get_for_user_maps_unsnoozed_reminder(
     connection: sqlite3.Connection,
     seed_reminder: Seed,
