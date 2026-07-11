@@ -27,7 +27,7 @@ plan, the check you would rerun, and the stop condition. Do not use the
 network, install packages, commit, push, or open a pull request.
 ````
 
-## Controlled implementation: execute the approved service slice
+## Illustrative approval gate: execute the service slice
 
 ````text
 Approved. Implement the accepted snooze policy by editing only
@@ -57,7 +57,7 @@ test, then the full suite. Do not refactor yet and do not change tests.
 Show the exact diff and genuine outputs.
 ````
 
-## Captured hosted review: inspect the frozen pull request diff
+## Captured review: inspect the hosted pull request diff
 
 ````text
 Review https://github.com/Arthur742Ramos/working-with-ai-code/pull/6
