@@ -120,14 +120,32 @@ examples, and [`ch01/README.md`](ch01/README.md) for the index.
 - [`PROMPTS.md`](ch10/PROMPTS.md): Prompt blocks from the current manuscript draft
 - [`captures/README.md`](ch10/captures/README.md): Optional controlled red-to-green reproductions
 
-Chapters 6 through 10 are runnable projects with passing pytest suites:
+### Chapter 11
+
+- [`ch11/README.md`](ch11/README.md): Setup, project overview, real capture provenance, and limits
+- [`deployment.json`](ch11/deployment.json): Maintained safe deployment proposal
+- [`deployment_guard.py`](ch11/deployment_guard.py): Listing 11.1 policy checks plus plan and post-change verification
+- [`pipeline.py`](ch11/pipeline.py): Listing 11.2 provider-neutral compile, test, and read-only plan pipeline
+- [`incident_triage.py`](ch11/incident_triage.py): Listing 11.3 source-linked incident timeline selection
+- [`observation.json`](ch11/observation.json): Sanitized post-change observations
+- [`incident.jsonl`](ch11/incident.jsonl): Sanitized structured events for one rollout
+- [`test_deployment_guard.py`](ch11/test_deployment_guard.py): Deployment policy and postcondition checks
+- [`test_incident_triage.py`](ch11/test_incident_triage.py): Timeline filtering, evidence, and ordering checks
+- [`requirements.txt`](ch11/requirements.txt): Chapter test dependency
+- [`PROMPTS.md`](ch11/PROMPTS.md): The two human prompt blocks from the current manuscript
+- [`captures/README.md`](ch11/captures/README.md): Controlled red-state reproduction guidance
+- [`captures/deployment-before.json`](ch11/captures/deployment-before.json): Preserved one-line red fixture
+- [`captures/session-transcript.md`](ch11/captures/session-transcript.md): Historical red-to-green command record
+
+Chapters 6 through 11 are runnable projects with passing pytest suites:
 `cd ch06 && python3 -m pytest -q` prints `7 passed`,
 `cd ch07 && python3 -m pytest -q` prints `8 passed`,
 `cd ch08 && python3 -m pytest -q` and
 `cd ch09 && python3 -m pytest -q` each print `9 passed`, and
-`cd ch10 && python3 -m pytest -q` prints `49 passed`. Chapter 9's
-deterministic red-to-green commands are documented in
-[`ch09/README.md`](ch09/README.md).
+`cd ch10 && python3 -m pytest -q` prints `49 passed`, and
+`cd ch11 && python3 -m pytest -q` prints `12 passed`. Chapters 9 and 11
+document their deterministic red-to-green exercises in
+[`ch09/README.md`](ch09/README.md) and [`ch11/README.md`](ch11/README.md).
 
 ## Running the Code
 
@@ -139,18 +157,19 @@ pip install -r ch02/requirements.txt \
     -r ch07/requirements.txt \
     -r ch08/requirements.txt \
     -r ch09/requirements.txt \
-    -r ch10/requirements.txt
+    -r ch10/requirements.txt \
+    -r ch11/requirements.txt
 ```
 
 Chapter 1 has no listings. Chapter 5 listings are mostly prompt templates
 (Markdown files) and SQL schemas rather than runnable Python code, so that
 chapter has no `requirements.txt`.
 
-Chapters 6 through 10 are self-contained, runnable projects. Each needs
+Chapters 6 through 11 are self-contained, runnable projects. Each needs
 only `pytest`; from the chapter directory, run `python3 -m pytest -q`.
-Chapter 9 documents its red-to-green exercise in `ch09/README.md`.
-Chapter 10 requires CPython 3.11 or newer and reports `49 passed` on
-the published snapshot.
+Chapters 9 and 11 document their red-to-green exercises in their README files.
+Chapters 10 and 11 require CPython 3.11 or newer. Chapter 10 reports
+`49 passed`; Chapter 11's current maintained suite reports `12 passed`.
 
 Chapter 2 listings share a small provider-neutral client in
 [`llm_client.py`](llm_client.py). Set these environment variables:

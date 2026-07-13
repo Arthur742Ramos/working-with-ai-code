@@ -1,0 +1,7 @@
+{
+  "revision": "sample-api:1.8.0",
+  "ready_replicas": 6,
+  "total_replicas": 6,
+  "error_rate": 0.008,
+  "request_succeeded": true
+}
