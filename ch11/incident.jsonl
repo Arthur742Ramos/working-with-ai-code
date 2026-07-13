@@ -1,0 +1,6 @@
+{"timestamp":"2030-04-18T14:00:00Z","deployment_id":"deploy-104","service":"sample-api","revision":"sample-api:1.8.0","severity":"INFO","event":"rollout_started"}
+{"timestamp":"2030-04-18T14:02:00Z","deployment_id":"deploy-103","service":"sample-api","revision":"sample-api:1.7.2","severity":"INFO","event":"health_check_passed"}
+{"timestamp":"2030-04-18T14:04:00Z","deployment_id":"deploy-104","service":"sample-api","revision":"sample-api:1.8.0","severity":"WARN","event":"ready_replicas_below_target"}
+{"timestamp":"2030-04-18T14:05:00Z","deployment_id":"deploy-104","service":"sample-api","revision":"sample-api:1.8.0","severity":"ERROR","event":"error_rate_above_limit","trace_id":"4bf92f3577b34da6a3ce929d0e0e4736","error_rate":0.071}
+{"timestamp":"2030-04-18T14:07:00Z","deployment_id":"deploy-104","service":"sample-api","revision":"sample-api:1.7.2","severity":"INFO","event":"rollback_started"}
+{"timestamp":"2030-04-18T14:13:00Z","deployment_id":"deploy-104","service":"sample-api","revision":"sample-api:1.7.2","severity":"INFO","event":"service_recovered"}
