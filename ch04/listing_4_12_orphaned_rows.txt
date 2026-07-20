@@ -1,7 +1,0 @@
-$ sqlite3 shop.db
-> SELECT COUNT(*) FROM order_items oi
-    LEFT JOIN products p ON p.code = oi.code
-    WHERE p.code IS NULL;
-28
-> -- the distinct order ids holding one
-7, 14, 21, 28, ... 112, ... 196

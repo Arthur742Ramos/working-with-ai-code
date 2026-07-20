@@ -1,9 +1,8 @@
-"""Adversarial tests for the validator (chapter 7).
+"""Maintained tests for the JSON config validator.
 
-One test per category the tester role named: happy path, missing
-required key, wrong type, nested miss, empty schema, the bool-as-int
-boundary, and malformed rules. The final test is the slice the agent
-session adds in section 7.6: a float type the contract did not yet cover.
+The suite covers happy paths, required keys, wrong types, nesting,
+empty schemas, strict integer handling, malformed rules, and float
+support.
 """
 
 from validator import validate
@@ -75,3 +74,14 @@ def test_float_type_is_supported():
     assert len(errors) == 1
     assert errors[0].path == "ratio"
     assert "float" in errors[0].message
+
+
+def test_float_subclass_is_rejected_by_policy():
+    class DerivedFloat(float):
+        pass
+
+    schema = {"ratio": {"type": "float", "required": True}}
+    errors = validate({"ratio": DerivedFloat(0.5)}, schema)
+    assert len(errors) == 1
+    assert errors[0].path == "ratio"
+    assert errors[0].message == "expected float"

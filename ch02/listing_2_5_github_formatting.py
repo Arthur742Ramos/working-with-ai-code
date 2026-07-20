@@ -3,12 +3,9 @@
 From "Working with AI as a Real Teammate" (Manning)
 Chapter 2
 
-Reuses get_git_diff from Listing 2.1, SCHEMA from Listing 2.3, and
-SYSTEM_PROMPT, build_prompt, and generate_pr_description from Listing 2.4.
+Continues the module from Listing 2.4, reusing `get_git_diff`,
+`generate_pr_description`, `json`, and `sys`.
 """
-
-import sys
-
 
 def format_for_github(pr: dict) -> str:
     """Format the PR description for GitHub."""

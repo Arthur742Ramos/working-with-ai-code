@@ -1,10 +1,7 @@
-"""JSON config validator (chapter 7 running example).
+"""JSON config validator for the bounded-agent example.
 
-Built by four narrow roles: the architect fixed the contract (a
-dotted-path ValidationError, a list return that never raises, a small
-set of supported types), the coder implemented it, the tester broke it,
-and the explainer wrote the CLI and README. `validate` walks the schema
-and returns a list of errors, possibly empty.
+`validate` walks a schema and returns dotted-path validation errors.
+The maintained green state includes strict built-in float support.
 """
 
 from dataclasses import dataclass

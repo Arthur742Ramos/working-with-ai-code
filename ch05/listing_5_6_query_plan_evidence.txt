@@ -1,0 +1,14 @@
+sqlite> SELECT COUNT(*) AS item_count
+   ...> FROM order_items WHERE order_id = 120;
+66
+sqlite> SELECT code FROM order_items
+   ...> WHERE order_id = 120 ORDER BY id LIMIT 1;
+26176
+sqlite> SELECT COUNT(*) AS indexes_on_products
+   ...> FROM pragma_index_list('products');
+0
+sqlite> EXPLAIN QUERY PLAN
+   ...> SELECT code, name, price FROM products
+   ...> WHERE code = 26176;
+QUERY PLAN
+`--SCAN products

@@ -1,0 +1,18 @@
+Accepted behavior:
+- upsert by stable source id so reruns are safe
+- normalize name, email, date, and account type
+- validate every row; skip and report invalid rows
+- write before-and-after audit rows for email, date, and account type
+- make dry run execute the logic, then roll back
+
+Stage 1: read both schemas and propose field mappings
+Gate: approve identity, date, and type semantics
+
+Stage 2: transform and validate fixture rows
+Gate: inspect skipped rows and sample audit records
+
+Stage 3: run the complete migration in dry-run mode
+Gate: reconcile read, upserted, skipped, and audit counts
+
+Stage 4: package readiness evidence and open decisions
+Gate: hand off the reviewed plan without running target data

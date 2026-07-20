@@ -2,183 +2,158 @@
 
 Code listings from the Manning book by Arthur Ramos.
 
-Each chapter directory mirrors that chapter's printed listings as
-standalone, reader-facing files, alongside a `README.md` index, a
-`PROMPTS.md` of the chapter's prompt blocks, and (where the code uses
-third-party packages) a `requirements.txt`. Listings that call a model
-use the provider-neutral [`llm_client.py`](llm_client.py) helper.
-Runnable teaching projects may have no AI provider dependency at all.
+Each chapter directory mirrors that chapter's printed listings. Chapters 1–5
+present the printed listings as standalone, reader-facing files
+(`listing_N_M_*`) alongside a `README.md` index and a `PROMPTS.md` of the
+chapter's prompt blocks. Chapters 6–12 are self-contained, runnable teaching
+projects with passing test suites; their `README.md` files map each printed
+listing to the maintained source file it comes from. A `requirements.txt`
+appears wherever a chapter uses third-party packages.
 
 ## Chapters
 
-### Chapter 1
+### Chapter 1 — Working with AI: from magic to engineering
 
-Chapter 1 has no numbered code listings. See
-[`ch01/PROMPTS.md`](ch01/PROMPTS.md) for the chapter's prompt and response
-examples, and [`ch01/README.md`](ch01/README.md) for the index.
+- [`listing_1_1_rate_limiter_before.py`](ch01/listing_1_1_rate_limiter_before.py) — Listing 1.1: The rate limiter before the observability repair
+- [`listing_1_2_focused_red.txt`](ch01/listing_1_2_focused_red.txt) — Listing 1.2: Genuine focused red for the missing signal
+- [`listing_1_3_accepted_repair.diff`](ch01/listing_1_3_accepted_repair.diff) — Listing 1.3: The accepted one-line repair
+- [`listing_1_4_green_evidence.txt`](ch01/listing_1_4_green_evidence.txt) — Listing 1.4: Focused and broader green evidence
+- [`PROMPTS.md`](ch01/PROMPTS.md) — Prompt blocks from the current manuscript draft
 
-### Chapter 2
+### Chapter 2 — Contracts that produce checkable work
 
-- [`listing_2_1_simple.py`](ch02/listing_2_1_simple.py) — Listing 2.1: Simple PR generator: no contract, no validation
-- [`listing_2_2_contract.py`](ch02/listing_2_2_contract.py) — Listing 2.2: PR generator with system prompt and contract
-- [`listing_2_3_schema.py`](ch02/listing_2_3_schema.py) — Listing 2.3: JSON schema for PR description validation
-- [`listing_2_4_validation.py`](ch02/listing_2_4_validation.py) — Listing 2.4: Generation function with validation
+- [`listing_2_1_contract_template.txt`](ch02/listing_2_1_contract_template.txt) — Listing 2.1: A compact contract for checkable work
+- [`listing_2_2_local_fixture.py`](ch02/listing_2_2_local_fixture.py) — Listing 2.2: A fixed diff and deterministic local response
+- [`listing_2_3_schema.py`](ch02/listing_2_3_schema.py) — Listing 2.3: JSON Schema for a PR description
+- [`listing_2_4_generate_and_validate.py`](ch02/listing_2_4_generate_and_validate.py) — Listing 2.4: Generate, parse, and validate the result
 - [`listing_2_5_github_formatting.py`](ch02/listing_2_5_github_formatting.py) — Listing 2.5: GitHub formatting and CLI entry point
-- [`listing_2_6_retry.py`](ch02/listing_2_6_retry.py) — Listing 2.6: Retry logic with conversational error feedback
-- [`listing_2_7_github_actions_ci.yml`](ch02/listing_2_7_github_actions_ci.yml) — Listing 2.7: GitHub Actions job that runs the generator in CI
+- [`listing_2_6_retry.py`](ch02/listing_2_6_retry.py) — Listing 2.6: Conversational retry after validation failure
 - [`PROMPTS.md`](ch02/PROMPTS.md) — Prompt blocks from the current manuscript draft
 
-### Chapter 3
+### Chapter 3 — Conversations that converge
 
-- [`listing_3_1_rate_limiter_decorator.py`](ch03/listing_3_1_rate_limiter_decorator.py) — Listing 3.1: Branch A result: decorator-based rate limiter
-- [`listing_3_2_rate_limit_script.py`](ch03/listing_3_2_rate_limit_script.py) — Listing 3.2: Branch B result, part 1: Redis sliding-window script
-- [`listing_3_3_rate_limit_middleware.py`](ch03/listing_3_3_rate_limit_middleware.py) — Listing 3.3: Branch B result, part 2: Python wrapper and middleware
-- [`listing_3_4_event_processor_start.py`](ch03/listing_3_4_event_processor_start.py) — Listing 3.4: The starting code: event processor with hidden issues
-- [`listing_3_5_ai_review_response.txt`](ch03/listing_3_5_ai_review_response.txt) — Listing 3.5: The production-readiness review the agent returned
-- [`listing_3_6_event_processor_critical_fix.py`](ch03/listing_3_6_event_processor_critical_fix.py) — Listing 3.6: After fixing the three ship-blockers
-- [`listing_3_7_timestamp_parsing.py`](ch03/listing_3_7_timestamp_parsing.py) — Listing 3.7: Robust timestamp parsing with an explicit UTC contract
-- [`listing_3_8_validation_and_filtering.txt`](ch03/listing_3_8_validation_and_filtering.txt) — Listing 3.8: Final version, part 1: validation and filtering
-- [`listing_3_9_aggregation_and_output.txt`](ch03/listing_3_9_aggregation_and_output.txt) — Listing 3.9: Final version, part 2: aggregation and output
-- [`listing_3_10_test_cases_part1.py`](ch03/listing_3_10_test_cases_part1.py) — Listing 3.10: Generated tests, part 1: harness and filtering
-- [`listing_3_11_test_cases_part2.py`](ch03/listing_3_11_test_cases_part2.py) — Listing 3.11: Generated tests, part 2: dedup, validation, timezones
+- [`listing_3_1_event_processor_start.py`](ch03/listing_3_1_event_processor_start.py) — Listing 3.1: Starting event processor
+- [`listing_3_2_missing_events_guard.diff`](ch03/listing_3_2_missing_events_guard.diff) — Listing 3.2: Missing-events validation guard
 - [`PROMPTS.md`](ch03/PROMPTS.md) — Prompt blocks from the current manuscript draft
 
-### Chapter 4
+### Chapter 4 — Plans you can review and redirect
 
-- [`listing_4_1_timestamp_parser.py`](ch04/listing_4_1_timestamp_parser.py) — Listing 4.1: AI-generated timestamp parser: looks correct, misses edge cases
-- [`listing_4_2_test_proves_nothing.py`](ch04/listing_4_2_test_proves_nothing.py) — Listing 4.2: A test that passes but proves nothing useful
-- [`listing_4_3_test_verifies_behavior.py`](ch04/listing_4_3_test_verifies_behavior.py) — Listing 4.3: A test that verifies behavior
-- [`listing_4_4_money_handling.py`](ch04/listing_4_4_money_handling.py) — Listing 4.4: A flawed money-handling function for two models to review
-- [`listing_4_5_smoke_test.py`](ch04/listing_4_5_smoke_test.py) — Listing 4.5: A quick smoke test function for AI-generated code
-- [`listing_4_6_property_based_testing.py`](ch04/listing_4_6_property_based_testing.py) — Listing 4.6: Property-based testing for AI-generated code
-- [`listing_4_7_existence_check.py`](ch04/listing_4_7_existence_check.py) — Listing 4.7: Quick existence check for recommended packages
-- [`listing_4_8_validation_module.py`](ch04/listing_4_8_validation_module.py) — Listing 4.8: AI-generated validation module to be verified
-- [`listing_4_9_validator_tests.py`](ch04/listing_4_9_validator_tests.py) — Listing 4.9: Behavior-focused tests the agent generated for the validator
-- [`listing_4_10_reproduce_incident.txt`](ch04/listing_4_10_reproduce_incident.txt) — Listing 4.10: The agent reproduces the incident before forming a theory
-- [`listing_4_11_nplus1_loop.py`](ch04/listing_4_11_nplus1_loop.py) — Listing 4.11: The N+1 loop at the heart of `build_summary`
-- [`listing_4_12_orphaned_rows.txt`](ch04/listing_4_12_orphaned_rows.txt) — Listing 4.12: The orphaned rows the overnight import left behind
-- [`listing_4_13_explain_query_plan.txt`](ch04/listing_4_13_explain_query_plan.txt) — Listing 4.13: EXPLAIN QUERY PLAN exposes a full scan per item
-- [`listing_4_14_left_join_fix.diff`](ch04/listing_4_14_left_join_fix.diff) — Listing 4.14: The fix: one LEFT JOIN with a None-guard (excerpt from `fix.diff`)
-- [`listing_4_15_before_after_load.txt`](ch04/listing_4_15_before_after_load.txt) — Listing 4.15: Before and after, the same 300-request load at cold cache
-- [`listing_4_16_tiny_eval.py`](ch04/listing_4_16_tiny_eval.py) — Listing 4.16: A tiny eval: the cases that broke, scored on every run
+- [`listing_4_1_staged_execution_plan.txt`](ch04/listing_4_1_staged_execution_plan.txt) — Listing 4.1: Staged execution plan for the customer importer
+- [`listing_4_2_walking_skeleton.py`](ch04/listing_4_2_walking_skeleton.py) — Listing 4.2: Walking skeleton for a dry-run-capable importer
+- [`listing_4_3_idempotent_replay_test.py`](ch04/listing_4_3_idempotent_replay_test.py) — Listing 4.3: Focused test for an idempotent replay
+- [`listing_4_4_bounded_replay_policy.diff`](ch04/listing_4_4_bounded_replay_policy.diff) — Listing 4.4: Exact diff for the bounded replay policy
+- [`listing_4_5_migration_execution_contract.txt`](ch04/listing_4_5_migration_execution_contract.txt) — Listing 4.5: Staged execution contract for a user migration
 - [`PROMPTS.md`](ch04/PROMPTS.md) — Prompt blocks from the current manuscript draft
 
-### Chapter 5
+### Chapter 5 — Diagnosing failure under uncertainty
 
-- [`listing_5_1_universal_task_template.md`](ch05/listing_5_1_universal_task_template.md) — Listing 5.1: The universal task template
-- [`listing_5_2_test_cases.py`](ch05/listing_5_2_test_cases.py) — Listing 5.2: Using test cases to constrain a function
-- [`listing_5_3_structured_json.md`](ch05/listing_5_3_structured_json.md) — Listing 5.3: Requesting structured JSON output
-- [`listing_5_4_transform_sql_to_orm.md`](ch05/listing_5_4_transform_sql_to_orm.md) — Listing 5.4: Transform category: SQL to ORM
-- [`listing_5_5_generate_api_endpoint.md`](ch05/listing_5_5_generate_api_endpoint.md) — Listing 5.5: Generate category: API endpoint with full contract
-- [`listing_5_6_legacy_schema.sql`](ch05/listing_5_6_legacy_schema.sql) — Listing 5.6: Legacy source schema (`legacy_users`)
-- [`listing_5_7_target_schema.sql`](ch05/listing_5_7_target_schema.sql) — Listing 5.7: Target schema (`accounts` and audit)
+- [`listing_5_1_falsifiable_hypothesis.txt`](ch05/listing_5_1_falsifiable_hypothesis.txt) — Listing 5.1: A falsifiable hypothesis for a repeatable order failure
+- [`listing_5_2_timestamp_parser.py`](ch05/listing_5_2_timestamp_parser.py) — Listing 5.2: A timestamp parser that passes common examples
+- [`listing_5_3_structural_vs_behavior.py`](ch05/listing_5_3_structural_vs_behavior.py) — Listing 5.3: Structural assertions versus behavior assertions
+- [`listing_5_4_per_item_lookup.py`](ch05/listing_5_4_per_item_lookup.py) — Listing 5.4: The per-item lookup in the shipped summary path
+- [`listing_5_5_missing_product_repair.diff`](ch05/listing_5_5_missing_product_repair.diff) — Listing 5.5: The exact missing-product policy repair
+- [`listing_5_6_query_plan_evidence.txt`](ch05/listing_5_6_query_plan_evidence.txt) — Listing 5.6: Order and query-plan evidence for the repeated scan
 - [`PROMPTS.md`](ch05/PROMPTS.md) — Prompt blocks from the current manuscript draft
 
-### Chapter 6
+### Chapter 6 — Roles that produce independent artifacts
 
-- [`importer.py`](ch06/importer.py) — Listings 6.1–6.3: Parsing rows and deriving a stable idempotency key; Building requests and retrying transient failures; Running a dry import
-- [`test_importer.py`](ch06/test_importer.py) — The chapter 6 pytest suite: one test per slice's inspection question
+- [`validator.py`](ch06/validator.py) — Listing 6.1: The coder's validator implementation (maintained green version)
+- [`test_bool_is_not_accepted_as_int.py`](ch06/test_bool_is_not_accepted_as_int.py) — Listing 6.2: Independent focused test derived from the contract
+- [`cli.py`](ch06/cli.py) — Listing 6.3: A thin command-line runner for the verified validator
+- [`test_validator.py`](ch06/test_validator.py) — The eight maintained broader checks
 - [`PROMPTS.md`](ch06/PROMPTS.md) — Prompt blocks from the current manuscript draft
 
-### Chapter 7
+### Chapter 7 — Bounded agents and orchestration
 
-- [`validator.py`](ch07/validator.py) — Listing 7.1: The coder's validator implementation
-- [`test_validator.py`](ch07/test_validator.py) — Listings 7.2 and 7.3: Adversarial tests for the validator (core cases and boundary cases)
-- [`cli.py`](ch07/cli.py) — Listing 7.4: A thin CLI runner for the validator
-- [`listing_7_5_tool_use_loop.py`](ch07/listing_7_5_tool_use_loop.py) — Listing 7.5: A minimal tool-use loop
+- [`agent_loop.py`](ch07/agent_loop.py) — Listing 7.1: A minimal bounded tool-use loop
+- [`validator.py`](ch07/validator.py) — Listing 7.2 target: the validator with strict `float` support
+- [`test_agent_loop.py`](ch07/test_agent_loop.py) and [`test_validator.py`](ch07/test_validator.py) — the loop and validator suites
 - [`PROMPTS.md`](ch07/PROMPTS.md) — Prompt blocks from the current manuscript draft
 
-### Chapter 8
+### Chapter 8 — From checks to evaluations
 
-- [`allocation.py`](ch08/allocation.py) — Listing 8.1: Proportional money allocation; floors each share, then hands the leftover cents to the largest fractional parts so the shares sum to exactly `total`
-- [`sanity.py`](ch08/sanity.py) — Listing 8.2: Cheap, implementation-independent checks (`conserves` and `is_fair`)
-- [`test_allocation.py`](ch08/test_allocation.py) — Listing 8.3: Adversarial tests, one per category the tester and red-team prompts named
-- [`test_golden.py`](ch08/test_golden.py) — Listing 8.4: A frozen golden set, evaluation made executable
+- [`test_allocation.py`](ch08/test_allocation.py) — Listing 8.1: Two checks with different jobs, plus the behavior suite
+- [`allocation.py`](ch08/allocation.py) — Listing 8.2 target: proportional allocation with exact `Fraction` residues
+- [`test_golden.py`](ch08/test_golden.py) — Listing 8.3: Excerpt from the maintained allocation golden set
 - [`PROMPTS.md`](ch08/PROMPTS.md) — Prompt blocks from the current manuscript draft
 
-### Chapter 9
+### Chapter 9 — Context engineering: data, tools, and trust
 
-- [`AGENTS.md`](ch09/AGENTS.md) - Repository-level instructions that define the approved outbound HTTP boundary
-- [`alerts.py`](ch09/alerts.py) - The house-correct alert feature that uses `http_client.call`
-- [`http_client.py`](ch09/http_client.py) - The injectable, fail-closed house HTTP client with auth and bounded retries
-- [`test_alerts.py`](ch09/test_alerts.py) - Behavior checks for routing, auth, and failure responses
-- [`test_house_rules.py`](ch09/test_house_rules.py) - Executable AST guard against direct HTTP transports
-- [`test_http_client.py`](ch09/test_http_client.py) - Credential, retry, and no-network checks
-- [`fixtures/direct_requests/alerts.py`](ch09/fixtures/direct_requests/alerts.py) - Deterministic red-state fixture for the coding-agent session
-- [`PROMPTS.md`](ch09/PROMPTS.md) - The context-aware coding-agent prompt
+- [`AGENTS.md`](ch09/AGENTS.md) — Listing 9.1: A short project rule with an enforcement point
+- [`http_client.py`](ch09/http_client.py) — Listing 9.2: The response interface and alert call
+- [`retrieval.py`](ch09/retrieval.py) — Listing 9.3: Retrieve, preserve provenance, then inject
+- [`alerts.py`](ch09/alerts.py) — the house-correct alert feature that uses `http_client.call`
+- [`PROMPTS.md`](ch09/PROMPTS.md) — Prompt blocks from the current manuscript draft
 
-### Chapter 10
+### Chapter 10 — Software engineering: from idea to review-ready code
 
-- [`ch10/README.md`](ch10/README.md): Setup, listing index, evidence ledger, and known limits
-- [`reminders/service.py`](ch10/reminders/service.py): Listing 10.1, snooze policy behind injected clock and repository ports
-- [`tests/test_service.py`](ch10/tests/test_service.py): Listing 10.2, service policy checked with a fake repository and frozen clock
-- [`tests/test_sqlite_repository.py`](ch10/tests/test_sqlite_repository.py): Listing 10.3, a check that crosses the real SQLite row boundary
-- [`reminders/handler.py`](ch10/reminders/handler.py): Request validation and domain-outcome mapping
-- [`reminders/repository.py`](ch10/reminders/repository.py): Named row access and owner-scoped writes
-- [`manual_check.py`](ch10/manual_check.py): Listing 10.4, deterministic handler-to-SQLite output
-- [`AGENTS.md`](ch10/AGENTS.md): Path-scoped rules for coding agents
-- [`PROMPTS.md`](ch10/PROMPTS.md): Prompt blocks from the current manuscript draft
-- [`captures/README.md`](ch10/captures/README.md): Optional controlled red-to-green reproductions
+- [`reminders/service.py`](ch10/reminders/service.py) — Listing 10.1: Keeping snooze policy inside the service
+- [`tests/test_service.py`](ch10/tests/test_service.py) — Listing 10.2: Proving policy with a fake and frozen clock
+- [`tests/test_sqlite_repository.py`](ch10/tests/test_sqlite_repository.py) — Listing 10.3: Crossing the real SQLite row boundary
+- [`manual_check.py`](ch10/manual_check.py) — Listing 10.4: Comparing local responses with storage
+- [`PROMPTS.md`](ch10/PROMPTS.md) — Prompt blocks from the current manuscript draft
 
-### Chapter 11
+### Chapter 11 — Automation and operations: from proposal to production evidence
 
-- [`ch11/README.md`](ch11/README.md): Setup, project overview, real capture provenance, and limits
-- [`deployment.json`](ch11/deployment.json): Maintained safe deployment proposal
-- [`deployment_guard.py`](ch11/deployment_guard.py): Listing 11.1 policy checks plus plan and post-change verification
-- [`pipeline.py`](ch11/pipeline.py): Listing 11.2 provider-neutral compile, test, and read-only plan pipeline
-- [`incident_triage.py`](ch11/incident_triage.py): Listing 11.3 source-linked incident timeline selection
-- [`observation.json`](ch11/observation.json): Sanitized post-change observations
-- [`incident.jsonl`](ch11/incident.jsonl): Sanitized structured events for one rollout
-- [`test_deployment_guard.py`](ch11/test_deployment_guard.py): Deployment policy and postcondition checks
-- [`test_incident_triage.py`](ch11/test_incident_triage.py): Timeline filtering, evidence, and ordering checks
-- [`requirements.txt`](ch11/requirements.txt): Chapter test dependency
-- [`PROMPTS.md`](ch11/PROMPTS.md): The two human prompt blocks from the current manuscript
-- [`captures/README.md`](ch11/captures/README.md): Controlled red-state reproduction guidance
-- [`captures/deployment-before.json`](ch11/captures/deployment-before.json): Preserved one-line red fixture
-- [`captures/session-transcript.md`](ch11/captures/session-transcript.md): Historical red-to-green command record
+- [`deployment_guard.py`](ch11/deployment_guard.py) — Listing 11.1: Rollout-policy branch for unavailable capacity
+- [`pipeline.py`](ch11/pipeline.py) — Listing 11.2: Stopping the pipeline at the approval boundary
+- [`incident_triage.py`](ch11/incident_triage.py) — Listing 11.3: Selecting one deployment's events in time order (and printing Listing 11.4)
+- [`listing_11_5.txt`](ch11/listing_11_5.txt) — Listing 11.5: A post-change evidence packet
+- [`PROMPTS.md`](ch11/PROMPTS.md) — Prompt blocks from the current manuscript draft
 
-Chapters 6 through 11 are runnable projects with passing pytest suites:
-`cd ch06 && python3 -m pytest -q` prints `7 passed`,
-`cd ch07 && python3 -m pytest -q` prints `8 passed`,
-`cd ch08 && python3 -m pytest -q` and
-`cd ch09 && python3 -m pytest -q` each print `9 passed`, and
-`cd ch10 && python3 -m pytest -q` prints `49 passed`, and
-`cd ch11 && python3 -m pytest -q` prints `12 passed`. Chapters 9 and 11
-document their deterministic red-to-green exercises in
-[`ch09/README.md`](ch09/README.md) and [`ch11/README.md`](ch11/README.md).
+### Chapter 12 — Measuring and governing AI-assisted work
+
+- [`workflow_metrics.py`](ch12/workflow_metrics.py) — Listing 12.3 target: the green metric that counts every terminal attempt
+- [`test_workflow_metrics.py`](ch12/test_workflow_metrics.py) — Listing 12.2: Failed attempts remain in the denominator
+- [`listing_12_3_terminal_denominator.diff`](ch12/listing_12_3_terminal_denominator.diff) — Listing 12.3: Counting terminal attempts in the denominator
+- [`listing_12_4_decision_record.py`](ch12/listing_12_4_decision_record.py) — Listing 12.4: A reviewable workflow decision record
+- [`captures/before/workflow_metrics.py`](ch12/captures/before/workflow_metrics.py) — Listing 12.1: the defective before-state metric
+- [`PROMPTS.md`](ch12/PROMPTS.md) — Prompt blocks from the current manuscript draft
+
+Chapters 6 through 12 are runnable projects with passing test suites. From the
+chapter directory, run `python3 -m pytest -q`:
+
+- `ch06` prints `8 passed`,
+- `ch07` prints `13 passed`,
+- `ch08` prints `10 passed`,
+- `ch09` prints `14 passed`,
+- `ch10` prints `49 passed`,
+- `ch11` prints `24 passed`, and
+- `ch12` prints `4 passed` (equivalently, `python3 -m unittest -v test_workflow_metrics`).
+
+Chapters 6, 7, 8, 9, 11, and 12 document their deterministic red-to-green
+exercises under each chapter's `captures/README.md`; Chapter 10 documents its
+controlled reproductions in [`ch10/captures/README.md`](ch10/captures/README.md).
 
 ## Running the Code
 
+Chapters 6 through 12 (and Chapter 2, for `jsonschema`) declare their
+dependencies:
+
 ```bash
 pip install -r ch02/requirements.txt \
-    -r ch03/requirements.txt \
-    -r ch04/requirements.txt \
     -r ch06/requirements.txt \
     -r ch07/requirements.txt \
     -r ch08/requirements.txt \
     -r ch09/requirements.txt \
     -r ch10/requirements.txt \
-    -r ch11/requirements.txt
+    -r ch11/requirements.txt \
+    -r ch12/requirements.txt
 ```
 
-Chapter 1 has no listings. Chapter 5 listings are mostly prompt templates
-(Markdown files) and SQL schemas rather than runnable Python code, so that
-chapter has no `requirements.txt`.
+Chapter 1 listings are excerpts and captured evidence. Chapters 3, 4, and 5
+listings are standalone Python, text, and diff files that mirror the printed
+listings; they need no third-party packages. Chapter 2's printed listings run
+offline through a deterministic local fixture (Listing 2.2), so no model
+provider or API key is required; only `jsonschema` is needed.
 
-Chapters 6 through 11 are self-contained, runnable projects. Each needs
-only `pytest`; from the chapter directory, run `python3 -m pytest -q`.
-Chapters 9 and 11 document their red-to-green exercises in their README files.
-Chapters 10 and 11 require CPython 3.11 or newer. Chapter 10 reports
-`49 passed`; Chapter 11's current maintained suite reports `12 passed`.
+Chapters 6 through 12 are self-contained, runnable projects. Each needs only
+`pytest`; from the chapter directory, run `python3 -m pytest -q`. Chapters 10,
+11, and 12 use CPython 3.11 or newer.
 
-Chapter 2 listings share a small provider-neutral client in
-[`llm_client.py`](llm_client.py). Set these environment variables:
-
-```bash
-export AI_API_URL="https://YOUR_ENDPOINT/v1/chat/completions"
-export AI_MODEL="your-model-name"
-export AI_API_KEY="your-key-if-needed"
-```
+The provider-neutral [`llm_client.py`](llm_client.py) helper remains available
+for readers who want to wire a listing to a live model, but the printed
+listings in this edition run without one.
 
 ## License
 

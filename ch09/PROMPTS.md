@@ -1,15 +1,9 @@
-# Chapter 9 prompts
+# CH09 Prompts
 
-## Apply repository context, then verify
+Prompt blocks extracted from the current manuscript source.
+
+## Inspect the seam before editing
 
 ````text
-Read the instructions that apply to this directory before editing.
-
-`alerts.py` needs `send_alert(message)` to post `{"text": message}` to
-`ALERTS_URL` and return true for a successful response. Make the smallest
-change that fits this repository. Do not add dependencies or make a live
-network call.
-
-Run the relevant behavior tests and executable house-rule checks. Report the
-commands and results.
+Inspect `alerts.py`, the focused alert-routing test, the executable house-rule guard, and the shared client interface. Before editing, run the focused test against the staged before state. Require `send_alert` to route the existing method, URL, and JSON payload through `http_client.call`, while the broader guard still rejects `requests` and any other direct transport. Report genuine red and the smallest-reviewable-change plan. Preserve readable idiom; do not weaken tests, add dependencies, or edit canonical files.
 ````

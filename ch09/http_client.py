@@ -48,7 +48,7 @@ def call(
     headers: Optional[Mapping[str, str]] = None,
     max_retries: int = 2,
 ) -> Response:
-    """Apply auth and retry transient responses through one transport."""
+    """Apply auth and bounded transient retries."""
     if max_retries < 0:
         raise ValueError("max_retries must be non-negative")
 

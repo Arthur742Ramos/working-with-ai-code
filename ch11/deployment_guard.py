@@ -5,9 +5,13 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import reprlib
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+
+
+MAX_ERROR_RATE = 0.02
 
 
 @dataclass(frozen=True)
@@ -76,6 +80,24 @@ def load_observation(path: Path) -> Observation:
     )
 
 
+def _is_finite_number(value: object) -> bool:
+    if isinstance(value, bool):
+        return False
+    if isinstance(value, int):
+        return True
+    return (
+        isinstance(value, float)
+        and math.isfinite(value)
+    )
+
+
+def _is_valid_rate_limit(value: object) -> bool:
+    return (
+        _is_finite_number(value)
+        and 0 < value <= MAX_ERROR_RATE
+    )
+
+
 def rollout_violations(
     plan: DeploymentPlan,
 ) -> list[str]:
@@ -90,13 +112,16 @@ def rollout_violations(
         type(plan.max_unavailable) is not int
         or plan.max_unavailable not in (0, 1)
     ):
-        failures.append("max_unavailable must be 0 or 1")
+        failures.append(
+            "max_unavailable must be 0 or 1"
+        )
     if (
         not isinstance(plan.readiness_path, str)
         or not plan.readiness_path.startswith("/")
     ):
         failures.append("readiness_path must start with /")
-    if not 0 < plan.error_rate_limit <= 0.02:
+    rate = plan.error_rate_limit
+    if not _is_valid_rate_limit(rate):
         failures.append(
             "error_rate_limit must be > 0 and <= 0.02"
         )
@@ -139,50 +164,106 @@ def verification_failures(
         failures.append(
             "observed revision does not match plan"
         )
-    if observed.total_replicas != plan.replicas:
+    if type(observed.total_replicas) is not int:
+        failures.append("observed replica total is invalid")
+    elif observed.total_replicas != plan.replicas:
         failures.append(
             "observed replica total does not match"
         )
-    if observed.ready_replicas != plan.replicas:
+    if type(observed.ready_replicas) is not int:
+        failures.append(
+            "observed ready replicas are invalid"
+        )
+    elif observed.ready_replicas != plan.replicas:
         failures.append(
             "not all planned replicas are ready"
         )
     rate = observed.error_rate
+    limit = plan.error_rate_limit
     if (
-        isinstance(rate, bool)
-        or not isinstance(rate, (int, float))
-        or not math.isfinite(rate)
+        not _is_finite_number(rate)
         or not 0 <= rate <= 1
     ):
         failures.append("observed error rate is invalid")
-    elif rate > plan.error_rate_limit:
+    elif not _is_valid_rate_limit(limit):
+        failures.append("plan error rate limit is invalid")
+    elif rate > limit:
         failures.append("observed error rate exceeds limit")
     if observed.request_succeeded is not True:
         failures.append("representative request failed")
     return failures
 
 
-def describe_plan(plan: DeploymentPlan) -> str:
+def _short_repr(
+    value: object,
+    limit: int = 40,
+) -> str:
+    rendered = reprlib.repr(value)
+    if len(rendered) <= limit:
+        return rendered
+    return rendered[: limit - 3] + "..."
+
+
+def _safe_field(
+    value: object,
+    limit: int = 80,
+) -> str:
+    if not isinstance(value, str):
+        return _short_repr(value, limit)
+    sample = value[:limit]
+    rendered = "".join(
+        character
+        if character.isprintable()
+        else f"\\x{ord(character):02x}"
+        for character in sample
+    )
+    if len(value) > limit:
+        rendered += "..."
+    if len(rendered) > limit:
+        rendered = rendered[: limit - 3] + "..."
+    return rendered
+
+
+def _format_rate(value: object) -> str:
+    if not _is_valid_rate_limit(value):
+        return _short_repr(value)
+    rendered = repr(value)
+    if "e" in rendered.lower():
+        return rendered
+    whole, separator, fraction = rendered.partition(".")
+    if not separator:
+        return f"{whole}.000"
+    return f"{whole}.{fraction.ljust(3, '0')}"
+
+
+def describe_plan(
+    plan: DeploymentPlan,
+    failures: list[str] | None = None,
+) -> str:
     """Render the pipeline's small approval surface."""
     lines = [
-        f"service={plan.service}",
-        f"environment={plan.environment}",
+        f"service={_safe_field(plan.service)}",
+        f"environment={_safe_field(plan.environment)}",
         (
             "revision="
-            f"{plan.current_revision} -> "
-            f"{plan.proposed_revision}"
+            f"{_safe_field(plan.current_revision)} -> "
+            f"{_safe_field(plan.proposed_revision)}"
         ),
         (
-            f"rollout=batch {plan.batch_size}, "
-            f"max unavailable {plan.max_unavailable}"
+            "rollout=batch "
+            f"{_safe_field(plan.batch_size)}, "
+            "max unavailable "
+            f"{_safe_field(plan.max_unavailable)}"
         ),
         (
-            f"health={plan.readiness_path}, "
-            f"error rate <= {plan.error_rate_limit:.3f}"
+            f"health={_safe_field(plan.readiness_path)}, "
+            "error rate <= "
+            f"{_format_rate(plan.error_rate_limit)}"
         ),
-        f"rollback={plan.rollback_revision}",
+        f"rollback={_safe_field(plan.rollback_revision)}",
     ]
-    failures = policy_violations(plan)
+    if failures is None:
+        failures = policy_violations(plan)
     status = "PASS" if not failures else "BLOCK"
     lines.append(f"policy={status}")
     lines.extend(f"violation={item}" for item in failures)
@@ -208,8 +289,15 @@ def main() -> int:
     args = _parse_args()
     plan = load_plan(args.config)
     if args.command == "plan":
-        print(describe_plan(plan))
-        return 0 if not policy_violations(plan) else 2
+        failures = policy_violations(plan)
+        print(describe_plan(plan, failures))
+        return 0 if not failures else 2
+    plan_failures = policy_violations(plan)
+    if plan_failures:
+        print("verification=FAIL")
+        for item in plan_failures:
+            print(f"failure=plan policy: {item}")
+        return 3
     observed = load_observation(args.observation)
     failures = verification_failures(plan, observed)
     status = "PASS" if not failures else "FAIL"

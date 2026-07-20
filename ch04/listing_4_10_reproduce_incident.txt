@@ -1,9 +1,0 @@
-$ python loadtest.py --requests 300 \
-    --concurrency 20
-p50  9.5ms   p99 155.2ms   max 205ms
-error rate 12.7%  (38/300)
-
-$ curl -s localhost:8080/orders/112/summary
-HTTP 500
-$ curl -s localhost:8080/orders/16/summary
-HTTP 200

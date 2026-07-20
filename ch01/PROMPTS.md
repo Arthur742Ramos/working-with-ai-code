@@ -2,46 +2,14 @@
 
 Prompt blocks extracted from the current manuscript source.
 
-These are the conversation prompts from the worked 3C Loop examples: refining an
-Alembic migration, then adding rate limiting to a Flask endpoint across three turns.
-
-## Alembic migration contract
+## Inspect the fallback signal
 
 ````text
-Write an Alembic migration to add a preferences JSONB column to the users table. PostgreSQL 14. Default to empty object. Add an index for preferences->>'theme'. Include both upgrade and downgrade functions.
+Inspect `app.py` and run the focused fallback-observability test before editing. Keep the existing bounded fail-open overload policy, per-user key, Redis storage, and ten-per-minute limit. Add one real application-visible fallback signal. Plan first and do not edit yet. Stop if the focused test does not reproduce the failure or if the repair cannot stay reviewable.
 ````
 
-## Adding a check constraint
+## Challenge the repair
 
 ````text
-This looks good, but I also need a check constraint. It should ensure the JSON is always an object, not an array or primitive.
-````
-
-## Rate limiting request
-
-````text
-Here is a Flask endpoint in my app:
-
-```python
-@app.route("/api/upload", methods=["POST"])
-@login_required
-def upload():
-    f = request.files["file"]
-    save_upload(current_user.id, f)
-    return {"ok": True}
-```
-
-Add rate limiting: at most 10 requests per minute per user. Keep it simple.
-````
-
-## Sharing state across instances
-
-````text
-This needs to work across multiple server instances behind a load balancer. The in-process counter won't be shared. We use redis-py; switch to Redis for shared state.
-````
-
-## Redis failure policy
-
-````text
-What happens if Redis is unavailable? Should requests fail open (allow) or fail closed (reject)?
+Challenge the implementation against the strict smallest production diff. Preserve the accepted fallback behavior and require the existing library warning to reach the application logger. Reject any extra mechanism the library already provides.
 ````

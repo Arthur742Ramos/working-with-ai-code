@@ -7,7 +7,7 @@ Agent surface: GitHub Copilot CLI
 Runtime: CPython 3.14.6
 
 The capture started with `deployment.json` equal to
-`deployment-before.json`. Before editing, the agent read the applicable
+`deployment_policy_value/before/deployment.json`. Before editing, the agent read the applicable
 repository instructions, `deployment.json`, the policy function in
 `deployment_guard.py`, and the focused test in
 `test_deployment_guard.py`.

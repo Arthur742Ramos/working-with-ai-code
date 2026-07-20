@@ -1,0 +1,22 @@
+Goal: import validated customers without duplicates.
+
+Preconditions:
+- source_id is stable across exports
+- the API accepts Idempotency-Key
+- invalid rows are skipped and counted
+
+Stage 1: parse and normalize one row
+Artifact: CustomerRow plus stable key
+Check: invalid fields fail; email changes keep the key
+Gate: approve the identity rule
+
+Stage 2: build and send one request
+Artifact: request builder plus injected sender
+Check: only 429, 500, 502, 503, and 504 retry
+Check: 400 fails immediately
+Gate: approve retry and success policy
+
+Stage 3: run the smallest end-to-end path
+Artifact: dry-run-capable runner and summary counts
+Check: dry run sends nothing
+Gate: accept the skeleton evidence or revise the plan

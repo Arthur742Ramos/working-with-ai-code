@@ -1,47 +1,19 @@
-# Chapter 1: From magic to tool
+# Chapter 1 — Code Listings
 
-This chapter introduces the 3C Loop (Contract, Conversation, Checks) and does not include numbered code listings. Instead, it uses prompt examples that illustrate the difference between vague prompts and contract-style prompts, then traces two complete 3C Loop conversations.
+Working with AI as engineering, not magic: a single worked repair on a
+Flask rate limiter. You inspect the code, reproduce a focused red (the
+in-memory fallback transition never reaches the application logger), apply
+the accepted one-line repair, then show focused and broader green evidence.
 
-See [`PROMPTS.md`](PROMPTS.md) for the conversation prompts used in the worked examples (the Alembic migration and the rate-limiting walkthrough).
+- **`listing_1_1_rate_limiter_before.py`** — Listing 1.1: The rate limiter before the observability repair
+- **`listing_1_2_focused_red.txt`** — Listing 1.2: Genuine focused red for the missing signal
+- **`listing_1_3_accepted_repair.diff`** — Listing 1.3: The accepted one-line repair
+- **`listing_1_4_green_evidence.txt`** — Listing 1.4: Focused and broader green evidence
+- **`PROMPTS.md`** — Prompt blocks from the current manuscript draft
 
-## Key Prompts
+Listing 1.1 is an excerpt of the application under repair. Listings 1.2 and
+1.4 are captured test output, and Listing 1.3 is the printed one-line diff
+fragment, so they mirror the printed listings rather than standing alone as
+runnable modules.
 
-### Vague prompt (what not to do)
-
-```
-Write me some code for handling errors.
-```
-
-### Contract-style prompt (what to do instead)
-
-```
-Write a Python function that wraps API calls with retry logic.
-
-Requirements:
-- Retry up to 3 times on transient errors (timeouts, 5xx responses)
-- Use exponential backoff starting at 1 second
-- Raise the original exception after retries fail
-- Log each retry attempt with the error details
-```
-
-### Weak contract
-
-```
-Write a database migration to add user preferences.
-```
-
-### Strong contract
-
-```
-Write an Alembic migration to add a preferences JSONB column to the users table.
-PostgreSQL 14. Default to empty object. Add an index for preferences->>'theme'.
-Include both upgrade and downgrade functions.
-```
-
-## Concepts Introduced
-
-- The myth of magic prompts
-- Prompts as contracts (task, constraints, context, output format)
-- The 3C Loop: Contract, Conversation, Checks
-- Just-enough machinery: next-token prediction, context windows, temperature, hallucination
-- Judgment as the scarce skill AI will not replace
+See the [main README](../README.md) for setup instructions.

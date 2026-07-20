@@ -85,6 +85,8 @@ class SnoozeReminderService:
         now = normalize_utc(self._clock.now())
         updated = replace(
             reminder,
-            snoozed_until=now + timedelta(minutes=minutes),
+            snoozed_until=(
+                now + timedelta(minutes=minutes)
+            ),
         )
         return self._repository.save(updated)
