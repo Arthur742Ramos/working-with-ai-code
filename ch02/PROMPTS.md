@@ -2,45 +2,22 @@
 
 Prompt blocks extracted from the current manuscript source.
 
-## Vague summary request
-
-````text
-Summarize this document.
-````
-
-## Structured summary request
-
-````text
-Summarize this document in 3-5 bullet points.
-Focus on actionable recommendations. Skip background information.
-Each bullet should be one sentence.
-````
-
-## Step-by-step code review
-
-````text
-Review this code in three steps:
-1. First, identify what the code accomplishes
-2. Then, list any bugs with line numbers
-3. Finally, propose fixes for each issue, explaining why each fix works
-````
-
 ## Ask for a PR description
 
 ````text
 Write a PR description for this diff:
 
-[the staged git diff]
+[a staged validation diff]
 ````
 
-## Retry: JSON parse error
+## Inspect the retry wiring
 
 ````text
-That JSON was invalid: Expecting value: line 1 column 1 (char 0). Fix it to match the schema.
+The CLI appears to bypass the existing conversational retry path after malformed structured output. Inspect `pr_generator.py` and the focused test. Run a discriminating red check, state the strict smallest-change plan, and identify the retry policy a human must own. Do not edit production code yet.
 ````
 
-## Retry: schema validation error
+## Apply the bounded repair
 
 ````text
-That JSON was invalid: ['Test invalid email'] is too short. Fix it to match the schema.
+Reuse the existing helper unchanged. Retry JSON and schema failures, allow two retries for three attempts total, and apply the strict smallest production diff. Then run the focused check and the broader neighboring checks.
 ````

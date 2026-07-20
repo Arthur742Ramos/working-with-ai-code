@@ -1,5 +1,0 @@
-            before      after
-p50         9.5 ms      2.3 ms
-p99       155.2 ms    128.9 ms
-error      12.7%        0.0%
-order 112   500         200  (unknown product)

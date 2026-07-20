@@ -1,0 +1,9 @@
+$ python tests/focused_test.py app.py
+PASS: test_redis_outage_routes_fallback_warning_to_app_logger
+observed: 1 fallback warning on application logger
+neighbor retained: user-1 first 10=200, 11th=429; user-2 first=200
+
+$ python tests/broader_test.py app.py
+PASS: test_healthy_storage_emits_no_fallback_warning
+observed: 0 fallback warnings on application logger
+neighbor retained: user-1 first 10=200, 11th=429; user-2 first=200

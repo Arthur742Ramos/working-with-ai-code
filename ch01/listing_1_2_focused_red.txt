@@ -1,0 +1,4 @@
+FAIL: test_redis_outage_routes_fallback_warning_to_app_logger
+expected: 1 fallback warning on application logger
+observed: 0 fallback warnings on application logger
+neighbor retained: user-1 first 10=200, 11th=429; user-2 first=200

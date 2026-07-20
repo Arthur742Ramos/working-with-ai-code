@@ -33,7 +33,15 @@ STAGES = (
     ),
     Stage(
         "test",
-        (sys.executable, "-m", "pytest", "-q"),
+        (
+            sys.executable,
+            "-m",
+            "pytest",
+            "-q",
+            "test_deployment_guard.py",
+            "test_incident_triage.py",
+            "test_pipeline.py",
+        ),
     ),
     Stage(
         "plan-and-policy",
@@ -49,7 +57,7 @@ STAGES = (
 
 def run_stage(stage: Stage) -> int:
     """Run one stage and preserve its real exit code."""
-    print(f"== {stage.name} ==")
+    print(f"== {stage.name} ==", flush=True)
     completed = subprocess.run(
         stage.command,
         cwd=ROOT,

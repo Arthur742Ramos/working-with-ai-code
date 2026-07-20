@@ -1,40 +1,54 @@
-# Chapter 7 — Code Listings
+# Chapter 7 — Bounded agents and orchestration
 
-The running example for chapter 7: a JSON config validator built by four
-narrow roles (architect, coder, tester, explainer) and then extended by a
-real agent session in section 7.6. Like chapter 6, this is a runnable
-project rather than a set of standalone listing files.
+A minimal bounded tool-use loop (allow-list plus a step budget) alongside a
+strict-`float` type added to the JSON config validator through an
+independent inspect-red-fix cycle.
 
-- **`validator.py`** — Listing 7.1: The coder's validator implementation.
-  `validate(config, schema) -> list[ValidationError]` walks the schema,
-  never raises, and returns a list of dotted-path errors. `CHECKS` is the
-  set of supported types.
-- **`test_validator.py`** — Listings 7.2 and 7.3: Adversarial tests for
-  the validator, one per category the tester role named. The core cases
-  (happy path and top-level misses) are Listing 7.2; the boundary cases
-  (empty schema, bool-is-not-int, malformed rules) are Listing 7.3. It
-  also includes `test_float_type_is_supported`, the slice the agent adds
-  in section 7.6.
-- **`cli.py`** — Listing 7.4: A thin CLI runner for the validator. Loads
-  `schema.json` and `config.json`, calls `validate`, prints errors, and
-  exits 0 or 1. No validation logic lives here.
-- **`listing_7_5_tool_use_loop.py`** — Listing 7.5: A minimal tool-use
-  loop. An illustrative snippet that shows the shape of an agent loop; it
-  references undefined names and is **not** run by the test suite.
+- **`agent_loop.py`** — Listing 7.1: A minimal bounded tool-use loop
+- **`validator.py`** — Listing 7.2 target: the maintained green validator with strict `float` support
+- **`test_agent_loop.py`** — Behavior checks for the loop's return, tool routing, allow-list, and step budget
+- **`test_validator.py`** — The nine maintained validator checks, including the strict-float cases
+- **`cli.py`** — A thin command-line runner for the validator
+- **`fixtures/`** — `schema.json`, `config-valid.json`, and `config-invalid.json` for the CLI
+- **`captures/before/validator.py`** — the red before-state validator with no `float` type
 - **`PROMPTS.md`** — Prompt blocks from the current manuscript draft
 
-The `float` test in `test_validator.py` starts red. Adding `"float"` to
-`CHECKS` is the worked agent slice; section 7.6 shows the real capture
-going from red to green.
+## Setup and checks
 
-Run the suite:
+Run from this directory (needs only `pytest`):
 
 ```bash
-cd ch07 && python3 -m pytest -q
+python3 -m pytest -q
+python3 cli.py --schema fixtures/schema.json --config fixtures/config-valid.json
+python3 cli.py --schema fixtures/schema.json --config fixtures/config-invalid.json
 ```
 
-Expected: `8 passed`. The suite does not import
-`listing_7_5_tool_use_loop.py`. The only dependency is `pytest`
-(see [`requirements.txt`](requirements.txt)).
+`python3 -m pytest -q` reports **13 passed** (four loop checks plus nine
+validator checks). The valid CLI command prints `ok` and exits `0`; the
+invalid one reports `service.port: expected int` and
+`service.ratio: expected float` and exits `1`.
+
+## Listing map
+
+- **Listing 7.1** is `agent_loop.py`: `run_agent` bounds the model with an
+  allowed-tool set and a fixed step budget, returning final text, raising
+  `PermissionError` on an out-of-policy tool, and `RuntimeError` when the
+  budget is spent. The inline `# A`–`# D` markers match the printed callouts.
+- **Listing 7.2** is the one-line registration of a strict `float` predicate
+  (`type(value) is float`) in the validator's `CHECKS`. The maintained
+  `validator.py` is the green after-state; `captures/before/validator.py` is
+  the red before-state without the `float` entry.
+
+## Red-to-green capture
+
+See [`captures/README.md`](captures/README.md) to reproduce the strict-float
+red result and the one-line repair.
+
+## Limits
+
+A step budget is a stop condition, not a sandbox: it bounds how long a loop
+runs, not which files, commands, or network targets a tool may reach. The
+loop's permission check stops at the tool name; a production harness should
+prefer typed tools or validated argument vectors over model-authored text.
 
 See the [main README](../README.md) for setup instructions.

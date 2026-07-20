@@ -1,23 +1,23 @@
 # Chapter 5 — Code Listings
 
-The four prompt building blocks (role, constraints, examples, steps) and
-the four task categories (explain, transform, generate, critique), ending
-in a data-migration case study where an explicit operational contract turns
-an irreversible task into a reviewable one.
+Diagnosing failure under uncertainty: a falsifiable hypothesis for a
+repeatable order failure, a timestamp parser that passes common examples
+but hides edge cases, structural versus behavioral assertions, the shipped
+per-item lookup that dereferences a missing product, the exact fail-closed
+policy repair, and the order and query-plan evidence for the repeated scan.
 
-- **`listing_5_1_universal_task_template.md`** — Listing 5.1: The universal task template
-- **`listing_5_2_test_cases.py`** — Listing 5.2: Using test cases to constrain a function
-- **`listing_5_3_structured_json.md`** — Listing 5.3: Requesting structured JSON output
-- **`listing_5_4_transform_sql_to_orm.md`** — Listing 5.4: Transform category: SQL to ORM
-- **`listing_5_5_generate_api_endpoint.md`** — Listing 5.5: Generate category: API endpoint with full contract
-- **`listing_5_6_legacy_schema.sql`** — Listing 5.6: Legacy source schema (`legacy_users`)
-- **`listing_5_7_target_schema.sql`** — Listing 5.7: Target schema (`accounts` and audit)
+- **`listing_5_1_falsifiable_hypothesis.txt`** — Listing 5.1: A falsifiable hypothesis for a repeatable order failure
+- **`listing_5_2_timestamp_parser.py`** — Listing 5.2: A timestamp parser that passes common examples
+- **`listing_5_3_structural_vs_behavior.py`** — Listing 5.3: Structural assertions versus behavior assertions
+- **`listing_5_4_per_item_lookup.py`** — Listing 5.4: The per-item lookup in the shipped summary path
+- **`listing_5_5_missing_product_repair.diff`** — Listing 5.5: The exact missing-product policy repair
+- **`listing_5_6_query_plan_evidence.txt`** — Listing 5.6: Order and query-plan evidence for the repeated scan
 - **`PROMPTS.md`** — Prompt blocks from the current manuscript draft
 
-Most chapter 5 listings are prompt templates rather than runnable Python code.
-Listing 5.2 defines the test cases that constrain a `slugify` specification.
-Listings 5.6 and 5.7 are the legacy and target schemas for the migration case
-study (`code/ch05/schema_legacy.sql` and `code/ch05/schema_new.sql` in the
-book repo); the chapter's migration prompts name the target `schema_new.sql`.
+Listings 5.3 and 5.4 are excerpts of the order module under diagnosis
+(`process_order`, `sample_order`, `lookup_product`, and the surrounding
+loop variables are defined there), so they mirror the printed listings
+rather than standing alone. Listing 5.5 is the exact applied diff against
+`server.py`, and Listing 5.6 is captured SQLite session evidence.
 
 See the [main README](../README.md) for setup instructions.

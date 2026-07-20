@@ -1,0 +1,18 @@
+Task: [the result to produce]
+
+Accepted behavior:
+- [observable result]
+- [edge case or failure behavior]
+
+Context:
+- [authoritative input the task needs]
+
+Constraints and non-goals:
+- [testable boundary]
+- [work explicitly outside scope]
+
+Output:
+- [format required by the next consumer]
+
+Checks:
+- [command, schema, or inspection]

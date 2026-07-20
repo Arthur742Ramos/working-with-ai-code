@@ -1,32 +1,55 @@
-# Chapter 6 — Code Listings
+# Chapter 6 — Roles that produce independent artifacts
 
-The running example for chapter 6: a CSV customer importer built slice by
-slice in a planner-executor flow. Parse one row and derive a stable
-idempotency key, build and retry the API request, then run a dry import
-that counts outcomes. This chapter is a runnable project rather than a set
-of standalone listing files, so a reader can `cd` in and run the tests.
+A JSON config validator built by four narrow roles (architect, coder,
+tester, explainer). An independent tester's focused test catches Python
+`True` being accepted where a schema requires `int`, and the implementer
+tightens exactly one predicate under an explicit policy.
 
-- **`importer.py`** — Listings 6.1–6.3: `parse_customer` (6.1: parsing rows
-  and deriving a stable idempotency key), `build_request` and
-  `send_with_retry` (6.2: building requests and retrying transient
-  failures), and `run_import` (6.3: running a dry import). The sender is
-  injected so retry behavior is testable without real network calls.
-- **`test_importer.py`** — One test per slice's inspection question:
-  parsing, stable keys, transient retry, nonretryable failure, dry run, and
-  the `409 Conflict` idempotent-replay case.
+- **`validator.py`** — Listing 6.1: The coder's validator implementation (maintained green version)
+- **`test_bool_is_not_accepted_as_int.py`** — Listing 6.2: Independent focused test derived from the contract
+- **`cli.py`** — Listing 6.3: A thin command-line runner for the verified validator
+- **`test_validator.py`** — The eight maintained broader checks for the validator
+- **`schema.json`**, **`config.json`**, **`invalid_config.json`** — generic fixtures for the CLI commands
+- **`captures/before/validator.py`** — the permissive red before-state fixture
 - **`PROMPTS.md`** — Prompt blocks from the current manuscript draft
 
-The `409` test is the worked "change the plan on new evidence" slice from
-section 6.3: it starts red, and adding `IDEMPOTENT_REPLAY = {409}` to
-`send_with_retry` takes it green.
+## Setup and checks
 
-Run the suite:
+Run from this directory (needs only `pytest`):
 
 ```bash
-cd ch06 && python3 -m pytest -q
+python3 -m pytest -q
+python3 cli.py --schema schema.json --config config.json
+python3 cli.py --schema schema.json --config invalid_config.json
+python3 test_bool_is_not_accepted_as_int.py validator.py
 ```
 
-Expected: `7 passed`. The only dependency is `pytest`
-(see [`requirements.txt`](requirements.txt)).
+`python3 -m pytest -q` reports **8 passed**. The valid CLI command prints
+`ok` and exits `0`; the invalid one prints `service.port: expected int` and
+exits `1`. The focused handoff test prints `PASS`.
+
+## Listing map
+
+- **Listing 6.1** follows the formatting of the maintained `validator.py`,
+  but its printed `int` predicate (`isinstance(value, int)`) is the coder's
+  permissive before-state, preserved under `captures/before/validator.py`.
+  The maintained `validator.py` keeps the accepted strict predicate
+  (`type(value) is int`).
+- **Listing 6.2** is `test_bool_is_not_accepted_as_int.py`, the independent
+  focused tester artifact and standalone green check.
+- **Listing 6.3** is `cli.py`, the thin command-line runner.
+
+## Red-to-green capture
+
+The permissive before-state accepts `True` where an `int` is required. See
+[`captures/README.md`](captures/README.md) to reproduce the focused red, the
+one-line repair, and the focused and broader green.
+
+## Limits
+
+The validator supports only strings, exact built-in integers, Booleans,
+dictionaries, and exact built-in floats. Arrays, coercion, custom messages,
+and unknown-key validation are out of scope. The capture proves only the
+Boolean-as-integer repair; it does not choose a product's schema policy.
 
 See the [main README](../README.md) for setup instructions.

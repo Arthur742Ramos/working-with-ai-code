@@ -1,11 +1,11 @@
-"""Listing 2.6: Retry logic with conversational error feedback
+"""Listing 2.6: Conversational retry after validation failure
 
 From "Working with AI as a Real Teammate" (Manning)
 Chapter 2
 
-Reuses SYSTEM_PROMPT, build_prompt, and SCHEMA from the earlier listings.
+Continues the module from Listing 2.4, reusing `build_prompt`,
+`SYSTEM_PROMPT`, `SCHEMA`, `chat`, `json`, and `ValidationError`.
 """
-
 
 def generate_with_retry(diff: str,
                         max_retries: int = 2

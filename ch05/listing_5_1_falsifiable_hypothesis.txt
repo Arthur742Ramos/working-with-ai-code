@@ -1,0 +1,15 @@
+Observation:
+Order 7 fails on every summary request.
+A neighboring valid order succeeds.
+
+Hypothesis:
+Order 7 references a product absent from the catalog.
+The summary code dereferences the missing lookup result.
+
+Prediction:
+A left join will expose at least one missing product row.
+The same seeded order will fail before total calculation.
+
+Disproof:
+Reject this hypothesis if every referenced product exists
+or if the failure occurs before product lookup.

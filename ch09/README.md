@@ -1,98 +1,52 @@
-# Chapter 9 - Context engineering with executable house rules
+# Chapter 9 — Context engineering: data, tools, and trust
 
-This runnable sample shows why an agent needs repository context, not just a
-better prompt. The feature is intentionally small: post an alert when a job
-fails. A generic implementation might import `requests` and post directly.
-That code is plausible, but wrong for this service because it bypasses the
-approved client that owns authentication and retries.
+A short project rule with an executable enforcement point, an approved
+outbound-HTTP boundary with auth and bounded retries, an alert feature routed
+through that seam, and a retrieval helper that preserves provenance before
+injecting evidence into a prompt.
 
-The important surfaces are:
+- **`AGENTS.md`** — Listing 9.1: A short project rule with an enforcement point
+- **`http_client.py`** — Listing 9.2: The response interface and alert call
+- **`retrieval.py`** — Listing 9.3: Retrieve, preserve provenance, then inject
+- **`alerts.py`** — the house-correct alert feature that uses `http_client.call`
+- **`test_alerts.py`** — routing, auth, and failure checks for the alert feature
+- **`test_http_client.py`** — credential, retry, and fail-closed checks
+- **`test_house_rules.py`** — an executable AST guard against direct HTTP transports
+- **`test_retrieval.py`** — provenance, selection, injection, and recall checks
+- **`captures/before/`** — the red before-state that imports `requests` directly
+- **`PROMPTS.md`** — Prompt blocks from the current manuscript draft
 
-- **`AGENTS.md`** - the short, local contract a coding agent must follow.
-- **`alerts.py`** - the final feature implementation. It uses only the
-  approved `http_client.call` entry point.
-- **`http_client.py`** - the narrow outbound-HTTP boundary. It adds
-  authentication, retries transient failures without timing sleeps, accepts
-  an injected transport for tests, and fails closed by default.
-- **`test_house_rules.py`** - an AST-based repository guard. It rejects
-  direct transport imports even when they use aliases or `from ... import`
-  syntax, keeping policy enforcement outside the model.
-- **`test_alerts.py`** and **`test_http_client.py`** - behavior, credential,
-  retry, and no-network verification.
-- **`fixtures/direct_requests/alerts.py`** - the checked-in failing state used
-  by the chapter's red-to-green coding-agent session. It is scanned as source
-  but never imported, so reproducing red needs neither `requests` nor a live
-  endpoint.
+## Setup and checks
 
-## Setup and final green state
-
-From the repository root:
+Run from this directory (needs only `pytest`):
 
 ```bash
-python3 -m pip install -r ch09/requirements.txt
-cd ch09
 python3 -m pytest -q
 ```
 
-Expected: `9 passed`. The suite makes no network calls and needs no real
-credential.
+`python3 -m pytest -q` reports **14 passed**.
 
-## Deterministic red-to-green reproduction
+## Listing map
 
-The failing fixture is a real direct-`requests` implementation. Point the
-house-rule test at it:
+- **Listing 9.1** is the `## Outbound HTTP` rule in `AGENTS.md`; its last
+  line names `test_house_rules.py` as the enforcement point.
+- **Listing 9.2** is the `Response` dataclass and `call` signature in
+  `http_client.py`. The printed listing shows the interface (`...`); the
+  maintained file adds the injected transport, auth header, and bounded
+  transient retries.
+- **Listing 9.3** is `format_evidence` and `answer` in `retrieval.py`, which
+  also carries the deterministic `InMemoryStore` and `recall_at_k` metric
+  used by the tests.
 
-```bash
-cd ch09
-HOUSE_RULE_ROOT=fixtures/direct_requests \
-  python3 -m pytest -q \
-  test_house_rules.py::test_no_unapproved_http_clients
-```
+## Red-to-green capture
 
-This deterministically fails with:
+See [`captures/README.md`](captures/README.md) to reproduce the seam red
+result (a feature importing `requests` directly) and the routing repair.
 
-```text
-alerts.py:3: unapproved outbound HTTP import: requests
-```
+## Limits
 
-No line number is fabricated: it refers to the checked-in fixture. The test
-parses source without importing it, so `requests` is deliberately not a
-dependency and no live request is attempted.
+These checks do not prove a live alert service, credential validity,
+production transport behavior, or backoff timing. The retrieval example uses
+deterministic token overlap, not a production embedding model.
 
-The minimal fix is the same change made in the final `alerts.py`:
-
-```diff
--import requests
-+from http_client import call
-...
--    response = requests.post(ALERTS_URL, json={"text": message})
--    return response.status_code < 400
-+    response = call("POST", ALERTS_URL, json={"text": message})
-+    return response.status < 400
-```
-
-For the captured session, those three lines were changed in the fixture, the
-same guard went green, and the checked-in failing fixture was then restored.
-To verify the corrected source without modifying the repository:
-
-```bash
-tmpdir="$(mktemp -d)"
-cp alerts.py "$tmpdir/alerts.py"
-HOUSE_RULE_ROOT="$tmpdir" \
-  python3 -m pytest -q \
-  test_house_rules.py::test_no_unapproved_http_clients
-rm -rf "$tmpdir"
-```
-
-Expected: `1 passed`. The final full suite remains green.
-
-## What the example teaches
-
-The instruction file gives the agent a local fact it could not learn from
-public examples. The approved client grants only one narrow capability and
-fails closed when no transport or credential is configured. The AST guard
-then verifies the constraint independently of the agent. Together, those
-surfaces demonstrate persistent context, explicit tools, least privilege,
-and executable verification without relying on a model to remember policy.
-
-See the [main README](../README.md) for the repository-wide index.
+See the [main README](../README.md) for setup instructions.

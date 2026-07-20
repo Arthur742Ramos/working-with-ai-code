@@ -1,8 +1,8 @@
-"""Thin CLI runner for the validator (listing 7.4).
+"""Thin command-line runner for the JSON config validator.
 
-Parses arguments, loads the schema and config JSON files, calls
-`validate`, prints one line per error in dotted-path format, and exits 0
-on success or 1 on failure. No validation logic lives here.
+Parses arguments, loads the schema and config files, calls `validate`,
+prints one dotted-path error per line, and exits 0 on success or 1 on
+validation failure. No validation logic lives here.
 """
 
 import argparse

@@ -1,0 +1,7 @@
+{
+  "service": {
+    "host": "example.com",
+    "port": 8080,
+    "ratio": 0.5
+  }
+}

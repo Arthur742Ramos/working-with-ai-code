@@ -1,12 +1,10 @@
-"""Executable guard: feature modules may use only the house HTTP client."""
+"""Executable guard: feature modules use only the house HTTP client."""
 
 import ast
-import os
 from dataclasses import dataclass
 from pathlib import Path
 
 HERE = Path(__file__).parent
-SOURCE_ROOT = Path(os.environ.get("HOUSE_RULE_ROOT", HERE))
 
 ALLOWED_MODULES = {"http_client.py"}
 UNAPPROVED_HTTP_MODULES = {
@@ -52,7 +50,10 @@ def imported_modules(tree: ast.AST):
 def find_unapproved_http_imports(root: Path):
     violations = []
     for path in feature_modules(root):
-        tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+        tree = ast.parse(
+            path.read_text(encoding="utf-8"),
+            filename=str(path),
+        )
         for line, module in imported_modules(tree):
             root_module = module.split(".", 1)[0]
             if root_module in UNAPPROVED_HTTP_MODULES:
@@ -61,9 +62,9 @@ def find_unapproved_http_imports(root: Path):
 
 
 def test_no_unapproved_http_clients():
-    violations = find_unapproved_http_imports(SOURCE_ROOT)
+    violations = find_unapproved_http_imports(HERE)
     details = "\n".join(
-        violation.display(SOURCE_ROOT) for violation in violations
+        violation.display(HERE) for violation in violations
     )
     assert not violations, (
         "outbound HTTP must go through http_client.call; "
@@ -71,10 +72,12 @@ def test_no_unapproved_http_clients():
     )
 
 
-def test_direct_requests_fixture_proves_guard_is_live():
-    fixture_root = HERE / "fixtures" / "direct_requests"
-    violations = find_unapproved_http_imports(fixture_root)
+def test_direct_requests_source_proves_guard_is_live(tmp_path):
+    source = tmp_path / "alerts.py"
+    source.write_text("import requests\n", encoding="utf-8")
 
-    assert [item.display(fixture_root) for item in violations] == [
-        "alerts.py:3: unapproved outbound HTTP import: requests"
+    violations = find_unapproved_http_imports(tmp_path)
+
+    assert [item.display(tmp_path) for item in violations] == [
+        "alerts.py:1: unapproved outbound HTTP import: requests"
     ]
