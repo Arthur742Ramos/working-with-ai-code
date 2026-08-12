@@ -83,6 +83,9 @@ appears wherever a chapter uses third-party packages.
 - [`http_client.py`](ch09/http_client.py) — Listing 9.2: The response interface and alert call
 - [`retrieval.py`](ch09/retrieval.py) — Listing 9.3: Retrieve, preserve provenance, then inject
 - [`alerts.py`](ch09/alerts.py) — the house-correct alert feature that uses `http_client.call`
+- [`mcp_policy.py`](ch09/mcp_policy.py) — host-owned MCP capability policy
+- [`test_mcp_policy.py`](ch09/test_mcp_policy.py) — posture and lethal-trifecta checks
+- [`parity.md`](ch09/parity.md) — the Chapter 9 listing-to-source map
 - [`PROMPTS.md`](ch09/PROMPTS.md) — Prompt blocks from the current manuscript draft
 
 ### Chapter 10 — Software engineering: from idea to review-ready code
@@ -90,7 +93,9 @@ appears wherever a chapter uses third-party packages.
 - [`reminders/service.py`](ch10/reminders/service.py) — Listing 10.1: Keeping snooze policy inside the service
 - [`tests/test_service.py`](ch10/tests/test_service.py) — Listing 10.2: Proving policy with a fake and frozen clock
 - [`tests/test_sqlite_repository.py`](ch10/tests/test_sqlite_repository.py) — Listing 10.3: Crossing the real SQLite row boundary
+- [`tests/test_capture_controls.py`](ch10/tests/test_capture_controls.py) — capture cleanup and review-state controls
 - [`manual_check.py`](ch10/manual_check.py) — Listing 10.4: Comparing local responses with storage
+- [`captures/sqlite_row_conversion_seam/`](ch10/captures/sqlite_row_conversion_seam/) — the current SQLite row-conversion session fixture
 - [`PROMPTS.md`](ch10/PROMPTS.md) — Prompt blocks from the current manuscript draft
 
 ### Chapter 11 — Automation and operations: from proposal to production evidence
@@ -116,8 +121,8 @@ chapter directory, run `python3 -m pytest -q`:
 - `ch06` prints `8 passed`,
 - `ch07` prints `13 passed`,
 - `ch08` prints `10 passed`,
-- `ch09` prints `14 passed`,
-- `ch10` prints `49 passed`,
+- `ch09` prints `28 passed`,
+- `ch10` prints `53 passed` (49 behavior checks plus four capture controls),
 - `ch11` prints `24 passed`, and
 - `ch12` prints `4 passed` (equivalently, `python3 -m unittest -v test_workflow_metrics`).
 

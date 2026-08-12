@@ -34,9 +34,9 @@ py -3 -m venv .venv
 .venv\Scripts\python manual_check.py
 ```
 
-The full suite should report `49 passed`. Production code uses only the Python
-standard library. [`requirements.txt`](requirements.txt) declares `pytest` for
-the tests.
+The full suite should report `53 passed`: 49 behavior checks plus four
+capture-control checks. Production code uses only the Python standard library.
+[`requirements.txt`](requirements.txt) declares `pytest` for the tests.
 
 ## Ticket and accepted behavior
 
@@ -75,6 +75,8 @@ simultaneous state changes.
 - [`PROMPTS.md`](PROMPTS.md) contains the chapter's prompt blocks.
 - [`captures/README.md`](captures/README.md) reproduces both controlled
   red-to-green paths from a clean snapshot.
+- [`captures/sqlite_row_conversion_seam/`](captures/sqlite_row_conversion_seam/)
+  preserves the current SQLite row-conversion session, patch, and transcript.
 - [`reminders/domain.py`](reminders/domain.py) defines the immutable domain value.
 - [`reminders/handler.py`](reminders/handler.py) validates transport data and maps
   domain outcomes.
@@ -84,6 +86,8 @@ simultaneous state changes.
   behavior.
 - [`tests/test_snooze_flow.py`](tests/test_snooze_flow.py) composes the handler,
   service, and real adapter.
+- [`tests/test_capture_controls.py`](tests/test_capture_controls.py) checks
+  capture locality and cleanup behavior.
 - [`manual_check.py`](manual_check.py) prints deterministic response and stored
   values.
 
@@ -122,8 +126,9 @@ raised the suite from 35 tests to 36. A later read-only pull-request review foun
 durations, UTC representation, fresh clock reads, authenticated identities, and
 reminder IDs, raising the suite to 44. A final rereview added checks for a NULL
 primary key, a varied full-flow tuple, and an extra unapproved integer. A later
-manuscript gate added cross-connection commit and validation-order cases. The
-current suite has 49 tests.
+manuscript gate added cross-connection commit and validation-order cases.
+The behavior suite has 49 tests, and the package-level capture controls add
+four checks for a total of 53.
 
 The `sqlite3.Row.get` failure in the chapter is a controlled reproduction. The
 capture temporarily replaces `row["snoozed_until"]` with the plausible but
