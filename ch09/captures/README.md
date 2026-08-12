@@ -1,34 +1,31 @@
-# Chapter 9 capture — the house-rule seam
+# Chapter 9 captures — the house-rule seam
 
-The red before-state feature imports a transport directly (`import requests`)
-and reads `response.status_code`. It returns success through that direct
-transport, but the shared `http_client.call` observer records no method, URL,
-or JSON, so the routing test fails and the house-rule guard flags the
-unapproved import.
+The `house_rule_seam/` fixture preserves the public red before state, the exact
+three-line repair, and a sanitized command/output transcript. The red feature
+imports a transport directly (`import requests`) and reads
+`response.status_code`; the green feature routes the same method, endpoint, and
+JSON through `http_client.call`.
 
-## Files
+## Replay the current session
 
-- `before/alerts.py` — the red feature that imports `requests` directly.
-- `before/http_client.py` — the before-state shared client.
-
-## Reproduce the red-to-green repair
-
-Run from the chapter directory (`ch09/`):
+Run from `ch09/`:
 
 ```bash
-# The exact repair (already applied in the maintained alerts.py):
-#   -import requests
-#   +from http_client import call
-#   -    response = requests.post(ALERTS_URL, json={"text": message})
-#   -    return response.status_code < 400
-#   +    response = call("POST", ALERTS_URL, json={"text": message})
-#   +    return response.status < 400
-
-python3 -m pytest -q
+python3 captures/house_rule_seam/run_capture.py
 ```
 
-The maintained `alerts.py` routes through `http_client.call`, so the suite
-reports `14 passed`. Use `before/alerts.py` in a disposable copy to reproduce
-the red result, where `test_send_alert_routes_through_house_client` fails and
-the AST guard reports an unapproved `requests` import. Never leave the
-maintained feature modules in the before-state.
+Replay runs the focused red, applies the stored patch in disposable
+package-local space, then runs focused and broader green. It uses the local
+offline transport stub and never calls a live endpoint.
+
+The capture's [`session.md`](house_rule_seam/session.md) records the contract,
+failure, exact diff, and output. The fixture stays generic and public; it does
+not reproduce internal book workspace paths or provenance identifiers.
+
+## Retained before-state
+
+- `house_rule_seam/before/alerts.py` imports `requests` directly.
+- `house_rule_seam/before/http_client.py` is the shared client boundary.
+- `house_rule_seam/before/requests.py` is an offline stub used only by replay.
+- `house_rule_seam/after/` shows the repaired feature and unchanged boundary.
+- `house_rule_seam/patches/house_rule_seam.patch` is the machine-readable repair.

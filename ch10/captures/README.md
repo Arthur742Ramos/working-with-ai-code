@@ -1,5 +1,19 @@
 # Controlled red-to-green captures
 
+The current row-conversion session is preserved under
+[`sqlite_row_conversion_seam/`](sqlite_row_conversion_seam/). Its public
+replay uses a real `sqlite3.Row`, the maintained adapter test file, a stored
+one-line patch, and a sanitized command/output transcript. Run it from `ch10/`
+with:
+
+```bash
+python3 captures/sqlite_row_conversion_seam/run_capture.py
+```
+
+The older service and SQLite patch walkthroughs below remain useful as
+standalone exercises. The package-local fixture is the current Chapter 10
+session surface.
+
 ## Service implementation slice
 
 The chapter's service implementation scene used a temporary, intentionally red
