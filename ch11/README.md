@@ -1,4 +1,4 @@
-# Chapter 11 — Automation and operations: from proposal to production evidence
+# Chapter 11 — Taking AI-assisted changes to production
 
 A production deployment modeled as a reviewable proposal: deterministic
 policy checks, a provider-neutral pipeline that stops at the approval
