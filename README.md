@@ -98,7 +98,7 @@ appears wherever a chapter uses third-party packages.
 - [`captures/sqlite_row_conversion_seam/`](ch10/captures/sqlite_row_conversion_seam/) — the current SQLite row-conversion session fixture
 - [`PROMPTS.md`](ch10/PROMPTS.md) — Prompt blocks from the current manuscript draft
 
-### Chapter 11 — Automation and operations: from proposal to production evidence
+### Chapter 11 — Taking AI-assisted changes to production
 
 - [`deployment_guard.py`](ch11/deployment_guard.py) — Listing 11.1: Rollout-policy branch for unavailable capacity
 - [`pipeline.py`](ch11/pipeline.py) — Listing 11.2: Stopping the pipeline at the approval boundary
