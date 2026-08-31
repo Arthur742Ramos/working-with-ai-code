@@ -40,7 +40,8 @@ def test_parity_map_covers_current_chapter_surfaces():
     for token in (
         "Listing 9.1 outbound rule",
         "Listing 9.2 shared HTTP seam",
-        "Listing 9.3 retrieval flow",
+        "Listing 9.3 illustrative skill shape",
+        "Listing 9.4 retrieval flow",
         "MCP resources, prompts, and tools",
         "Lethal-trifecta containment",
         "Real alert seam session",

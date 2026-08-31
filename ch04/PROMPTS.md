@@ -2,6 +2,12 @@
 
 Prompt blocks extracted from the current manuscript source.
 
+## Single-shot import request
+
+````text
+Write a Python script that imports customers from a CSV file into our API. Add retries, idempotency, validation, logging, and a dry-run mode.
+````
+
 ## Clarify the importer
 
 ````text
@@ -30,4 +36,22 @@ conflicts.
 ````text
 Apply only that bounded change. Run the focused test, then
 run the full test file. Show the actual outputs.
+````
+
+## Local correction
+
+````text
+Keep the current design. Change only the retry function so `400` responses are not retried. Do not modify parsing, dry-run behavior, or the request format.
+````
+
+## Return to the gate after new evidence
+
+````text
+New information: the API does not support idempotency keys. Stop implementation. Revise the plan for safe retries and duplicate prevention. Give me two options with tradeoffs. Do not write code yet.
+````
+
+## Reset with a clean contract
+
+````text
+We are building a Python CSV importer. Current decisions: `source_id` is stable, the API does not support idempotency keys, invalid rows are skipped and counted, and dry run must send no requests. Task: propose a duplicate-prevention strategy. Do not write code.
 ````

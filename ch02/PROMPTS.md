@@ -10,6 +10,38 @@ Write a PR description for this diff:
 [a staged validation diff]
 ````
 
+## Constrained code generation
+
+````text
+Write a Python function to validate email addresses.
+
+Use Python 3.11 and the standard library only. Return a
+dataclass with `is_valid`, `reason`, and
+`normalized_address` fields. For valid addresses, trim
+surrounding whitespace and lowercase the domain. Handle an
+empty string, a missing `@`, and multiple `@` symbols
+explicitly. Raise `ValueError` for non-string input.
+````
+
+## Requesting structured error analysis
+
+````text
+Analyze this error log and return a JSON object with exactly these fields:
+
+```json
+{
+  "root_cause": "one-sentence explanation",
+  "affected_components": ["list", "of", "services"],
+  "severity": "low | medium | high | critical",
+  "suggested_fix": "actionable next step",
+  "confidence": "high | medium | low"
+}
+```
+
+Error log:
+[paste log here]
+````
+
 ## Inspect the retry wiring
 
 ````text

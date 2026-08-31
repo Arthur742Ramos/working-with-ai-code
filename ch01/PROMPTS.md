@@ -2,6 +2,12 @@
 
 Prompt blocks extracted from the current manuscript source.
 
+## Adding a check constraint
+
+````text
+This looks right. Add a check constraint so the stored JSON is always an object, never an array or a primitive.
+````
+
 ## Inspect the fallback signal
 
 ````text
