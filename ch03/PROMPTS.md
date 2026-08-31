@@ -2,6 +2,78 @@
 
 Prompt blocks extracted from the current manuscript source.
 
+## Debugging a connection error
+
+````text
+My Python script crashes with "connection refused" when hitting the API.
+````
+
+## Reporting diagnostic results
+
+````text
+Service is running, I checked. URL looks right. It worked yesterday. I am not on a VPN.
+````
+
+## Sharing network findings
+
+````text
+Interesting. It shows the service listening on 127.0.0.1, not 0.0.0.0.
+````
+
+## Requesting progress summary
+
+````text
+Summarize in five to seven bullets what we have done so far, the assumptions you are currently working from, and the next two possible steps.
+````
+
+## Requesting self-critique
+
+````text
+Switch to reviewer mode and critique your previous answer. List three things that might be wrong or suboptimal, and three ways to make it more robust.
+````
+
+## Requesting test scenarios
+
+````text
+Given the solution above, propose unit tests or scenarios that would validate it, and any logging or queries that would confirm it behaves correctly in production.
+````
+
+## Requesting production hardening
+
+````text
+Take the draft above and refine it toward something usable in production. Focus on error handling, edge cases, logging, and comments where the logic is not obvious.
+````
+
+## Requesting minimal safe change
+
+````text
+Propose the smallest change that moves us toward the goal while minimizing risk. Explain why it is safer than a larger change.
+````
+
+## Checkpointing progress
+
+````text
+Before we continue, checkpoint the work. Summarize what we have decided, what we tried that did not work, and what we are currently investigating. I will confirm or correct it, then we continue.
+````
+
+## Confirming an implementation plan
+
+````text
+Before we implement, confirm my understanding. We are using Redis with a five-minute time to live, invalidating on writes to the users table, and falling back to the database on a cache miss. Is that right?
+````
+
+## Opening a branch
+
+````text
+I am improving query performance on a users table with ten million rows. I am exploring caching in a separate conversation. Here, consider only database-level options: indexes, query restructuring, and partitioning.
+````
+
+## Redirecting conversation focus
+
+````text
+Set aside the caching discussion. Here is where we are now. Goal: optimize the three slowest queries. Approach: database indexing only. Constraint: no schema changes, only new indexes. Here are the three queries.
+````
+
 ## Requesting production review
 
 ````text

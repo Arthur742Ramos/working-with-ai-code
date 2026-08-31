@@ -7,8 +7,8 @@ injecting evidence into a prompt. The chapter also models host-owned MCP
 capability policy without pretending to implement protocol transport.
 
 - **`AGENTS.md`** — Listing 9.1: A short project rule with an enforcement point
-- **`http_client.py`** — Listing 9.2: The response interface and alert call
-- **`retrieval.py`** — Listing 9.3: Retrieve, preserve provenance, then inject
+- **`http_client.py`** — Listing 9.2: The response interface used by the notification
+- **`retrieval.py`** — Listing 9.4: Retrieve, preserve provenance, then inject
 - **`alerts.py`** — the house-correct alert feature that uses `http_client.call`
 - **`test_alerts.py`** — routing, auth, and failure checks for the alert feature
 - **`test_http_client.py`** — credential, retry, and fail-closed checks
@@ -40,7 +40,10 @@ python3 -m pytest -q
   `http_client.py`. The printed listing shows the interface (`...`); the
   maintained file adds the injected transport, auth header, and bounded
   transient retries.
-- **Listing 9.3** is `format_evidence` and `answer` in `retrieval.py`, which
+- **Listing 9.3** is an illustrative metadata-first skill shape. It teaches
+  progressive disclosure as a compact file shape rather than a universal
+  format, so it has no maintained companion source and nothing here runs it.
+- **Listing 9.4** is `format_evidence` and `answer` in `retrieval.py`, which
   also carries the deterministic `InMemoryStore` and `recall_at_k` metric
   used by the tests.
 - The MCP section is represented by `mcp_policy.py`; its tests keep

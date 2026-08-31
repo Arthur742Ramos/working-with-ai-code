@@ -2,7 +2,7 @@
 +++ b/event_processor.py
 @@ -7,6 +7,10 @@
      """Process user events from JSON."""
-     f = open(input_path)                  # A
+     f = open(input_path)
      data = json.load(f)
 +    if "events" not in data:
 +        raise ValueError(

@@ -28,6 +28,7 @@ appears wherever a chapter uses third-party packages.
 - [`listing_2_4_generate_and_validate.py`](ch02/listing_2_4_generate_and_validate.py) — Listing 2.4: Generate, parse, and validate the result
 - [`listing_2_5_github_formatting.py`](ch02/listing_2_5_github_formatting.py) — Listing 2.5: GitHub formatting and CLI entry point
 - [`listing_2_6_retry.py`](ch02/listing_2_6_retry.py) — Listing 2.6: Conversational retry after validation failure
+- [`listing_2_7_anthropic_adapter.py`](ch02/listing_2_7_anthropic_adapter.py) — Listing 2.7: Optional live-provider adapter (needs `anthropic`; not part of the offline path)
 - [`PROMPTS.md`](ch02/PROMPTS.md) — Prompt blocks from the current manuscript draft
 
 ### Chapter 3 — Conversations that converge
@@ -58,9 +59,9 @@ appears wherever a chapter uses third-party packages.
 ### Chapter 6 — Roles that produce independent artifacts
 
 - [`validator.py`](ch06/validator.py) — Listing 6.1: The coder's validator implementation (maintained green version)
-- [`test_bool_is_not_accepted_as_int.py`](ch06/test_bool_is_not_accepted_as_int.py) — Listing 6.2: Independent focused test derived from the contract
-- [`cli.py`](ch06/cli.py) — Listing 6.3: A thin command-line runner for the verified validator
-- [`test_validator.py`](ch06/test_validator.py) — The eight maintained broader checks
+- [`test_validator.py`](ch06/test_validator.py) — Listing 6.2 source: the eight maintained broader checks, four of which the chapter excerpts
+- [`test_bool_is_not_accepted_as_int.py`](ch06/test_bool_is_not_accepted_as_int.py) — Listing 6.3: Independent focused test derived from the contract
+- [`cli.py`](ch06/cli.py) — Listing 6.4: A thin command-line runner for the verified validator
 - [`PROMPTS.md`](ch06/PROMPTS.md) — Prompt blocks from the current manuscript draft
 
 ### Chapter 7 — Bounded agents and orchestration
@@ -80,8 +81,8 @@ appears wherever a chapter uses third-party packages.
 ### Chapter 9 — Context engineering: data, tools, and trust
 
 - [`AGENTS.md`](ch09/AGENTS.md) — Listing 9.1: A short project rule with an enforcement point
-- [`http_client.py`](ch09/http_client.py) — Listing 9.2: The response interface and alert call
-- [`retrieval.py`](ch09/retrieval.py) — Listing 9.3: Retrieve, preserve provenance, then inject
+- [`http_client.py`](ch09/http_client.py) — Listing 9.2: The response interface used by the notification
+- [`retrieval.py`](ch09/retrieval.py) — Listing 9.4: Retrieve, preserve provenance, then inject
 - [`alerts.py`](ch09/alerts.py) — the house-correct alert feature that uses `http_client.call`
 - [`mcp_policy.py`](ch09/mcp_policy.py) — host-owned MCP capability policy
 - [`test_mcp_policy.py`](ch09/test_mcp_policy.py) — posture and lethal-trifecta checks
@@ -150,7 +151,10 @@ Chapter 1 listings are excerpts and captured evidence. Chapters 3, 4, and 5
 listings are standalone Python, text, and diff files that mirror the printed
 listings; they need no third-party packages. Chapter 2's printed listings run
 offline through a deterministic local fixture (Listing 2.2), so no model
-provider or API key is required; only `jsonschema` is needed.
+provider or API key is required; only `jsonschema` is needed. Listing 2.7 is
+the one exception: it is an optional live-provider boundary that is not part
+of the offline path and needs a separate `pip install anthropic` plus
+credentials from a supported SDK credential source.
 
 Chapters 6 through 12 are self-contained, runnable projects. Each needs only
 `pytest`; from the chapter directory, run `python3 -m pytest -q`. Chapters 10,

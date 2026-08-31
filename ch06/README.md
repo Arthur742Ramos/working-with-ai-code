@@ -6,9 +6,9 @@ tester, explainer). An independent tester's focused test catches Python
 tightens exactly one predicate under an explicit policy.
 
 - **`validator.py`** — Listing 6.1: The coder's validator implementation (maintained green version)
-- **`test_bool_is_not_accepted_as_int.py`** — Listing 6.2: Independent focused test derived from the contract
-- **`cli.py`** — Listing 6.3: A thin command-line runner for the verified validator
-- **`test_validator.py`** — The eight maintained broader checks for the validator
+- **`test_validator.py`** — Listing 6.2 source: the eight maintained broader checks; the printed listing excerpts four of them
+- **`test_bool_is_not_accepted_as_int.py`** — Listing 6.3: Independent focused test derived from the contract
+- **`cli.py`** — Listing 6.4: A thin command-line runner for the verified validator
 - **`schema.json`**, **`config.json`**, **`invalid_config.json`** — generic fixtures for the CLI commands
 - **`captures/before/validator.py`** — the permissive red before-state fixture
 - **`PROMPTS.md`** — Prompt blocks from the current manuscript draft
@@ -35,9 +35,14 @@ exits `1`. The focused handoff test prints `PASS`.
   permissive before-state, preserved under `captures/before/validator.py`.
   The maintained `validator.py` keeps the accepted strict predicate
   (`type(value) is int`).
-- **Listing 6.2** is `test_bool_is_not_accepted_as_int.py`, the independent
+- **Listing 6.2** excerpts four contract-derived cases from `test_validator.py`
+  — `test_nested_missing_required_key`, `test_empty_schema_accepts_anything`,
+  `test_bool_is_not_accepted_as_int`, and
+  `test_malformed_schema_rule_reports_error`. The chapter prints the complete
+  functions without modification; the maintained file keeps all eight checks.
+- **Listing 6.3** is `test_bool_is_not_accepted_as_int.py`, the independent
   focused tester artifact and standalone green check.
-- **Listing 6.3** is `cli.py`, the thin command-line runner.
+- **Listing 6.4** is `cli.py`, the thin command-line runner.
 
 ## Red-to-green capture
 
