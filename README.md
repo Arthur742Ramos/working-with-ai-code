@@ -3,9 +3,9 @@
 Code listings from the Manning book by Arthur Ramos.
 
 Each chapter directory mirrors that chapter's printed listings. Chapters 1–5
-present the printed listings as standalone, reader-facing files
-(`listing_N_M_*`) alongside a `README.md` index and a `PROMPTS.md` of the
-chapter's prompt blocks. Chapters 6–12 are self-contained, runnable teaching
+present the printed listings as reader-facing files (`listing_N_M_*`) alongside
+a `README.md` index and a `PROMPTS.md` of the chapter's prompt blocks. Chapters
+6–12 are self-contained, runnable teaching
 projects with passing test suites; their `README.md` files map each printed
 listing to the maintained source file it comes from. A `requirements.txt`
 appears wherever a chapter uses third-party packages.
@@ -33,8 +33,17 @@ appears wherever a chapter uses third-party packages.
 
 ### Chapter 3 — Conversations that converge
 
-- [`listing_3_1_event_processor_start.py`](ch03/listing_3_1_event_processor_start.py) — Listing 3.1: Starting event processor
-- [`listing_3_2_missing_events_guard.diff`](ch03/listing_3_2_missing_events_guard.diff) — Listing 3.2: Missing-events validation guard
+- [`listing_3_1_rate_limit_decorator.py`](ch03/listing_3_1_rate_limit_decorator.py) — Listing 3.1: Branch A result, decorator-based rate limiter
+- [`listing_3_2_rate_limit_redis_script.py`](ch03/listing_3_2_rate_limit_redis_script.py) — Listing 3.2: Branch B result, Redis sliding-window script
+- [`listing_3_3_rate_limit_middleware.py`](ch03/listing_3_3_rate_limit_middleware.py) — Listing 3.3: Branch B result, Python wrapper and middleware
+- [`listing_3_4_event_processor_start.py`](ch03/listing_3_4_event_processor_start.py) — Listing 3.4: Starting event processor
+- [`listing_3_5_missing_events_guard.diff`](ch03/listing_3_5_missing_events_guard.diff) — Listing 3.5: Missing-events validation guard
+- [`listing_3_6_event_processor_after_blockers.py`](ch03/listing_3_6_event_processor_after_blockers.py) — Listing 3.6: After fixing the three ship-blockers
+- [`listing_3_7_timestamp_parser.py`](ch03/listing_3_7_timestamp_parser.py) — Listing 3.7: Robust timestamp parsing with an explicit UTC contract
+- [`listing_3_8_event_processor_validation.py`](ch03/listing_3_8_event_processor_validation.py) — Listing 3.8: Final version, validation and filtering
+- [`listing_3_9_event_processor_aggregation.py`](ch03/listing_3_9_event_processor_aggregation.py) — Listing 3.9: Final version, aggregation and output
+- [`listing_3_10_generated_tests.py`](ch03/listing_3_10_generated_tests.py) — Listing 3.10: Generated tests, harness and filtering
+- [`listing_3_11_generated_tests_timezone.py`](ch03/listing_3_11_generated_tests_timezone.py) — Listing 3.11: Generated tests, deduplication and timezones
 - [`PROMPTS.md`](ch03/PROMPTS.md) — Prompt blocks from the current manuscript draft
 
 ### Chapter 4 — Plans you can review and redirect
@@ -148,8 +157,9 @@ pip install -r ch02/requirements.txt \
 ```
 
 Chapter 1 listings are excerpts and captured evidence. Chapters 3, 4, and 5
-listings are standalone Python, text, and diff files that mirror the printed
-listings; they need no third-party packages. Chapter 2's printed listings run
+listings are Python, text, and diff files that mirror the printed listings;
+some are continuation excerpts rather than complete modules, and they need no
+third-party packages. Chapter 2's printed listings run
 offline through a deterministic local fixture (Listing 2.2), so no model
 provider or API key is required; only `jsonschema` is needed. Listing 2.7 is
 the one exception: it is an optional live-provider boundary that is not part
