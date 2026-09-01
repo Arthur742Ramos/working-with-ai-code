@@ -1,13 +1,84 @@
-"""Listing 4.2: Walking skeleton for a dry-run-capable importer
+from collections.abc import Callable, Iterable
+from dataclasses import dataclass
+import hashlib
+import time
 
-From "Working with AI as a Real Teammate" (Manning)
-Chapter 4
+REQUIRED = ("source_id", "email", "name")
+TRANSIENT = {429, 500, 502, 503, 504}
 
-Excerpt: `Sender`, `parse_customer`, and `send_with_retry` are defined
-elsewhere in the importer; this listing shows the dry-run-capable runner.
-"""
 
-from collections.abc import Iterable
+@dataclass(frozen=True)
+class CustomerRow:
+    source_id: str
+    email: str
+    name: str
+    key: str
+
+
+@dataclass(frozen=True)
+class ApiResult:
+    status: int
+    body: str
+
+
+Request = dict[str, object]
+Sender = Callable[[Request], ApiResult]
+
+
+def parse_customer(raw: dict[str, str]) -> CustomerRow:
+    cleaned = {
+        field: (raw.get(field) or "").strip()
+        for field in REQUIRED
+    }
+    missing = [
+        field for field in REQUIRED
+        if not cleaned[field]
+    ]
+    if missing:
+        raise ValueError(f"missing fields: {missing}")
+
+    digest = hashlib.sha256(
+        cleaned["source_id"].encode("utf-8")
+    ).hexdigest()
+
+    return CustomerRow(
+        source_id=cleaned["source_id"],
+        email=cleaned["email"].lower(),
+        name=cleaned["name"],
+        key=digest[:32],
+    )
+
+
+def build_request(row: CustomerRow) -> Request:
+    return {
+        "path": "/customers",
+        "json": {
+            "external_id": row.source_id,
+            "email": row.email,
+            "name": row.name,
+        },
+        "headers": {"Idempotency-Key": row.key},
+    }
+
+
+def send_with_retry(
+    row: CustomerRow,
+    sender: Sender,
+    attempts: int = 3,
+) -> ApiResult:
+    request = build_request(row)
+
+    for attempt in range(1, attempts + 1):
+        result = sender(request)
+        if result.status < 400:
+            return result
+        if result.status not in TRANSIENT:
+            raise RuntimeError(result.body)
+        if attempt == attempts:
+            raise RuntimeError(result.body)
+        time.sleep(2 ** (attempt - 1))
+
+    raise AssertionError("unreachable")
 
 
 def run_import(

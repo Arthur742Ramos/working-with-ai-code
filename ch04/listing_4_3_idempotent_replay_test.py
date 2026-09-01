@@ -1,11 +1,15 @@
-"""Listing 4.3: Focused test for an idempotent replay
+from importer import (
+    ApiResult,
+    parse_customer,
+    send_with_retry,
+)
 
-From "Working with AI as a Real Teammate" (Manning)
-Chapter 4
 
-Excerpt: `parse_customer`, `send_with_retry`, and `fake_sender` are defined
-in the importer and its test harness.
-"""
+def fake_sender(status):
+    def sender(request):
+        return ApiResult(status=status, body="")
+    return sender
+
 
 def test_conflict_is_idempotent_replay():
     raw = {

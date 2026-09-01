@@ -16,7 +16,7 @@ questions that would most change this importer. Focus on row
 identity, retry safety, invalid rows, and dry-run behavior.
 ````
 
-## Human contract
+## Human contract (reconstructed)
 
 ````text
 The importer is in `importer.py` with tests in
