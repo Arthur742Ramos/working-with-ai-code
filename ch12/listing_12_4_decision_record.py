@@ -9,24 +9,28 @@ the evidence boundary without pretending that code made the judgment.
 
 decision = {
     "workflow": "bounded_python_test_repair",
-    "current_scope": "pilot_group",
+    "current_scope": "current_practice",
     "action": "pause",
     "evidence": {
-        "elapsed_time": {
-            "baseline_minutes": 71,
-            "trial_minutes": 55,
+        "time_to_acceptance": {
+            "current_practice_minutes": 71,
+            "bounded_workflow_minutes": 55,
             "proposed_gain_percent": 15,
             "threshold_status": "unapproved",
             "observation": "proposed_gain_cleared",
         },
+        "nonaccepted_terminal_minutes": {
+            "current_practice": 46,
+            "bounded_workflow": 73,
+        },
         "accepted_without_major_rework": {
-            "baseline": "24/30",
-            "trial": "25/30",
+            "current_practice": "24/30",
+            "bounded_workflow": "25/30",
             "band_status": "unresolved",
         },
         "escaped_defects": {
-            "baseline": "1/24 accepted",
-            "trial": "2/25 accepted",
+            "current_practice": "1/24 accepted",
+            "bounded_workflow": "2/25 accepted",
             "band_status": "unresolved",
         },
         "authority_exceptions": 2,
