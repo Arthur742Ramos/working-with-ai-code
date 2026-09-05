@@ -25,7 +25,8 @@ def process_events(input_path, output_path,
             event_date = _parse_timestamp(ts)
         except (ValueError, TypeError) as exc:
             logger.warning(
-                "Skipping timestamp %r: %s", ts, exc
+                "Skipping unparseable "
+                "timestamp %r: %s", ts, exc
             )
             continue
         if start_date <= event_date <= end_date:

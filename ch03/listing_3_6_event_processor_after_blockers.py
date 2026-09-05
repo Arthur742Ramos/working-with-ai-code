@@ -7,6 +7,10 @@ def process_events(input_path, output_path,
     """Process user events from JSON."""
     with open(input_path) as f:           # A
         data = json.load(f)
+    if "events" not in data:
+        raise ValueError(
+            "input must be an object with an 'events' key"
+        )
 
     results = []
     for event in data["events"]:
