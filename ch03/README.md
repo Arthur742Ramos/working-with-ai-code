@@ -24,4 +24,10 @@ Listings 3.6 through 3.9 are successive source excerpts from the
 illustrative review path. Listings 3.10 and 3.11 are the corresponding
 generated-test excerpts.
 
+Listing 3.6 preserves the missing-events guard accepted in Listing 3.5.
+Run `python3 -m pytest -q test_review_states.py` from this directory to
+check that missing input still raises the selected error while empty and
+non-empty batches retain their expected summaries. The later validation
+listing retains the final implementation's warning text.
+
 See the [main README](../README.md) for setup instructions.
