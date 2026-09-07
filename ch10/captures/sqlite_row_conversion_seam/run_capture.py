@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
+import re
 import shutil
 import subprocess
 import sys
@@ -39,7 +40,9 @@ def require_work_cleanup(root: Path = CAPTURE_DIR) -> None:
         )
 
 
-def run_pytest(target: str | None = None) -> subprocess.CompletedProcess[str]:
+def run_pytest(
+    target: str | None = None, root: Path = WORK_DIR,
+) -> subprocess.CompletedProcess[str]:
     command = [
         sys.executable,
         "-m",
@@ -48,6 +51,8 @@ def run_pytest(target: str | None = None) -> subprocess.CompletedProcess[str]:
         "--tb=short",
         "-p",
         "no:cacheprovider",
+        "--basetemp",
+        str(WORK_DIR / ".pytest-tmp"),
     ]
     if target is not None:
         command.append(target)
@@ -56,11 +61,12 @@ def run_pytest(target: str | None = None) -> subprocess.CompletedProcess[str]:
         "PY_COLORS": "0",
         "PYTHONDONTWRITEBYTECODE": "1",
         "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
-        "PYTHONPATH": str(WORK_DIR),
+        "PYTEST_ADDOPTS": "",
+        "PYTHONPATH": str(root),
     })
     return subprocess.run(
         command,
-        cwd=WORK_DIR,
+        cwd=root,
         env=environment,
         text=True,
         stdout=subprocess.PIPE,
@@ -101,6 +107,50 @@ def apply_patch() -> None:
         raise RuntimeError(
             "capture patch failed:\n" + result.stdout
         )
+    verify_after_state()
+
+
+def verify_after_state() -> None:
+    before = (BEFORE_PACKAGE / "repository.py").read_text(encoding="utf-8")
+    old = 'row.get("snoozed_until")'
+    if before.count(old) != 1:
+        raise RuntimeError("before state must contain exactly one row.get call")
+    expected = before.replace(old, 'row["snoozed_until"]')
+    actual = (WORK_DIR / "reminders" / "repository.py").read_text(encoding="utf-8")
+    if actual != expected:
+        raise RuntimeError("capture patch must make only the one-line row repair")
+    for filename in ("domain.py", "repository.py"):
+        if (WORK_DIR / "reminders" / filename).read_bytes() != (
+            PACKAGE_DIR / "reminders" / filename
+        ).read_bytes():
+            raise RuntimeError(f"maintained adapter drifted: {filename}")
+
+
+def require_evidence(result, phase: str) -> None:
+    expected_status = 1 if phase == "focused_red" else 0
+    summary = {
+        "focused_red": "1 failed",
+        "focused_green": "1 passed",
+        "broader_green": "12 passed",
+    }[phase]
+    diagnostic = "AttributeError: 'sqlite3.Row' object has no attribute 'get'"
+    evidence = (CAPTURE_DIR / "evidence" / f"{phase}.txt").read_text(
+        encoding="utf-8",
+    )
+    status = (CAPTURE_DIR / "evidence" / f"{phase}.exit_status").read_text(
+        encoding="utf-8",
+    )
+    if (
+        result.returncode != expected_status
+        or status.strip() != str(expected_status)
+        or evidence.splitlines()[-1] != summary
+        or re.search(rf"(?m)^{re.escape(summary)}(?: in .+)?$", result.stdout)
+        is None
+        or (expected_status == 1 and (
+            diagnostic not in result.stdout or diagnostic not in evidence
+        ))
+    ):
+        raise RuntimeError(f"{phase} evidence mismatch:\n{result.stdout}")
 
 
 def replay() -> None:
@@ -109,23 +159,24 @@ def replay() -> None:
         red = run_pytest(FOCUSED_TARGET)
         print("focused_red")
         print(red.stdout, end="")
-        if red.returncode != 1:
-            raise RuntimeError(
-                "before state did not produce the expected focused red"
-            )
+        require_evidence(red, "focused_red")
 
         apply_patch()
         focused = run_pytest(FOCUSED_TARGET)
         print("focused_green")
         print(focused.stdout, end="")
-        if focused.returncode != 0:
-            raise RuntimeError("focused after-state check failed")
+        require_evidence(focused, "focused_green")
 
         broader = run_pytest("tests/test_sqlite_repository.py")
         print("broader_green")
         print(broader.stdout, end="")
-        if broader.returncode != 0:
-            raise RuntimeError("broader after-state check failed")
+        require_evidence(broader, "broader_green")
+
+        package = run_pytest(root=PACKAGE_DIR)
+        print("package_green")
+        print(package.stdout, end="")
+        if package.returncode != 0:
+            raise RuntimeError("maintained package check failed")
     finally:
         clean_work_directories()
         require_work_cleanup()

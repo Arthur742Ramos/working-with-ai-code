@@ -8,7 +8,7 @@ capability policy without pretending to implement protocol transport.
 
 - **`AGENTS.md`** — Listing 9.1: A short project rule with an enforcement point
 - **`http_client.py`** — Listing 9.2: The response interface used by the notification
-- **`retrieval.py`** — Listing 9.4: Retrieve, preserve provenance, then inject
+- **`retrieval.py`** — Listing 9.4: Excerpt: retrieve, preserve provenance, then inject
 - **`alerts.py`** — the house-correct alert feature that uses `http_client.call`
 - **`test_alerts.py`** — routing, auth, and failure checks for the alert feature
 - **`test_http_client.py`** — credential, retry, and fail-closed checks
@@ -30,7 +30,7 @@ Run from this directory (needs only `pytest`):
 python3 -m pytest -q
 ```
 
-`python3 -m pytest -q` reports **28 passed**.
+`python3 -m pytest -q` reports **32 passed**, including public capture controls.
 
 ## Listing map
 

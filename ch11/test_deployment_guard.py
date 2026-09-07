@@ -280,22 +280,64 @@ def test_verify_cli_rejects_invalid_plan(
         ROOT / "observation.json",
     )
 
-    assert completed.returncode == 3
+    assert completed.returncode == 2
     assert completed.stderr == ""
     assert completed.stdout == (
-        "verification=FAIL\n"
-        "failure=plan policy: "
-        "error_rate_limit must be > 0 and <= 0.02\n"
+        "policy=BLOCK\n"
+        "violation=error_rate_limit must be > 0 "
+        "and <= 0.02\n"
     )
+    assert "recovery=" not in completed.stdout
 
 
-def test_verify_cli_prints_passing_verdict() -> None:
-    completed = _run_cli(
+def test_verify_cli_prints_verdicts_and_input_errors(
+    tmp_path: Path,
+) -> None:
+    passing = _run_cli(
         "verify",
         CONFIG,
         ROOT / "observation.json",
     )
 
-    assert completed.returncode == 0
-    assert completed.stderr == ""
-    assert completed.stdout == "verification=PASS\n"
+    assert passing.returncode == 0
+    assert passing.stderr == ""
+    assert passing.stdout == "verification=PASS\n"
+
+    failed_data = json.loads(
+        (ROOT / "observation.json").read_text()
+    )
+    failed_data["ready_replicas"] = 5
+    failed_observation = (
+        tmp_path / "failed-observation.json"
+    )
+    failed_observation.write_text(json.dumps(failed_data))
+
+    failed = _run_cli(
+        "verify",
+        CONFIG,
+        failed_observation,
+    )
+
+    assert failed.returncode == 3
+    assert failed.stderr == ""
+    assert failed.stdout == (
+        "verification=FAIL\n"
+        "failure=not all planned replicas are ready\n"
+        "recovery=REQUESTED\n"
+    )
+
+    malformed = tmp_path / "malformed-observation.json"
+    malformed.write_text("{")
+
+    invalid = _run_cli(
+        "verify",
+        CONFIG,
+        malformed,
+    )
+
+    assert invalid.returncode == 1
+    assert invalid.stdout == ""
+    assert invalid.stderr == (
+        "tool_error=invalid observation input "
+        "malformed-observation.json\n"
+    )

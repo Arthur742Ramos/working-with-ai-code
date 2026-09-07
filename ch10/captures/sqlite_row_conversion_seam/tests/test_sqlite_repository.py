@@ -3,6 +3,7 @@ from collections.abc import Callable
 from datetime import datetime, timezone
 
 from reminders.domain import Reminder, ReminderStatus
+from reminders.repository import SQLiteReminderRepository
 
 
 Seed = Callable[..., None]
@@ -14,8 +15,6 @@ def test_get_for_user_maps_unsnoozed_reminder(
     seed_reminder: Seed,
 ) -> None:
     seed_reminder()
-    from reminders.repository import SQLiteReminderRepository
-
     repository = SQLiteReminderRepository(connection)
 
     result = repository.get_for_user(

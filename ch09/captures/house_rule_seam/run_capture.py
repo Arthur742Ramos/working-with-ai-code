@@ -5,12 +5,14 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
+import re
 import shutil
 import subprocess
 import sys
 
 
 CAPTURE_DIR = Path(__file__).resolve().parent
+PACKAGE_DIR = CAPTURE_DIR.parents[1]
 BEFORE_DIR = CAPTURE_DIR / "before"
 AFTER_DIR = CAPTURE_DIR / "after"
 TESTS_DIR = CAPTURE_DIR / "tests"
@@ -35,7 +37,9 @@ def require_work_cleanup(root: Path = CAPTURE_DIR) -> None:
         )
 
 
-def run_pytest(target: str | None = None) -> subprocess.CompletedProcess[str]:
+def run_pytest(
+    target: str | None = None, root: Path = WORK_DIR,
+) -> subprocess.CompletedProcess[str]:
     command = [
         sys.executable,
         "-m",
@@ -43,6 +47,8 @@ def run_pytest(target: str | None = None) -> subprocess.CompletedProcess[str]:
         "-q",
         "-p",
         "no:cacheprovider",
+        "--basetemp",
+        str(WORK_DIR / ".pytest-tmp"),
     ]
     if target is not None:
         command.append(target)
@@ -51,11 +57,13 @@ def run_pytest(target: str | None = None) -> subprocess.CompletedProcess[str]:
         "PY_COLORS": "0",
         "PYTHONDONTWRITEBYTECODE": "1",
         "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
-        "PYTHONPATH": str(WORK_DIR),
+        "PYTEST_ADDOPTS": "",
+        "HOUSE_RULE_ROOT": str(root),
+        "PYTHONPATH": str(root),
     })
     return subprocess.run(
         command,
-        cwd=WORK_DIR,
+        cwd=root,
         env=environment,
         text=True,
         stdout=subprocess.PIPE,
@@ -95,6 +103,25 @@ def apply_patch() -> None:
         raise RuntimeError(
             "capture patch failed:\n" + result.stdout
         )
+    verify_after_state()
+
+
+def verify_after_state() -> None:
+    for filename in ("alerts.py", "http_client.py"):
+        if (WORK_DIR / filename).read_bytes() != (
+            AFTER_DIR / filename
+        ).read_bytes():
+            raise RuntimeError(f"recreated after state drifted: {filename}")
+
+
+def require_result(result, status: int, summary: str, diagnostic="") -> None:
+    if (
+        result.returncode != status
+        or re.search(rf"(?m)^{re.escape(summary)}(?: in .+)?$", result.stdout)
+        is None
+        or diagnostic not in result.stdout
+    ):
+        raise RuntimeError(f"capture result did not match {summary}:\n{result.stdout}")
 
 
 def replay() -> None:
@@ -106,10 +133,10 @@ def replay() -> None:
         )
         print("focused_red")
         print(red.stdout, end="")
-        if red.returncode != 1:
-            raise RuntimeError(
-                "before state did not produce the expected focused red"
-            )
+        require_result(
+            red, 1, "1 failed",
+            "send_alert must route method, URL, and JSON through http_client.call",
+        )
 
         apply_patch()
         focused = run_pytest(
@@ -118,14 +145,18 @@ def replay() -> None:
         )
         print("focused_green")
         print(focused.stdout, end="")
-        if focused.returncode != 0:
-            raise RuntimeError("focused after-state check failed")
+        require_result(focused, 0, "1 passed")
 
         broader = run_pytest()
         print("broader_green")
         print(broader.stdout, end="")
-        if broader.returncode != 0:
-            raise RuntimeError("broader after-state check failed")
+        require_result(broader, 0, "10 passed")
+
+        package = run_pytest(root=PACKAGE_DIR)
+        print("package_green")
+        print(package.stdout, end="")
+        if package.returncode != 0:
+            raise RuntimeError("maintained package check failed")
     finally:
         clean_work_directories()
         require_work_cleanup()

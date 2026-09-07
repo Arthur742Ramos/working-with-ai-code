@@ -4,16 +4,19 @@ From "Working with AI as a Real Teammate" (Manning)
 Chapter 2
 
 Optional. The printed path runs offline through Listing 2.2. To use a live
-provider instead, install `anthropic`, configure credentials through a
-supported SDK credential source, and import `chat` from this module in place
+provider instead, install `anthropic`, set `ANTHROPIC_MODEL` to a supported
+model, configure credentials through a supported SDK credential source,
+and import `chat` from this module in place
 of the local one. Keep `FIXED_DIFF` from Listing 2.2 until you deliberately
 choose a different input boundary.
 """
 
+import os
+
 from anthropic import Anthropic
 
 
-MODEL = "claude-opus-4-8"
+MODEL_ENV = "ANTHROPIC_MODEL"
 
 
 class ProviderStopError(RuntimeError):
@@ -26,9 +29,15 @@ class ProviderStopError(RuntimeError):
 def chat(messages,
          system=None,
          max_tokens=1024) -> str:
+    model = os.environ.get(MODEL_ENV)
+    if not model:
+        raise RuntimeError(
+            f"Set {MODEL_ENV} to a supported model"
+        )
+
     client = Anthropic()
     request = {
-        "model": MODEL,
+        "model": model,
         "messages": messages,
         "max_tokens": max_tokens,
     }

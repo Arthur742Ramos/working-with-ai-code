@@ -52,3 +52,9 @@ Focused green proves that a present SQL `NULL` maps to Python `None`.
 The broader adapter run checks owner scope, identifier scope, timestamp
 round-trips, commit visibility, and zero-row failure. It does not define a
 future policy for a query that omits the projected column.
+
+Replay also requires the stored sanitized summaries and exit-status files to
+agree with those outcomes, checks that the one-line repair recreates the
+maintained adapter, and runs the full public package suite (57 checks).
+The broader adapter suite is staged from the maintained test file; the capture
+keeps only the focused test excerpt rather than duplicating that full suite.

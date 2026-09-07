@@ -6,6 +6,7 @@ import argparse
 import json
 import math
 import reprlib
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -287,23 +288,41 @@ def _parse_args() -> argparse.Namespace:
 def main() -> int:
     """Run a read-only plan or post-change verification."""
     args = _parse_args()
-    plan = load_plan(args.config)
+    try:
+        plan = load_plan(args.config)
+    except (OSError, KeyError, TypeError, ValueError):
+        print(
+            "tool_error=invalid plan input "
+            f"{_safe_field(args.config.name)}",
+            file=sys.stderr,
+        )
+        return 1
     if args.command == "plan":
         failures = policy_violations(plan)
         print(describe_plan(plan, failures))
         return 0 if not failures else 2
     plan_failures = policy_violations(plan)
     if plan_failures:
-        print("verification=FAIL")
+        print("policy=BLOCK")
         for item in plan_failures:
-            print(f"failure=plan policy: {item}")
-        return 3
-    observed = load_observation(args.observation)
+            print(f"violation={item}")
+        return 2
+    try:
+        observed = load_observation(args.observation)
+    except (OSError, KeyError, TypeError, ValueError):
+        print(
+            "tool_error=invalid observation input "
+            f"{_safe_field(args.observation.name)}",
+            file=sys.stderr,
+        )
+        return 1
     failures = verification_failures(plan, observed)
     status = "PASS" if not failures else "FAIL"
     print(f"verification={status}")
     for item in failures:
         print(f"failure={item}")
+    if failures:
+        print("recovery=REQUESTED")
     return 0 if not failures else 3
 
 

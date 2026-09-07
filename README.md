@@ -33,17 +33,17 @@ appears wherever a chapter uses third-party packages.
 
 ### Chapter 3 — Conversations that converge
 
-- [`listing_3_1_rate_limit_decorator.py`](ch03/listing_3_1_rate_limit_decorator.py) — Listing 3.1: Branch A result, decorator-based rate limiter
-- [`listing_3_2_rate_limit_redis_script.py`](ch03/listing_3_2_rate_limit_redis_script.py) — Listing 3.2: Branch B result, Redis sliding-window script
-- [`listing_3_3_rate_limit_middleware.py`](ch03/listing_3_3_rate_limit_middleware.py) — Listing 3.3: Branch B result, Python wrapper and middleware
+- [`listing_3_1_rate_limit_decorator.py`](ch03/listing_3_1_rate_limit_decorator.py) — Listing 3.1: Branch A result: decorator-based rate limiter
+- [`listing_3_2_rate_limit_redis_script.py`](ch03/listing_3_2_rate_limit_redis_script.py) — Listing 3.2: Branch B result, part 1: Redis sliding-window script
+- [`listing_3_3_rate_limit_middleware.py`](ch03/listing_3_3_rate_limit_middleware.py) — Listing 3.3: Branch B result, part 2: Python wrapper and middleware
 - [`listing_3_4_event_processor_start.py`](ch03/listing_3_4_event_processor_start.py) — Listing 3.4: Starting event processor
 - [`listing_3_5_missing_events_guard.diff`](ch03/listing_3_5_missing_events_guard.diff) — Listing 3.5: Missing-events validation guard
 - [`listing_3_6_event_processor_after_blockers.py`](ch03/listing_3_6_event_processor_after_blockers.py) — Listing 3.6: After fixing the three ship-blockers
 - [`listing_3_7_timestamp_parser.py`](ch03/listing_3_7_timestamp_parser.py) — Listing 3.7: Robust timestamp parsing with an explicit UTC contract
-- [`listing_3_8_event_processor_validation.py`](ch03/listing_3_8_event_processor_validation.py) — Listing 3.8: Final version, validation and filtering
-- [`listing_3_9_event_processor_aggregation.py`](ch03/listing_3_9_event_processor_aggregation.py) — Listing 3.9: Final version, aggregation and output
-- [`listing_3_10_generated_tests.py`](ch03/listing_3_10_generated_tests.py) — Listing 3.10: Generated tests, harness and filtering
-- [`listing_3_11_generated_tests_timezone.py`](ch03/listing_3_11_generated_tests_timezone.py) — Listing 3.11: Generated tests, deduplication and timezones
+- [`listing_3_8_event_processor_validation.py`](ch03/listing_3_8_event_processor_validation.py) — Listing 3.8: Final version, part 1: validation and filtering
+- [`listing_3_9_event_processor_aggregation.py`](ch03/listing_3_9_event_processor_aggregation.py) — Listing 3.9: Final version, part 2: aggregation and output
+- [`listing_3_10_generated_tests.py`](ch03/listing_3_10_generated_tests.py) — Listing 3.10: Generated tests, part 1: harness and filtering
+- [`listing_3_11_generated_tests_timezone.py`](ch03/listing_3_11_generated_tests_timezone.py) — Listing 3.11: Generated tests, part 2: deduplication and timezones
 - [`PROMPTS.md`](ch03/PROMPTS.md) — Prompt blocks from the current manuscript draft
 
 ### Chapter 4 — Plans you can review and redirect
@@ -91,7 +91,7 @@ appears wherever a chapter uses third-party packages.
 
 - [`AGENTS.md`](ch09/AGENTS.md) — Listing 9.1: A short project rule with an enforcement point
 - [`http_client.py`](ch09/http_client.py) — Listing 9.2: The response interface used by the notification
-- [`retrieval.py`](ch09/retrieval.py) — Listing 9.4: Retrieve, preserve provenance, then inject
+- [`retrieval.py`](ch09/retrieval.py) — Listing 9.4: Excerpt: retrieve, preserve provenance, then inject
 - [`alerts.py`](ch09/alerts.py) — the house-correct alert feature that uses `http_client.call`
 - [`mcp_policy.py`](ch09/mcp_policy.py) — host-owned MCP capability policy
 - [`test_mcp_policy.py`](ch09/test_mcp_policy.py) — posture and lethal-trifecta checks
@@ -103,7 +103,7 @@ appears wherever a chapter uses third-party packages.
 - [`reminders/service.py`](ch10/reminders/service.py) — Listing 10.1: Keeping snooze policy inside the service
 - [`tests/test_service.py`](ch10/tests/test_service.py) — Listing 10.2: Proving policy with a fake and frozen clock
 - [`tests/test_sqlite_repository.py`](ch10/tests/test_sqlite_repository.py) — Listing 10.3: Crossing the real SQLite row boundary
-- [`tests/test_capture_controls.py`](ch10/tests/test_capture_controls.py) — capture cleanup and review-state controls
+- [`tests/test_capture_controls.py`](ch10/tests/test_capture_controls.py) — capture cleanup, evidence, and adapter-parity controls
 - [`manual_check.py`](ch10/manual_check.py) — Listing 10.4: Comparing local responses with storage
 - [`captures/sqlite_row_conversion_seam/`](ch10/captures/sqlite_row_conversion_seam/) — the current SQLite row-conversion session fixture
 - [`PROMPTS.md`](ch10/PROMPTS.md) — Prompt blocks from the current manuscript draft
@@ -131,8 +131,8 @@ chapter directory, run `python3 -m pytest -q`:
 - `ch06` prints `8 passed`,
 - `ch07` prints `13 passed`,
 - `ch08` prints `10 passed`,
-- `ch09` prints `28 passed`,
-- `ch10` prints `53 passed` (49 behavior checks plus four capture controls),
+- `ch09` prints `32 passed`,
+- `ch10` prints `57 passed` (49 behavior checks plus eight capture controls),
 - `ch11` prints `24 passed`, and
 - `ch12` prints `4 passed` (equivalently, `python3 -m unittest -v test_workflow_metrics`).
 
@@ -164,7 +164,9 @@ offline through a deterministic local fixture (Listing 2.2), so no model
 provider or API key is required; only `jsonschema` is needed. Listing 2.7 is
 the one exception: it is an optional live-provider boundary that is not part
 of the offline path and needs a separate `pip install anthropic` plus
-credentials from a supported SDK credential source.
+credentials from a supported SDK credential source. Set `ANTHROPIC_MODEL` to
+a model ID available to your account; the adapter rejects missing model
+configuration rather than selecting a hardcoded provider model.
 
 Chapters 6 through 12 are self-contained, runnable projects. Each needs only
 `pytest`; from the chapter directory, run `python3 -m pytest -q`. Chapters 10,

@@ -5,9 +5,12 @@
 | Before adapter | `before/reminders/repository.py` |
 | Real-row fixture | `before/reminders/domain.py`, `tests/conftest.py` |
 | Focused discriminator | `tests/test_sqlite_repository.py::test_get_for_user_maps_unsnoozed_reminder` |
+| Full adapter checks used by replay | `../../tests/test_sqlite_repository.py` (staged over the focused excerpt) |
 | Exact repair | `patches/sqlite_row_conversion.diff` |
 | Command/output transcript | `session.md`, `evidence/` |
 | Replay and cleanup | `run_capture.py` |
+| Evidence controls | `evidence/*.exit_status`, normalized summaries and real-row diagnostic |
+| After-state parity | Exact one-line replacement; maintained `reminders/repository.py` and `domain.py` |
 
 The capture is intentionally package-local and sanitized. It does not include
 book workspace paths, historical repository identifiers, or private review

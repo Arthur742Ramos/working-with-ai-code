@@ -1,7 +1,7 @@
 # Chapter 10: Code Listings
 
 This directory contains the runnable reminder-snooze example from Chapter 10,
-"Software engineering: from idea to running code."
+"Software engineering: from idea to review-ready code."
 
 The project takes one vague ticket through accepted behavior, module boundaries,
 focused checks, a controlled SQLite failure, and a review-ready local change.
@@ -34,7 +34,7 @@ py -3 -m venv .venv
 .venv\Scripts\python manual_check.py
 ```
 
-The full suite should report `53 passed`: 49 behavior checks plus four
+The full suite should report `57 passed`: 49 behavior checks plus eight
 capture-control checks. Production code uses only the Python standard library.
 [`requirements.txt`](requirements.txt) declares `pytest` for the tests.
 
@@ -87,7 +87,7 @@ simultaneous state changes.
 - [`tests/test_snooze_flow.py`](tests/test_snooze_flow.py) composes the handler,
   service, and real adapter.
 - [`tests/test_capture_controls.py`](tests/test_capture_controls.py) checks
-  capture locality and cleanup behavior.
+  capture locality, cleanup, evidence semantics, adapter parity, and test staging.
 - [`manual_check.py`](manual_check.py) prints deterministic response and stored
   values.
 
@@ -128,7 +128,9 @@ reminder IDs, raising the suite to 44. A final rereview added checks for a NULL
 primary key, a varied full-flow tuple, and an extra unapproved integer. A later
 manuscript gate added cross-connection commit and validation-order cases.
 The behavior suite has 49 tests, and the package-level capture controls add
-four checks for a total of 53.
+eight checks for a total of 57 in this public package. The additional public
+controls verify the row failure, broader count, exact repair, and staged suite
+without depending on author-only review receipts.
 
 The `sqlite3.Row.get` failure in the chapter is a controlled reproduction. The
 capture temporarily replaces `row["snoozed_until"]` with the plausible but

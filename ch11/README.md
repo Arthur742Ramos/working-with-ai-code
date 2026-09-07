@@ -32,6 +32,13 @@ python3 incident_triage.py incident.jsonl deploy-104
 tools, runs the tests, and builds a read-only plan that stops at
 `READY_FOR_APPROVAL`; an actual write is intentionally outside this example.
 
+The guard distinguishes invalid input (`tool_error` on stderr, exit `1`),
+blocked plan policy (`policy=BLOCK`, exit `2`), and a failed post-change
+verification (`verification=FAIL` with `recovery=REQUESTED`, exit `3`).
+Recovery is a request for the human-owned recovery path, not an automatic
+rollback. A stage that cannot launch reports `tool_error=<stage>` on stderr
+and stops the pipeline with exit `127`; other stage exit codes are preserved.
+
 ## Listing map
 
 - **Listing 11.1** is the rollout-policy branch in `deployment_guard.py` that

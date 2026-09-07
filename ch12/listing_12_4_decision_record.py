@@ -13,25 +13,21 @@ decision = {
     "action": "pause",
     "evidence": {
         "time_to_acceptance": {
-            "current_practice_minutes": 71,
-            "bounded_workflow_minutes": 55,
+            "current_minutes": 71,
+            "bounded_minutes": 55,
             "proposed_gain_percent": 15,
-            "threshold_status": "unapproved",
-            "observation": "proposed_gain_cleared",
+            "threshold": "unapproved",
         },
-        "nonaccepted_terminal_minutes": {
-            "current_practice": 46,
-            "bounded_workflow": 73,
+        "nonaccepted_minutes": {
+            "current": 46, "bounded": 73,
         },
-        "accepted_without_major_rework": {
-            "current_practice": "24/30",
-            "bounded_workflow": "25/30",
-            "band_status": "unresolved",
+        "accepted_without_rework": {
+            "current": "24/30", "bounded": "25/30",
+            "band": "unresolved",
         },
         "escaped_defects": {
-            "current_practice": "1/24 accepted",
-            "bounded_workflow": "2/25 accepted",
-            "band_status": "unresolved",
+            "current": "1/24", "bounded": "2/25",
+            "band": "unresolved",
         },
         "authority_exceptions": 2,
     },
