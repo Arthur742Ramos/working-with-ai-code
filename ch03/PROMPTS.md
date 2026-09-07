@@ -140,7 +140,7 @@ Work only on the missing `events` behavior in `event_processor.py`. First run `p
 Apply only that guard. Show the exact diff, then rerun the focused check and `python3 full_capture_check.py event_processor.py`.
 ````
 
-## Illustrative checkpoint for the next turn
+## Checkpoint the review
 
 ````text
 Checkpoint this review. Separate what the captured checks verified from the remaining source-inspection concerns. Then identify the unresolved decision that should shape the next bounded ask.
@@ -152,7 +152,7 @@ Checkpoint this review. Separate what the captured checks verified from the rema
 Our emitters run in multiple timezones. Before changing parsing, explain what a timestamp without an offset means, what can go wrong if we assume Coordinated Universal Time (UTC), and which contract choices would make the next implementation request checkable. Do not edit yet.
 ````
 
-## Fixing the ship-blockers (illustrative)
+## Fixing the ship-blockers
 
 ````text
 Fix only the issues you said should block shipping: the
@@ -161,7 +161,7 @@ other code unchanged for now. Edit `event_processor.py` and
 show me what changed.
 ````
 
-## Harden timestamp parsing (illustrative)
+## Harden timestamp parsing
 
 ````text
 We audited the emitters and confirmed that they log UTC.
@@ -171,7 +171,7 @@ If a timestamp cannot be parsed, skip that event and log a
 warning instead of crashing the batch.
 ````
 
-## Finish the robustness pass (illustrative)
+## Finish the robustness pass
 
 ````text
 Keep the documented naive-assumed-UTC contract. Store each
@@ -181,7 +181,7 @@ Skip and count events missing `user_id` or `type`, and log a
 one-line summary. Do not change the timestamp policy.
 ````
 
-## Requesting self-critique and tests (illustrative)
+## Requesting self-critique and tests
 
 ````text
 Critique the final version for edge cases that remain. Then

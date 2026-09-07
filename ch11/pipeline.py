@@ -10,6 +10,7 @@ from typing import Sequence
 
 
 ROOT = Path(__file__).parent
+LAUNCH_FAILURE = 127
 
 
 @dataclass(frozen=True)
@@ -58,11 +59,18 @@ STAGES = (
 def run_stage(stage: Stage) -> int:
     """Run one stage and preserve its real exit code."""
     print(f"== {stage.name} ==", flush=True)
-    completed = subprocess.run(
-        stage.command,
-        cwd=ROOT,
-        check=False,
-    )
+    try:
+        completed = subprocess.run(
+            stage.command,
+            cwd=ROOT,
+            check=False,
+        )
+    except OSError:
+        print(
+            f"tool_error={stage.name}",
+            file=sys.stderr,
+        )
+        return LAUNCH_FAILURE
     return completed.returncode
 
 

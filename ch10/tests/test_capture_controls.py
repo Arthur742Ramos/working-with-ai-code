@@ -2,6 +2,7 @@
 
 import importlib.util
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -67,3 +68,54 @@ def test_capture_runner_uses_the_real_adapter_suite():
 
     assert "tests/test_sqlite_repository.py" in runner
     assert "test_get_for_user_maps_unsnoozed_reminder" in runner
+
+
+def test_capture_evidence_requires_the_real_row_failure():
+    diagnostic = "AttributeError: 'sqlite3.Row' object has no attribute 'get'"
+    RUNNER.require_evidence(
+        SimpleNamespace(returncode=1, stdout=f"{diagnostic}\n1 failed in 0.01s\n"),
+        "focused_red",
+    )
+    with pytest.raises(RuntimeError, match="evidence mismatch"):
+        RUNNER.require_evidence(
+            SimpleNamespace(returncode=1, stdout="unrelated failure\n1 failed\n"),
+            "focused_red",
+        )
+
+
+def test_capture_evidence_rejects_wrong_green_count():
+    RUNNER.require_evidence(
+        SimpleNamespace(returncode=0, stdout="12 passed in 0.01s\n"),
+        "broader_green",
+    )
+    with pytest.raises(RuntimeError, match="evidence mismatch"):
+        RUNNER.require_evidence(
+            SimpleNamespace(returncode=0, stdout="1 passed\n"), "broader_green",
+        )
+
+
+def test_capture_patch_is_exact_and_matches_maintained_adapter(tmp_path, monkeypatch):
+    package = tmp_path / "reminders"
+    package.mkdir()
+    for filename in ("repository.py", "domain.py"):
+        (package / filename).write_bytes(
+            (PACKAGE_DIR / "reminders" / filename).read_bytes(),
+        )
+    monkeypatch.setattr(RUNNER, "WORK_DIR", tmp_path)
+    RUNNER.verify_after_state()
+    repository = package / "repository.py"
+    repository.write_text(
+        repository.read_text(encoding="utf-8") + "\n# unrelated change\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(RuntimeError, match="only the one-line"):
+        RUNNER.verify_after_state()
+
+
+def test_capture_stage_uses_current_adapter_tests(tmp_path, monkeypatch):
+    monkeypatch.setattr(RUNNER, "WORK_DIR", tmp_path / ".work")
+    monkeypatch.setattr(RUNNER, "clean_work_directories", lambda: None)
+    RUNNER.stage_before_state()
+    assert (RUNNER.WORK_DIR / "tests" / "test_sqlite_repository.py").read_bytes() == (
+        PACKAGE_DIR / "tests" / "test_sqlite_repository.py"
+    ).read_bytes()

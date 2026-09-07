@@ -2,6 +2,12 @@
 
 Prompt blocks extracted from the current manuscript source.
 
+## Complete the local repair within the boundary
+
+````text
+Repair `send_alert` through the approved shared client. Inspect the affected code and current rule, reproduce the focused failure, make the repair, and run the focused test plus the house-rule guard. The local tests use injected transports and make no live calls. Correct failures caused by this repair and rerun affected checks without asking again. Finish with the diff and check results. Do not send a live notification, weaken tests, change credentials, or expand the task. If progress requires one of those actions or an unresolved policy choice, report the blocker.
+````
+
 ## Inspect the seam before editing
 
 ````text

@@ -1,4 +1,4 @@
-"""Capture checks for auth, retry, and fail-closed behavior."""
+"""Focused checks for auth, retries, and the fail-closed transport."""
 
 import pytest
 

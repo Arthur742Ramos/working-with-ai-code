@@ -2,7 +2,7 @@
 
 Prompt blocks extracted from the current manuscript source.
 
-## Name the orphaned-product failure
+## Name the orphaned-product failure (reconstructed)
 
 ````text
 Inspect `seed.py`, `server.py`, and the focused check. Run
@@ -15,7 +15,7 @@ closed at the API boundary while upstream data is repaired.
 Do not change valid summaries or invent a missing price.
 ````
 
-## Apply the bounded repair
+## Apply the bounded repair (reconstructed)
 
 ````text
 Apply the one-sentence plan as the smallest reviewable diff.
@@ -24,7 +24,7 @@ show the exact production diff before the focused and broader
 checks.
 ````
 
-## Show focused and broader evidence
+## Show focused and broader evidence (reconstructed)
 
 ````text
 Run the focused check, then the broader check. Show the raw

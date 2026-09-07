@@ -1,4 +1,4 @@
-"""Approved outbound HTTP boundary for the capture fixture."""
+"""Approved outbound HTTP boundary with auth and bounded transient retries."""
 
 import os
 from dataclasses import dataclass
@@ -11,6 +11,7 @@ class Response:
     body: dict
 
 
+TRANSIENT_STATUSES = frozenset({429, 502, 503, 504})
 Transport = Callable[[str, str, Mapping[str, str], dict], Response]
 
 
@@ -20,18 +21,22 @@ def _unconfigured_transport(
     headers: Mapping[str, str],
     body: dict,
 ) -> Response:
-    raise RuntimeError("no HTTP transport configured")
+    raise RuntimeError(
+        "no HTTP transport configured; inject one with set_transport"
+    )
 
 
 _transport: Transport = _unconfigured_transport
 
 
 def set_transport(transport: Transport) -> None:
+    """Set the single transport used by the approved client."""
     global _transport
     _transport = transport
 
 
 def reset_transport() -> None:
+    """Restore the fail-closed transport after an injected test transport."""
     set_transport(_unconfigured_transport)
 
 
@@ -43,6 +48,7 @@ def call(
     headers: Optional[Mapping[str, str]] = None,
     max_retries: int = 2,
 ) -> Response:
+    """Apply auth and retry transient responses through one transport."""
     if max_retries < 0:
         raise ValueError("max_retries must be non-negative")
 
@@ -57,7 +63,7 @@ def call(
     response = _transport(method, url, request_headers, body)
     attempts = 0
     while (
-        response.status in {429, 502, 503, 504}
+        response.status in TRANSIENT_STATUSES
         and attempts < max_retries
     ):
         attempts += 1

@@ -23,6 +23,8 @@ FAILED tests/test_alerts.py::test_send_alert_routes_through_house_client
 The direct transport returned success, but the shared observer recorded no
 method, endpoint, or JSON payload. The smallest plan was to replace the
 transport import, call expression, and response field.
+The observer checks `http_client.call` itself, separately from authentication,
+and accepts both directly imported and module-qualified shared-client calls.
 
 ## Exact repair
 
@@ -45,11 +47,13 @@ $ python3 -m pytest -q -p no:cacheprovider \
 1 passed
 
 $ python3 -m pytest -q -p no:cacheprovider
-.........                                                               [100%]
-9 passed
+..........                                                               [100%]
+10 passed
 ```
 
 Focused green proves exact routing at the seam. The broader run protects the
 injected credentials, retry and fail-closed behavior, status handling, and
-import guard. It does not prove live endpoint availability or production
-transport behavior.
+import guard, its negative self-test, and module-qualified shared-client use.
+Replay also checks the patched files against the after snapshot and runs the
+maintained package suite. It does not prove live endpoint availability or
+production transport behavior.

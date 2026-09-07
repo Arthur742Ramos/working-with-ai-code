@@ -72,7 +72,7 @@ validation logic; the runner must remain a thin caller.
 State what is unsupported as plainly as what works.
 ````
 
-## Independent tester handoff
+## Independent tester handoff (reconstructed)
 
 ````text
 Act as the independent tester at the handoff from tester to implementer.

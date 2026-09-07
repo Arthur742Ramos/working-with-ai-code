@@ -1,10 +1,20 @@
 """Package-local checks for the maintained Chapter 9 teaching surfaces."""
 
 from pathlib import Path
+import importlib.util
+from types import SimpleNamespace
+
+import pytest
 
 
 HERE = Path(__file__).parent
 CAPTURE_DIR = HERE / "captures" / "house_rule_seam"
+SPEC = importlib.util.spec_from_file_location(
+    "house_rule_capture_runner", CAPTURE_DIR / "run_capture.py",
+)
+assert SPEC is not None and SPEC.loader is not None
+RUNNER = importlib.util.module_from_spec(SPEC)
+SPEC.loader.exec_module(RUNNER)
 
 
 def test_outbound_rule_matches_the_staged_listing():
@@ -89,3 +99,47 @@ def test_capture_patch_preserves_the_exact_boundary_change():
 def test_pytest_collection_excludes_capture_internals():
     pytest_config = (HERE / "pytest.ini").read_text(encoding="utf-8")
     assert "norecursedirs = captures" in pytest_config
+
+
+def test_capture_keeps_the_shared_client_unchanged():
+    before = (CAPTURE_DIR / "before" / "http_client.py").read_bytes()
+    after = (CAPTURE_DIR / "after" / "http_client.py").read_bytes()
+    assert before == after
+    assert b"TRANSIENT_STATUSES = frozenset({429, 502, 503, 504})" in before
+    assert b"inject one with set_transport" in before
+
+
+def test_capture_accepts_only_the_expected_red():
+    diagnostic = (
+        "send_alert must route method, URL, and JSON through http_client.call"
+    )
+    RUNNER.require_result(
+        SimpleNamespace(returncode=1, stdout=f"{diagnostic}\n1 failed in 0.01s\n"),
+        1, "1 failed", diagnostic,
+    )
+    with pytest.raises(RuntimeError, match="did not match"):
+        RUNNER.require_result(
+            SimpleNamespace(returncode=1, stdout="unrelated failure\n1 failed\n"),
+            1, "1 failed", diagnostic,
+        )
+
+
+def test_capture_rejects_drifted_after_state(tmp_path, monkeypatch):
+    for filename in ("alerts.py", "http_client.py"):
+        (tmp_path / filename).write_bytes(
+            (CAPTURE_DIR / "after" / filename).read_bytes(),
+        )
+    monkeypatch.setattr(RUNNER, "WORK_DIR", tmp_path)
+    RUNNER.verify_after_state()
+    (tmp_path / "http_client.py").write_text("changed\n", encoding="utf-8")
+    with pytest.raises(RuntimeError, match="after state drifted"):
+        RUNNER.verify_after_state()
+
+
+def test_capture_cleanup_retains_evidence(tmp_path):
+    (tmp_path / ".work").mkdir()
+    (tmp_path / ".work-review").mkdir()
+    (tmp_path / "evidence").mkdir()
+    RUNNER.clean_work_directories(tmp_path)
+    RUNNER.require_work_cleanup(tmp_path)
+    assert (tmp_path / "evidence").is_dir()

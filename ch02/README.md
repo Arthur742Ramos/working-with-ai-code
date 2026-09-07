@@ -38,6 +38,14 @@ separate install and credentials from a supported SDK credential source:
 
 ```bash
 pip install anthropic
+export ANTHROPIC_MODEL="your-supported-model-id"
 ```
+
+Choose a model ID supported by your provider account; there is no hard-coded
+model default. An unset or empty `ANTHROPIC_MODEL` raises
+`RuntimeError: Set ANTHROPIC_MODEL to a supported model` before creating the
+client or sending a request. Configure authentication separately through a
+supported SDK credential source (for example, `ANTHROPIC_API_KEY` supplied
+through your environment or secret store); never commit credentials.
 
 See the [main README](../README.md) for setup instructions.

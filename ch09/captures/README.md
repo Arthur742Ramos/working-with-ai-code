@@ -15,8 +15,9 @@ python3 captures/house_rule_seam/run_capture.py
 ```
 
 Replay runs the focused red, applies the stored patch in disposable
-package-local space, then runs focused and broader green. It uses the local
-offline transport stub and never calls a live endpoint.
+package-local space, checks exact after-state parity, then runs focused,
+ten-test broader, and maintained-package green. It uses the local offline
+transport stub and never calls a live endpoint.
 
 The capture's [`session.md`](house_rule_seam/session.md) records the contract,
 failure, exact diff, and output. The fixture stays generic and public; it does

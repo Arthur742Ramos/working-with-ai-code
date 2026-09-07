@@ -23,6 +23,12 @@ class Violation:
     line: int
     module: str
 
+    def display(self, root: Path) -> str:
+        return (
+            f"{self.path.relative_to(root)}:{self.line}: "
+            f"unapproved outbound HTTP import: {self.module}"
+        )
+
 
 def feature_modules(root: Path):
     for path in sorted(root.glob("*.py")):
@@ -51,7 +57,12 @@ def find_unapproved_http_imports(root: Path):
 
 
 def test_no_unapproved_http_clients():
-    assert not find_unapproved_http_imports(HERE)
+    violations = find_unapproved_http_imports(HERE)
+    details = "\n".join(item.display(HERE) for item in violations)
+    assert not violations, (
+        "outbound HTTP must go through http_client.call; "
+        f"found direct transport imports:\n{details}"
+    )
 
 
 def test_direct_requests_source_proves_guard_is_live(tmp_path):

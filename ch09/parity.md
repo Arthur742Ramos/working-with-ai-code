@@ -13,7 +13,14 @@ depending on the book repository or any private capture location.
 | MCP resources, prompts, and tools | `mcp_policy.py`, `test_mcp_policy.py` | Host selection, postures, approvals, and target allowlists are checked |
 | Lethal-trifecta containment | `mcp_policy.py`, `test_mcp_policy.py` | One tool and one composed host cannot complete all three legs |
 | Real alert seam session | `captures/house_rule_seam/` | Red state, exact patch, transcript, and replay remain package-local |
+| Capture routing discriminator | `captures/house_rule_seam/tests/test_alerts.py` | Exact shared-call observation accepts direct and module-qualified imports |
+| Capture integrity | `test_package_parity.py`, capture runner | Specific red diagnostic, unchanged shared client, exact after snapshot, and cleanup |
 
 The MCP model is intentionally a policy example, not an MCP protocol
 implementation. The capture transcript uses only public companion paths and
 generic endpoint data.
+
+Public replay uses a file-based offline transport stub and generates the import
+guard's negative fixture locally. It does not depend on author-only metadata,
+review receipts, manuscript parity checks, or stored workspace logs. The capture
+suite has ten checks; the maintained public suite has 32.
