@@ -1,0 +1,4 @@
+storage_error=injected write failure
+before=[('rem-1', None), ('rem-2', None)]
+after=[('rem-1', None), ('rem-2', None)]
+atomicity=PASS
