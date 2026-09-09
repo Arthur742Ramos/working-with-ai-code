@@ -1,0 +1,11 @@
+storage_error=injected write failure
+before=[('rem-1', None), ('rem-2', None)]
+after=[('rem-1', '2030-01-02T12:15:00+00:00'), ('rem-2', None)]
+Traceback (most recent call last):
+  File "/Users/arthur/Repos/AI_Book_Official/code/ch10/batch_case/probe_atomicity.py", line 82, in <module>
+    run(sys.argv[1])
+    ~~~^^^^^^^^^^^^^
+  File "/Users/arthur/Repos/AI_Book_Official/code/ch10/batch_case/probe_atomicity.py", line 74, in run
+    assert after == before, "batch partially committed"
+           ^^^^^^^^^^^^^^^
+AssertionError: batch partially committed

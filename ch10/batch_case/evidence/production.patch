@@ -1,0 +1,203 @@
+--- /dev/null
++++ b/reminders/batch_handler.py
+@@ -0,0 +1,61 @@
++from collections.abc import Mapping
++from dataclasses import dataclass
++
++from reminders.batch_service import (
++    BatchSnoozeService, InvalidReminderBatch,
++)
++from reminders.service import (
++    InvalidSnoozeDuration,
++    ReminderCompleted,
++    ReminderNotFound,
++)
++
++
++@dataclass(frozen=True)
++class BatchRequest:
++    user_id: str
++    body: object
++
++
++@dataclass(frozen=True)
++class BatchResponse:
++    status: int
++    body: dict[str, object]
++
++
++def handle_batch_snooze(
++    request: BatchRequest, service: BatchSnoozeService,
++) -> BatchResponse:
++    if (
++        not isinstance(request.body, Mapping)
++        or set(request.body) != {"reminder_ids", "minutes"}
++    ):
++        return BatchResponse(
++            422, {"error": "invalid_batch"},
++        )
++    try:
++        reminders = service.execute(
++            request.user_id,
++            request.body["reminder_ids"],
++            request.body["minutes"],
++        )
++    except (InvalidReminderBatch, InvalidSnoozeDuration):
++        return BatchResponse(
++            422, {"error": "invalid_batch"},
++        )
++    except ReminderNotFound:
++        return BatchResponse(404, {"error": "not_found"})
++    except ReminderCompleted:
++        return BatchResponse(
++            409, {"error": "reminder_completed"},
++        )
++    until = reminders[0].snoozed_until
++    if until is None or any(
++        reminder.snoozed_until != until
++        for reminder in reminders
++    ):
++        raise RuntimeError("inconsistent batch result")
++    return BatchResponse(200, {
++        "ids": [reminder.id for reminder in reminders],
++        "snoozed_until": until.isoformat(),
++    })
+--- /dev/null
++++ b/reminders/batch_service.py
+@@ -0,0 +1,78 @@
++from dataclasses import replace
++from datetime import timedelta
++from typing import Protocol
++
++from reminders.domain import (
++    Reminder, ReminderStatus, normalize_utc,
++)
++from reminders.service import (
++    ALLOWED_MINUTES,
++    Clock,
++    InvalidSnoozeDuration,
++    ReminderCompleted,
++    ReminderNotFound,
++)
++
++
++class InvalidReminderBatch(ValueError):
++    pass
++
++
++def validate_batch(reminder_ids, minutes):
++    if (
++        type(minutes) is not int
++        or minutes not in ALLOWED_MINUTES
++    ):
++        raise InvalidSnoozeDuration(minutes)
++    if not isinstance(reminder_ids, list):
++        raise InvalidReminderBatch()
++    if not 1 <= len(reminder_ids) <= 20:
++        raise InvalidReminderBatch()
++    if any(
++        not isinstance(rid, str) or not rid.strip()
++        for rid in reminder_ids
++    ):
++        raise InvalidReminderBatch()
++    if len(set(reminder_ids)) != len(reminder_ids):
++        raise InvalidReminderBatch()
++
++
++class BatchRepository(Protocol):
++    def get_for_user(
++        self, reminder_id: str, user_id: str,
++    ) -> Reminder | None: ...
++
++    def save_many(
++        self, reminders: list[Reminder],
++    ) -> list[Reminder]: ...
++
++
++class BatchSnoozeService:
++    def __init__(
++        self, repository: BatchRepository, clock: Clock,
++    ) -> None:
++        self._repository = repository
++        self._clock = clock
++
++    def execute(
++        self, user_id: str, reminder_ids: list[str],
++        minutes: int,
++    ) -> list[Reminder]:
++        validate_batch(reminder_ids, minutes)
++        selected = []
++        for reminder_id in reminder_ids:
++            reminder = self._repository.get_for_user(
++                reminder_id, user_id,
++            )
++            if reminder is None:
++                raise ReminderNotFound(reminder_id)
++            if reminder.status is ReminderStatus.COMPLETED:
++                raise ReminderCompleted(reminder_id)
++            selected.append(reminder)
++        now = normalize_utc(self._clock.now())
++        until = now + timedelta(minutes=minutes)
++        updated = [
++            replace(reminder, snoozed_until=until)
++            for reminder in selected
++        ]
++        return self._repository.save_many(updated)
+--- a/reminders/repository.py
++++ b/reminders/repository.py
+@@ -96,0 +97,18 @@
++    def _update(self, reminder: Reminder) -> None:
++        cursor = self._connection.execute(
++            """
++            UPDATE reminders
++            SET snoozed_until = ?
++            WHERE id = ? AND user_id = ?
++            """,
++            (
++                _format_optional_timestamp(
++                    reminder.snoozed_until
++                ),
++                reminder.id,
++                reminder.user_id,
++            ),
++        )
++        if cursor.rowcount != 1:
++            raise ReminderWriteError(reminder.id)
++
+@@ -99,13 +117,15 @@
+-            cursor = self._connection.execute(
+-                """
+-                UPDATE reminders
+-                SET snoozed_until = ?
+-                WHERE id = ? AND user_id = ?
+-                """,
+-                (
+-                    _format_optional_timestamp(
+-                        reminder.snoozed_until
+-                    ),
+-                    reminder.id,
+-                    reminder.user_id,
+-                ),
++            self._update(reminder)
++        return reminder
++
++    def save_many(
++        self, reminders: list[Reminder],
++    ) -> list[Reminder]:
++        if (
++            self._connection.in_transaction
++            or self._connection.isolation_level is None
++            or getattr(self._connection, "autocommit", -1)
++            != -1
++        ):
++            raise ReminderWriteError(
++                "batch requires an idle transaction-mode "
++                "connection"
+@@ -113,3 +133,4 @@
+-            if cursor.rowcount != 1:
+-                raise ReminderWriteError(reminder.id)
+-        return reminder
++        with self._connection:
++            for reminder in reminders:
++                self._update(reminder)
++        return reminders

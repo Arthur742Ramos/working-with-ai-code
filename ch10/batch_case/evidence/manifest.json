@@ -1,0 +1,60 @@
+{
+  "capture_date": "2026-09-08",
+  "agent": "Codex",
+  "commands": [
+    {
+      "command": "python -m pytest -q (before feature edits)",
+      "exit": 0,
+      "passed": 49
+    },
+    {
+      "command": "python probe_atomicity.py legacy",
+      "exit": 1
+    },
+    {
+      "command": "python probe_atomicity.py batch",
+      "exit": 0
+    },
+    {
+      "command": "python -m pytest -q (after feature edits)",
+      "exit": 0,
+      "passed": 85
+    }
+  ],
+  "sha256": {
+    "README.md": "0b9233641af6f822f979e987f84cd9afad72bf9b86203a58bc4a8e42258e00f5",
+    "evidence/01-contract.md": "3cdf921eb6c4ec47944fbfafcbd8cc1231d1aa12be1f4564578750818617e459",
+    "evidence/02-baseline.txt": "bf74dfdeab257430e1831e858c2991cb550680c6a4fb0c57c7d61cac22f54be9",
+    "evidence/03-legacy-red.txt": "ff592b79c94eb4dca1c3a2f095b5663fe78f4f9b4d7d4103dbe258e20cdc7a95",
+    "evidence/04-replan.md": "cb08e330d656a35fd1cb40aadb7afa37114e447157dd76ba41fd84c507236d76",
+    "evidence/05-batch-green.txt": "55208d8958f4258f73274a165914ef838e7ffc4d67e108a1c1ff1cf22dd811c1",
+    "evidence/06-suite-green.txt": "ab9130d5f877e4dfc19d20aace401aa8002f033a315469d0bf69d03d4ca364ad",
+    "evidence/before/reminders/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence/before/reminders/domain.py": "d4572628e4a20c671c9bb8781d34d971d80c975c1bac7512b2761362468a7c39",
+    "evidence/before/reminders/handler.py": "f4ec0a6a68fd6d8d7ad314aa181ee3517461039cd4b2c2d8cb7a66c3497f3e7b",
+    "evidence/before/reminders/repository.py": "ff4aa7e8a6aac8c4d63ff1cf5f50b10e64552829a5f24ff49e1d82d57d254294",
+    "evidence/before/reminders/service.py": "fb3a5151267c09e92399317e28f8a60aa43630ee46b7253a4543830597c222e5",
+    "evidence/production.patch": "0cee6eecf77b0550339ea9a17fe5421222665126f7fb04b985081e7d1c8b4f5c",
+    "probe_atomicity.py": "aacab5993714c86bae3047861b1c41e9168b8da1ea5113f58882a45df44a7871",
+    "pytest.ini": "137d79f55a8792b5fb4e3ebd6ab7c6467f3b26f41972caff799a8ef0d7542d29",
+    "reminders/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reminders/batch_handler.py": "97a473fe58a1abde5a412c71377c9bce34769eca41ff1524b4659c3858fb5462",
+    "reminders/batch_service.py": "6c2c9d03a3e1f37c6d62f1f3c976d86942060c4c7432d8be6fedc302007c43b7",
+    "reminders/domain.py": "d4572628e4a20c671c9bb8781d34d971d80c975c1bac7512b2761362468a7c39",
+    "reminders/handler.py": "f4ec0a6a68fd6d8d7ad314aa181ee3517461039cd4b2c2d8cb7a66c3497f3e7b",
+    "reminders/repository.py": "6f28096c872a986051b8c7f5053c0fc418271412cae8e5c73f9a99d1d44be21f",
+    "reminders/service.py": "fb3a5151267c09e92399317e28f8a60aa43630ee46b7253a4543830597c222e5",
+    "replay_capture.py": "0bf87ec64f8f28c0062d74e8a14978d89fef9d3347c10c13b42a0e122529f6ee",
+    "tests/conftest.py": "56207fd282dbb19a9799a88dbd6e0e6d6cdcc1c7d9f195a447713e2c6ece38e6",
+    "tests/test_batch_snooze.py": "8933b7d46ff91e88543b7078faea46a365c29cfd74b9074d8cf4e428996de3d0",
+    "tests/test_handler.py": "c2ec8ba7498279d698a19e723c7fb240aa620bcc87122fad2c8d258d182bbf8b",
+    "tests/test_service.py": "41f001661d21ff8bf49737dad4c3466ac7a7476134939d8978641bfb4a5b4a9a",
+    "tests/test_snooze_flow.py": "b203c46b6f0d0950d8aabc3569e6a550b2537c137382d5c9a6137b5d86e8f163",
+    "tests/test_sqlite_repository.py": "0a3bbd75ce426a9ba789c03a315a0da51170c3a871b34d41d6db4f75edba80dd"
+  },
+  "runtime": {
+    "python": "3.14.7",
+    "sqlite": "3.53.4"
+  },
+  "note": "Final patch includes line wrapping for print after the first green run; replay verifies the final equivalent state. The patch uses zero context lines so literal diff prefixes do not trigger trailing-space checks."
+}

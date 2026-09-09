@@ -158,3 +158,7 @@ check or conditional update. That policy is outside this chapter's contract.
 ## Revised printed example
 
 Run `python3 teaching/row_probe.py` for the complete SQLite row probe shown in the revised manuscript. The application modules and behavior tests match the current book support code. This public package retains its existing captured-session verifier; the internal authoring package also checks a private manuscript snapshot, which is not distributed here.
+
+## Batch extension
+
+The independent [batch snooze case](batch_case/README.md) extends the handler, service, and SQLite adapter. Its deliberate second-write failure rejected composing per-item commits; the revised batch operation rolls back all updates. Run its 85-test suite and hash-checked replay from `batch_case/`. The original single-reminder implementation and captured evidence remain unchanged.
