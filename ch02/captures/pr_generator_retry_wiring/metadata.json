@@ -78,7 +78,7 @@
     "README.md": "1afb61eae9f0228340b70ea06c0690f9b927c2a685330285e3be3024e8f0aa2a",
     "local_fixture.py": "8d137853f4deca00100cd8107e21233f4c2f0c3ab906f316b99d6d76508f9866",
     "schema.py": "3df5ac79f2648078f991fb23bd2685105b2dea8cbc3c712e3110073253800325",
-    "pr_generator.py": "e22b2c23cfb21c5de636c7a3a7c7af4c83700e937a233c007dd65d6cc64eb5b8",
+    "pr_generator.py": "8f3941de35500d3fdc66256eb279fdf0886ef4b4eacf271c285a2b45f1fabda4",
     "anthropic_adapter.py": "e336cfddc59fb2f6339bf497feaea1f951261f55a711d9f4cc8d738b33b26d6b",
     "test_pr_generator.py": "e0caa5f348822cd659cd54a4086c96ce8b30891169901a78a0cb1f78fc87b347",
     "pytest.ini": "6f643b069a9c1eb4327b395febd3431bc2085acbcfd30074ffe97e0d2f77b146",
@@ -145,7 +145,7 @@
     "status": "Pass",
     "test_count": 18,
     "artifact_path": "evidence/final-polish-recertification.json",
-    "checksum_sha256": "35db8925ec7a6ac2fef7a66974e0f184f134d1f655f24e9768fe9ec5a371859e",
+    "checksum_sha256": "40c66c739beece7daae85ee548c551d12e29beecabe1265322b4aea22c5ba1bf",
     "historical_capture_status": "preserved_unchanged"
   },
   "independent_review_status": "completed",

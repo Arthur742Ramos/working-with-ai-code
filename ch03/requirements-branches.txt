@@ -1,0 +1,5 @@
+# Optional dependencies for the illustrative rate-limiter branches.
+fastapi>=0.115,<1
+httpx>=0.28,<1
+redis>=5,<9
+pytest>=8,<10

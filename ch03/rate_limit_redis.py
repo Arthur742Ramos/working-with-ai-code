@@ -1,14 +1,16 @@
 """Illustrative Branch B: a Redis-backed FastAPI limiter.
 
-This module is compile-only in the support package. It requires
-the ``redis`` and ``fastapi`` packages plus a Redis server at
-``localhost:6379`` to execute.
+HTTP response paths are checked with a fake allow/deny result.
+The shared-counter path requires the ``redis`` and ``fastapi`` packages
+plus a Redis server at ``localhost:6379``; no live Redis or load test
+is claimed by the response checks.
 """
 
 import time
 
 import redis.asyncio as redis
-from fastapi import HTTPException, Request
+from fastapi import Request
+from fastapi.responses import JSONResponse
 
 RATE_LIMIT_SCRIPT = """
 local key = KEYS[1]
@@ -58,8 +60,8 @@ async def rate_limit_middleware(
     user = request.state.user_id      # C
     allowed = await check_rate_limit(user)
     if not allowed:
-        raise HTTPException(
+        return JSONResponse(
             status_code=429,
-            detail="Rate limit exceeded",
+            content={"detail": "Rate limit exceeded"},
         )
     return await call_next(request)   # D
