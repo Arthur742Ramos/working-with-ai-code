@@ -154,3 +154,7 @@ A production design needs an explicit concurrency policy, such as a version
 check or conditional update. That policy is outside this chapter's contract.
 
 [Return to the companion repository index](../README.md).
+
+## Revised printed example
+
+Run `python3 teaching/row_probe.py` for the complete SQLite row probe shown in the revised manuscript. The application modules and behavior tests match the current book support code. This public package retains its existing captured-session verifier; the internal authoring package also checks a private manuscript snapshot, which is not distributed here.

@@ -1,0 +1,15 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_________________ test_equal_exact_remainders_keep_input_order _________________
+
+    def test_equal_exact_remainders_keep_input_order():
+>       assert allocate(10, [1, 1, 4]) == [2, 2, 6]
+E       assert [2, 1, 7] == [2, 2, 6]
+E         
+E         At index 1 diff: 1 != 2
+E         Use -v to get more diff
+
+test_lost_cent.py:13: AssertionError
+=========================== short test summary info ============================
+FAILED test_lost_cent.py::test_equal_exact_remainders_keep_input_order - asse...
+1 failed in 0.01s

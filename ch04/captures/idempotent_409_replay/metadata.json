@@ -1,0 +1,124 @@
+{
+  "target_chapter": {
+    "number": 4,
+    "title": "Plans you can review and redirect"
+  },
+  "session_name": "idempotent_409_replay",
+  "stage": "complete_independently_reviewed",
+  "review_status": "completed",
+  "verdict": "Pass",
+  "coding_agent": {
+    "tool": "Claude Code",
+    "version": "2.1.210.642"
+  },
+  "capture_date": "2026-07-14",
+  "completion_date": "2026-07-15",
+  "repository_commit_before_session": "38da4cbd91cc22da2687f5c76b8e5c5f93ab44d6",
+  "source_provenance": {
+    "historical_origin": "The importer and test originated in previously maintained Chapter 6 support.",
+    "package_source": "importer.py",
+    "package_test": "test_importer_package.py",
+    "historical_pre_repair_blob_retained": false,
+    "before_fixture_derivation": "Reconstructed from the checksum-recorded source used by the original capture by removing only the documented 409 acceptance behavior.",
+    "historical_source_files_modified_during_capture": false,
+    "staged_chapter_modified_during_capture": false,
+    "executable_origin_dependency": false
+  },
+  "runner_sha256": "23486fe5dd5dc1fa83e029756819299c62daaaea83fd1a8e24d84dfb0defb3bc",
+  "before_fixture_checksums": {
+    "before/importer.py": "becde6ca9cd6a8ed803c471659cd2ad0dc2b1a21e10e7f8f1a62bebfc509b99b"
+  },
+  "focused_test_checksums": {
+    "tests/test_importer.py": "11ac7b86d7604d211517f975dc2a5f0197b122fc4bc1106dfa7a34396012c60b"
+  },
+  "red": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=.work python3 -m pytest -q --color=no -p no:cacheprovider tests/test_importer.py::test_conflict_is_idempotent_replay",
+    "exit_status": 1,
+    "raw_output": "evidence/focused-red.txt",
+    "normalized_output": "evidence/focused-red.normalized.txt"
+  },
+  "patch": {
+    "path": "patches/idempotent_409_replay.patch",
+    "sha256": "630d9d91b2205821c5348c5b057502067ad9e694bb2a0a17f3b31fb311a78848",
+    "after_sha256": "8272a2c17bb2328fa6082763221bcbff31f80583fa20d71579f2004fb838e5f2",
+    "removed_production_lines": 1,
+    "added_production_lines": 1,
+    "scope": "The existing send_with_retry success condition accepts exactly status 409 in addition to statuses below 400."
+  },
+  "focused_green": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=.work python3 -m pytest -q --color=no -p no:cacheprovider tests/test_importer.py::test_conflict_is_idempotent_replay",
+    "exit_status": 0,
+    "raw_output": "evidence/focused-green.txt",
+    "normalized_output": "evidence/focused-green.normalized.txt"
+  },
+  "broader_green": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=.work python3 -m pytest -q --color=no -p no:cacheprovider tests/test_importer.py",
+    "exit_status": 0,
+    "raw_output": "evidence/broader-green.txt",
+    "normalized_output": "evidence/broader-green.normalized.txt"
+  },
+  "normalization": "Normalized evidence masks only Python hexadecimal function addresses and pytest elapsed times. Raw combined output is retained unchanged.",
+  "document_checksums": {
+    "README.md": "977a22207b6737cbab1ad872c71e9d274fb6abcf71c743b7d4eac01b3bc01d9d",
+    "session.md": "9db904538cb22eb01e6ad635d656e455ad58e4db8b50b9719b9032f80158d505",
+    "parity.md": "e6610b7d0898c4b9f4212fc19fe1856a55ec64395ee1e398c13888bf977dcbba"
+  },
+  "supplemental_artifact_checksums": {
+    "patches/README.md": "2612bf47887764c06bc7987adc0ef26963f8a4338994d4da145548800ff9a31a"
+  },
+  "evidence_checksums": {
+    "evidence/broader-green.exit-status": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "evidence/broader-green.normalized.txt": "3b140db9e1a94d797ba8539327865242a0ff155d69b7e434095e058a26269868",
+    "evidence/broader-green.txt": "c03797ce8a140cbedec45f667eb0a850741047142e6318486c5eaa2124a27e29",
+    "evidence/focused-green.exit-status": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "evidence/focused-green.normalized.txt": "25e033825c01e5503b24235a99ab8264fcaa0387ba1761f9a041ba81a7c0294d",
+    "evidence/focused-green.txt": "4bcefcc9f6c645923b9993ccf73ad92e6b400ca25458ea14e095857fc2131342",
+    "evidence/focused-red.exit-status": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "evidence/focused-red.normalized.txt": "502c3268606429e91b1ec1854f31e9dfdfae91e1664c40c2626716a8c92784a7",
+    "evidence/focused-red.txt": "f02268a58768510fe99d1740439fce50cb2d7c7d9a51c51192f85024fb5fee11",
+    "evidence/independent-review.md": "b5edb6dd81ecdb9f9aa04bb95593d4b32b28f974154a98a956967c86bb48dca4",
+    "evidence/package-support-green.exit-status": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "evidence/package-support-green.normalized.txt": "3b140db9e1a94d797ba8539327865242a0ff155d69b7e434095e058a26269868",
+    "evidence/package-support-green.txt": "f82ef5dfe7698ffb764de054a81d190d7df4e7119218d436d12350d7af175f80"
+  },
+  "human_contract_origin": "The completion contract and standing approval policy are original to the human request. The bounded chapter-facing contract is explicitly reconstructed from that request and the retained staged contract.",
+  "transcript_status": {
+    "human_completion_contract": "verbatim excerpt",
+    "bounded_chapter_contract": "reconstructed and labeled",
+    "agent_actions": "condensed from the actual tool sequence, including failed-closed commands",
+    "command_outputs": "verbatim raw artifacts with separately stored normalized replay copies",
+    "diff": "machine-generated exact unified diff"
+  },
+  "replay_validation": {
+    "command": "python3 captures/idempotent_409_replay/run_capture.py",
+    "exit_status": 0,
+    "mode": "non-recording"
+  },
+  "stopped_before_production_edit": false,
+  "package_support_green": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q --color=no -p no:cacheprovider test_importer_package.py",
+    "exit_status": 0,
+    "raw_output": "evidence/package-support-green.txt",
+    "normalized_output": "evidence/package-support-green.normalized.txt"
+  },
+  "package_support_checksums": {
+    "importer.py": "df47686c0c85e27be6f3d46ccaaba7620bc8b7d98c6556cf1e0d51cbfec1425e",
+    "test_importer_package.py": "b9cf26f62315e8df8cfd834a3632b11fc6edd0e7abfa1066c3e0cbd132239a65",
+    "test_capture_certification.py": "a13753cfbc57fe3678c19c71f05d7b06f585387f75c8afa9cba95e56da47ea93"
+  },
+  "package_support_unchanged_by_replay": true,
+  "independent_review": {
+    "status": "completed",
+    "verdict": "Pass",
+    "reviewer_role": "Independent capture certification reviewer",
+    "reviewer_tool": "Claude Code 2.1.210",
+    "review_date": "2026-07-15",
+    "runtime": "Python 3.14.6, pytest 9.1.1",
+    "mode": "Clean disposable canonical and mirrored package copies with replay, isolation, parity, provenance, cleanup, and minimality checks",
+    "artifact": "evidence/independent-review.md",
+    "artifact_sha256": "b5edb6dd81ecdb9f9aa04bb95593d4b32b28f974154a98a956967c86bb48dca4",
+    "blocking_findings": [],
+    "non_blocking_findings": [],
+    "historical_session_status": "preserved_unchanged"
+  }
+}

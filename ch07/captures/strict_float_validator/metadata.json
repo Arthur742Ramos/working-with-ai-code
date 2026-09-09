@@ -1,0 +1,191 @@
+{
+  "schema_version": 2,
+  "target_chapter": {
+    "number": 7,
+    "title": "Bounded agents and orchestration"
+  },
+  "session_name": "strict_float_validator",
+  "capture_stage": "complete_independently_reviewed",
+  "coding_agent": {
+    "tool": "Claude Code",
+    "version": "2.1.210.642"
+  },
+  "capture_started_date": "2026-07-14",
+  "capture_completed_date": "2026-07-15",
+  "final_package_refresh_date": "2026-07-15",
+  "repository_commit_before_session": "38da4cbd91cc22da2687f5c76b8e5c5f93ab44d6",
+  "working_tree_clean_before_session": false,
+  "environment": {
+    "python": "3.14.6",
+    "pytest": "9.1.1"
+  },
+  "before_fixture": {
+    "provenance": "Reconstructed from the maintained validator by removing only the documented strict-float registration. This is not claimed as a historical byte copy.",
+    "historical_byte_copy": false,
+    "checksums_sha256": {
+      "before/validator.py": "da323047c1fb65b0e0c7b1ca9a9a9d4ada2de9223bba6341baf629855c69b78d"
+    }
+  },
+  "capture_input_checksums_sha256": {
+    "README.md": "051d4d1fdd87a3bdc07be9f5a6aaa25b7fa806b262c8a32dd0f4292550608b23",
+    "parity.md": "87ea5dca52a9e586d6320a087c35d34f3dca985357d92f2d8e185a9799b393e2",
+    "run_capture.py": "9f8827d56aa9ae15a76fd61597846be08c51e4184dfa3312e4151202fc1221e9",
+    "session.md": "1c7247b8726c840e035d84efcfd8852853c616060ea50c22242fcde1ab936cbf",
+    "tests/focused_test.py": "9025600d7943b5ff86f462272bffc2a86ba0ae8610df42ae342999f03a57190d",
+    "tests/test_validator.py": "481423981c364499d87bbdb0bf2d9a7f26a64a4dc6170e298ab39d40782469f7"
+  },
+  "red": {
+    "command": "python3 tests/focused_test.py before/validator.py",
+    "exit_status": 1,
+    "case_count": 5,
+    "output_path": "evidence/focused-red.txt",
+    "exit_status_path": "evidence/focused-red.exit"
+  },
+  "patch": {
+    "path": "patches/strict_float_validator.diff",
+    "sha256": "dfddc3e4f7a25807d91e3acfa1b06d3cd48060b994eb44d45ecd55a1a7956d21",
+    "after_state_sha256": "eeec57d030495f4c50b13479377dfcbdd939dc83d4ced204bdaf41896e642c43",
+    "generator": "diff -u --label a/validator.py --label b/validator.py before/validator.py .work/validator.py",
+    "production_lines_added": 1,
+    "production_lines_removed": 0,
+    "minimality_review": "The first independent review confirmed scope minimality: no zero-line implementation can register a missing type. Altering the malformed-rule branch, widening int, or adding coercion changes neighboring behavior, so the one mapping entry is the strict smallest production diff. At that review stage, the strengthened harness awaited independent re-review; the later read-only re-review passed."
+  },
+  "focused_green": {
+    "command": "python3 tests/focused_test.py <WORK>/validator.py",
+    "exit_status": 0,
+    "case_count": 5,
+    "output_path": "evidence/focused-green.txt",
+    "exit_status_path": "evidence/focused-green.exit"
+  },
+  "broader_green": {
+    "command": "python3 -m pytest -q -p no:cacheprovider test_validator.py",
+    "working_directory": "disposable after-state with package-local tests/test_validator.py snapshot",
+    "origin_note": "The localized snapshot preserves the eight origin test bodies and adds one post-review float-subclass policy test. The strengthened nine-test suite was rerun after the intentional harness change.",
+    "exit_status": 0,
+    "test_count": 9,
+    "output_path": "evidence/broader-green.txt",
+    "exit_status_path": "evidence/broader-green.exit"
+  },
+  "policy_discrimination": {
+    "widened_predicate": "isinstance(value, float)",
+    "focused_expected_status": 1,
+    "broader_expected_status": 1,
+    "required_focused_failure": "test_float_subclass_is_rejected_as_float",
+    "required_broader_failure": "test_float_subclass_is_rejected_by_policy",
+    "status": "executed during record and replay"
+  },
+  "origin_canonical_support_green": {
+    "command": "python3 -m pytest -q -p no:cacheprovider test_validator.py",
+    "working_directory_at_capture_time": "code/ch07",
+    "replay_behavior": "Historical evidence only. Isolated replay verifies the stored artifact checksum and does not execute this external path.",
+    "exit_status": 0,
+    "output_path": "evidence/canonical-support-green.txt",
+    "exit_status_path": "evidence/canonical-support-green.exit"
+  },
+  "artifact_checksums_sha256": {
+    "evidence/focused-red.txt": "3460c2c1d352f41c287b7e9e9128d68ee60f8d63f8d6ceb0f3f8f79daccb1146",
+    "evidence/focused-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "patches/strict_float_validator.diff": "dfddc3e4f7a25807d91e3acfa1b06d3cd48060b994eb44d45ecd55a1a7956d21",
+    "evidence/focused-green.txt": "2dfecc2a43e0040fffd92afcbeceb9530c926169999c939c6e93754a5d5c5239",
+    "evidence/focused-green.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "evidence/broader-green.txt": "7cbcb6fed0c98f24e879be20ccdb352cd4fac29e097becbb8de08c6773d3f71a",
+    "evidence/broader-green.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "evidence/canonical-support-green.txt": "39fe08eccc9034524839b230a726e8e17ae8e44496f47d441a0d01d8a823725c",
+    "evidence/canonical-support-green.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  "package_read_only_checksums_sha256": {
+    "before": {
+      "validator.py": "3c22faec868a07895178179bfdf451f184ad01498751236eafed65ef89f9dc6e",
+      "test_validator.py": "b655f302d23f2da881ac153942b6d8cc9d8e1c0e8bd62c79a1050a9ef37ac2f8"
+    },
+    "after": {
+      "validator.py": "3c22faec868a07895178179bfdf451f184ad01498751236eafed65ef89f9dc6e",
+      "test_validator.py": "b655f302d23f2da881ac153942b6d8cc9d8e1c0e8bd62c79a1050a9ef37ac2f8"
+    },
+    "status": "unchanged during isolated replay"
+  },
+  "origin_canonical_read_only_checksums_sha256": {
+    "purpose": "Historical provenance from the origin session. These external paths and checksums are retained but are not resolved or executed by isolated replay.",
+    "before": {
+      "chapters/ch07.md": "6e485d4f50ce5c1d5566725c4a59d470b53ea6d6cf5a662883d52b8826f858d1",
+      "code/ch07/README.md": "db747fc1744866aeb57f9ddd4b8c5cbd768a51e5b44d155e4f67fced04346a93",
+      "code/ch07/cli.py": "c968ba835adfb0e448865f93f4d6d1f8556a6723aafc9f2a9f3c357fdb72b22c",
+      "code/ch07/test_validator.py": "bc82db14fd7b09feb41d824f6c20d9a0e7238a412d583777b4039765d65da07d",
+      "code/ch07/validator.py": "eeec57d030495f4c50b13479377dfcbdd939dc83d4ced204bdaf41896e642c43"
+    },
+    "after": {
+      "chapters/ch07.md": "6e485d4f50ce5c1d5566725c4a59d470b53ea6d6cf5a662883d52b8826f858d1",
+      "code/ch07/README.md": "db747fc1744866aeb57f9ddd4b8c5cbd768a51e5b44d155e4f67fced04346a93",
+      "code/ch07/cli.py": "c968ba835adfb0e448865f93f4d6d1f8556a6723aafc9f2a9f3c357fdb72b22c",
+      "code/ch07/test_validator.py": "bc82db14fd7b09feb41d824f6c20d9a0e7238a412d583777b4039765d65da07d",
+      "code/ch07/validator.py": "eeec57d030495f4c50b13479377dfcbdd939dc83d4ced204bdaf41896e642c43"
+    },
+    "status": "unchanged in origin session; archival and non-executable in isolated replay"
+  },
+  "agent_action_record": {
+    "path": "evidence/agent-actions.jsonl",
+    "sha256": "274b474a12b0cc74a7831d46f0f5e85866b03dd86787725ec7b8b452fe9e17b5",
+    "status": "origin session actions preserved with attributable post-review repair actions appended"
+  },
+  "approval_basis": {
+    "standing_direction": "Choose the best bounded implementation without another approval checkpoint.",
+    "agent_selected_policy": "Use exact built-in float semantics. Built-in float passes; int, bool, string, and float subclasses remain invalid.",
+    "attribution_guard": "The record attributes the specific selection to the coding agent acting under standing direction; it does not claim the author named an option."
+  },
+  "human_contract": {
+    "original_retained": false,
+    "status": "reconstructed and labeled",
+    "basis": "Approved restructuring architecture, staged focused test, and current bounded author direction."
+  },
+  "transcript": {
+    "status": "condensed from current tool logs",
+    "details": "The contract is explicitly reconstructed. Inspection and action sequence are retained. Red, patch, and green evidence come from actual commands. Pytest elapsed time is normalized."
+  },
+  "normalization": "Pytest color and bytecode output were disabled. Only the machine-dependent elapsed-time value was replaced with <TIME> in stored pytest evidence.",
+  "production_edit_applied_to_canonical_files": false,
+  "production_edit_applied_to_disposable_copy": true,
+  "passing_after_state_reproducible": true,
+  "previous_independent_review": {
+    "status": "completed",
+    "verdict": "Fail",
+    "reviewer_role": "Independent canonical capture reviewer, read-only replay",
+    "reviewer_tool": "Claude Code CLI",
+    "review_date": "2026-07-15",
+    "source": "first-review workflow journal record 17",
+    "blocking_findings": [
+      "Active shared mapping selected historical support rather than this canonical package.",
+      "Focused and captured broader tests did not distinguish exact built-in float policy from isinstance behavior.",
+      "Review state contradicted itself across package records.",
+      "Printed Listing 7.2 omitted two trailing blank diff-context lines without a declared normalization."
+    ]
+  },
+  "independent_review": {
+    "status": "completed",
+    "verdict": "Pass",
+    "reviewer_role": "Independent capture certification reviewer, read-only re-review",
+    "reviewer_tool": "Claude Code",
+    "review_date": "2026-07-15",
+    "runtime": "Python 3.14.6, pytest 9.1.1",
+    "mode": "Clean disposable canonical and mirrored package copies with replay, policy discrimination, isolation, parity, provenance, cleanup, minimality, and publication checks",
+    "artifact_path": "evidence/independent-review.md",
+    "artifact_checksum_sha256": "b4dc799025fabd69050131a51d45e2bdc6138b4d3ec3b37c07fb6759064247f8",
+    "blocking_findings": [],
+    "non_blocking_findings": [],
+    "historical_session_status": "preserved_unchanged",
+    "historical_session_checksum_sha256": "1c7247b8726c840e035d84efcfd8852853c616060ea50c22242fcde1ab936cbf",
+    "shared_ledger_status": "Pending",
+    "shared_ledger_note": "External publication workflow state; not the package verdict."
+  },
+  "post_review_repairs": {
+    "focused_float_subclass_case_added": true,
+    "broader_float_subclass_test_added": true,
+    "isinstance_adversarial_replay_added": true,
+    "temporary_work_cleanup_invariant_added": true,
+    "chapter_evidence_counts_refreshed": true,
+    "listing_diff_made_byte_exact": true,
+    "shared_ledger_modified": false,
+    "historical_support_modified": false
+  },
+  "independent_review_status": "completed",
+  "status": "Pass"
+}

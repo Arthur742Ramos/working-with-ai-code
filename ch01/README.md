@@ -1,19 +1,44 @@
-# Chapter 1 — Code Listings
+# Chapter 1 final support package
 
-Working with AI as engineering, not magic: a single worked repair on a
-Flask rate limiter. You inspect the code, reproduce a focused red (the
-in-memory fallback transition never reaches the application logger), apply
-the accepted one-line repair, then show focused and broader green evidence.
+This internal package keeps the accepted rate-limiting implementation, its focused and broader checks, and the verified fallback-observability capture together.
 
-- **`listing_1_1_rate_limiter_before.py`** — Listing 1.1: The rate limiter before the observability repair
-- **`listing_1_2_focused_red.txt`** — Listing 1.2: Genuine focused red for the missing signal
-- **`listing_1_3_accepted_repair.diff`** — Listing 1.3: The accepted one-line repair
-- **`listing_1_4_green_evidence.txt`** — Listing 1.4: Focused and broader green evidence
-- **`PROMPTS.md`** — Prompt blocks from the current manuscript draft
+## Files
 
-Listing 1.1 is an excerpt of the application under repair. Listings 1.2 and
-1.4 are captured test output, and Listing 1.3 is the printed one-line diff
-fragment, so they mirror the printed listings rather than standing alone as
-runnable modules.
+- `app.py` is the complete green book-state implementation. It retains the per-user, ten-per-minute bounded fallback and routes Flask-Limiter's existing fallback warning through the application logger.
+- `tests/focused_test.py` exercises a genuine Redis connection failure and checks the application-visible warning plus neighboring per-user limits.
+- `tests/broader_test.py` protects the healthy storage path and checks that it emits no fallback warning.
+- `captures/fallback_observability/` preserves the immutable red before-state, accepted one-line patch, raw evidence, session record, and replay runner.
 
-See the [main README](../README.md) for setup instructions.
+## Run the green checks
+
+From the package root, create an isolated environment:
+
+```bash
+python3 -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
+```
+
+Then run both maintained top-level checks explicitly:
+
+```bash
+.venv/bin/python tests/focused_test.py
+.venv/bin/python tests/broader_test.py
+```
+
+Each script defaults to this package's green `app.py`. Use these explicit commands instead of broad test discovery, which could collect the intentionally red fixtures under `captures/` as if they were top-level checks.
+
+## Replay the captured repair
+
+```bash
+.venv/bin/python captures/fallback_observability/run_capture.py
+```
+
+Replay rebuilds disposable red and repaired states, compares them with the stored evidence, verifies the exact patch and package-local checksums, and removes its working directory. Default replay does not rewrite evidence or replace the top-level green implementation. It reads no repository-root, canonical-code, staged-chapter, or other-chapter file.
+
+## Remaining limitations
+
+- The checks cover one process. They do not prove that Redis counters are shared across application instances.
+- The outage check uses a closed local port rather than stopping a live Redis deployment.
+- The checks do not cover recovery after Redis returns or delivery to a monitoring or paging backend.
+- The package pins Flask-Limiter 4.1.1 because the warning assertion depends on that release's message and transition behavior. Any dependency upgrade requires a fresh replay and review.
+- The package retains the existing bounded fail-open policy. It does not decide production alert, recovery, or escalation thresholds.

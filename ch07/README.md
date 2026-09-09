@@ -1,54 +1,80 @@
-# Chapter 7 — Bounded agents and orchestration
+# Chapter 7 final support package
 
-A minimal bounded tool-use loop (allow-list plus a step budget) alongside a
-strict-`float` type added to the JSON config validator through an
-independent inspect-red-fix cycle.
+This self-contained package keeps the bounded tool-use loop, the final JSON validator and command-line runner, maintained tests, runnable fixtures, and the verified strict-float capture together.
 
-- **`agent_loop.py`** — Listing 7.1: A minimal bounded tool-use loop
-- **`validator.py`** — Listing 7.2 target: the maintained green validator with strict `float` support
-- **`test_agent_loop.py`** — Behavior checks for the loop's return, tool routing, allow-list, and step budget
-- **`test_validator.py`** — The nine maintained validator checks, including the strict-float cases
-- **`cli.py`** — A thin command-line runner for the validator
-- **`fixtures/`** — `schema.json`, `config-valid.json`, and `config-invalid.json` for the CLI
-- **`captures/before/validator.py`** — the red before-state validator with no `float` type
-- **`PROMPTS.md`** — Prompt blocks from the current manuscript draft
+## Chapter parity
 
-## Setup and checks
+- `agent_loop.py` is the complete implementation printed as Listing 7.1, "A minimal bounded tool-use loop."
+- `captures/strict_float_validator/patches/strict_float_validator.diff` is the exact one-line production diff printed as Listing 7.3, "The strict smallest float registration."
+- `demo_agent.py` and `contract.txt` make Listing 7.2 runnable with `python3 demo_agent.py`. Its adapter is scripted: no model or network is invoked.
+- `validator.py` is the maintained green after-state exercised by the package tests. It is support code, not a separate numbered listing.
+- `cli.py` is the runnable command-line wrapper for the validator. It is support code, not a numbered listing.
+- Tables 7.1 through 7.5 describe stop conditions, workflow choice, worker contracts, failure routing, and autonomy postures. They are conceptual decision aids and have no executable table artifact in this package.
 
-Run from this directory (needs only `pytest`):
+## Files
+
+- `test_agent_loop.py` checks final text, allowed tool execution, forbidden tools, and step-budget exhaustion.
+- `test_validator.py` contains nine final-state checks, including the explicit policy that a `float` subclass is rejected.
+- `fixtures/` contains one schema plus valid and invalid configuration files for the CLI.
+- `pytest.ini` limits top-level discovery to `test_*.py` outside `captures/`, so historical capture internals run only through their replay command.
+- `captures/strict_float_validator/` preserves the reconstructed red before-state, exact one-line patch, stored origin evidence, and isolated replay runner.
+
+## Verify the final implementation
+
+Run from this directory:
 
 ```bash
-python3 -m pytest -q
-python3 cli.py --schema fixtures/schema.json --config fixtures/config-valid.json
-python3 cli.py --schema fixtures/schema.json --config fixtures/config-invalid.json
+python3 -m pytest -q -p no:cacheprovider
 ```
 
-`python3 -m pytest -q` reports **13 passed** (four loop checks plus nine
-validator checks). The valid CLI command prints `ok` and exits `0`; the
-invalid one reports `service.port: expected int` and
-`service.ratio: expected float` and exits `1`.
+The expected result is thirteen passing tests: four bounded-loop tests and nine validator tests. Pytest does not recurse into `captures/`.
 
-## Listing map
+## Run the validator CLI
 
-- **Listing 7.1** is `agent_loop.py`: `run_agent` bounds the model with an
-  allowed-tool set and a fixed step budget, returning final text, raising
-  `PermissionError` on an out-of-policy tool, and `RuntimeError` when the
-  budget is spent. The inline `# A`–`# D` markers match the printed callouts.
-- **Listing 7.2** is the one-line registration of a strict `float` predicate
-  (`type(value) is float`) in the validator's `CHECKS`. The maintained
-  `validator.py` is the green after-state; `captures/before/validator.py` is
-  the red before-state without the `float` entry.
+The fixture schema requires a string host, a strict built-in integer port, and a strict built-in float ratio under `service`.
 
-## Red-to-green capture
+A valid configuration prints `ok` and exits 0:
 
-See [`captures/README.md`](captures/README.md) to reproduce the strict-float
-red result and the one-line repair.
+```bash
+python3 cli.py \
+  --schema fixtures/schema.json \
+  --config fixtures/config-valid.json
+```
 
-## Limits
+```text
+ok
+```
 
-A step budget is a stop condition, not a sandbox: it bounds how long a loop
-runs, not which files, commands, or network targets a tool may reach. The
-loop's permission check stops at the tool name; a production harness should
-prefer typed tools or validated argument vectors over model-authored text.
+The invalid fixture uses a Boolean port and an integer ratio. It prints both dotted-path errors and exits 1:
 
-See the [main README](../README.md) for setup instructions.
+```bash
+python3 cli.py \
+  --schema fixtures/schema.json \
+  --config fixtures/config-invalid.json
+```
+
+```text
+service.port: expected int
+service.ratio: expected float
+```
+
+File, permission, and malformed-JSON errors remain caller-visible exceptions rather than validation results.
+
+## Replay the captured repair
+
+Run from the capture directory:
+
+```bash
+cd captures/strict_float_validator
+python3 run_capture.py
+```
+
+Replay rebuilds disposable red and repaired states, compares them with the stored evidence, verifies the exact patch and package-local checksums, and removes its working directory. Default replay does not rewrite evidence. The original canonical support checksums and green output remain archival provenance; replay does not resolve or execute repository-root paths.
+
+## Remaining limitations
+
+- `run_agent` limits tools and steps, but it does not enforce path or argument policy, spend caps, wall-clock deadlines, repeated-failure stops, or external success checks.
+- A model response without a tool call ends `run_agent`; the caller must still verify any completion claim.
+- The validator deliberately rejects `float` subclasses, integers used as floats, decimal objects, strings, and coercion. The final suite now tests the subclass boundary explicitly.
+- The capture's original focused test names the four cases retained in the printed transcript. The later top-level subclass test strengthens the final package without rewriting that red evidence.
+- The package has no networked model adapter or production sandbox. Callers supply `ask_model` and `run_tool` and own their security boundaries.

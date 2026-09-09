@@ -1,66 +1,59 @@
-# Chapter 9 — Context engineering: data, tools, and trust
+# Chapter 9 final support package
 
-A short project rule with an executable enforcement point, an approved
-outbound-HTTP boundary with auth and bounded retries, an alert feature routed
-through that seam, and a retrieval helper that preserves provenance before
-injecting evidence into a prompt. The chapter also models host-owned MCP
-capability policy without pretending to implement protocol transport.
+This internal package keeps the green shared-client alert seam, the complete retrieval example, a bounded Model Context Protocol (MCP) policy model, deterministic tests, and the verified house-rule capture together. The directory is self-contained and can be copied to an isolated location without the repository root or another chapter.
 
-- **`AGENTS.md`** — Listing 9.1: A short project rule with an enforcement point
-- **`http_client.py`** — Listing 9.2: The response interface used by the notification
-- **`retrieval.py`** — Listing 9.4: Excerpt: retrieve, preserve provenance, then inject
-- **`alerts.py`** — the house-correct alert feature that uses `http_client.call`
-- **`test_alerts.py`** — routing, auth, and failure checks for the alert feature
-- **`test_http_client.py`** — credential, retry, and fail-closed checks
-- **`test_house_rules.py`** — an executable AST guard against direct HTTP transports
-- **`test_retrieval.py`** — provenance, selection, injection, and recall checks
-- **`mcp_policy.py`** — host-owned MCP resources, prompts, and tool postures
-- **`test_mcp_policy.py`** — approval, allowlist, and lethal-trifecta checks
-- **`parity.md`** — the public listing-to-source parity map
-- **`test_package_parity.py`** — checks for the maintained teaching surfaces
-- **`captures/before/`** — the red before-state that imports `requests` directly
-- **`captures/house_rule_seam/`** — the sanitized red-to-green session fixture
-- **`PROMPTS.md`** — Prompt blocks from the current manuscript draft
+## Files
 
-## Setup and checks
+- `AGENTS.md` is the short outbound-HTTP rule shown in the staged chapter.
+- `alerts.py` is the green feature implementation. It routes the existing method, endpoint, and JSON payload through `http_client.call`.
+- `http_client.py` is the complete injectable boundary behind the staged interface excerpt.
+- `test_alerts.py`, `test_http_client.py`, and `test_house_rules.py` check exact routing, credentials, status handling, retries, fail-closed behavior, and the import guard.
+- `retrieval.py` preserves the staged retrieve-then-inject flow and adds a deterministic local store plus `recall_at_k` measurement.
+- `test_retrieval.py` checks provenance, selection, the four-chunk limit, prompt injection, and partial versus complete recall.
+- `mcp_policy.py` models host-selected resources and prompts plus read, propose, and apply tool postures. It rejects the lethal trifecta within one tool or across the host's composed toolset.
+- `test_mcp_policy.py` checks host selection, all three postures, explicit approval, target allowlists, and lethal-trifecta containment.
+- `parity.md` maps every staged code and session surface to its package-local maintained source and records intentional differences.
+- `test_package_parity.py` checks the staged rule, alert repair, parity map, replay locality, and pytest discovery boundary.
+- `pytest.ini` limits top-level discovery to maintained green tests and excludes capture internals.
+- `captures/house_rule_seam/` preserves the immutable direct-transport red state, exact three-line repair, raw evidence, and package-local replay runner.
 
-Run from this directory (needs only `pytest`):
+## Verify the final package
+
+Run from this directory:
 
 ```bash
-python3 -m pytest -q
+PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q \
+  -p no:cacheprovider
 ```
 
-`python3 -m pytest -q` reports **32 passed**, including public capture controls.
+The expected result is twenty-eight passing tests. `pytest.ini` prevents recursive collection of the capture's test-shaped internals, so the top-level suite stays green while capture replay retains and exercises the intentional red before-state. No test makes a live network call or invokes a model.
 
-## Listing map
+## Replay the captured repair
 
-- **Listing 9.1** is the `## Outbound HTTP` rule in `AGENTS.md`; its last
-  line names `test_house_rules.py` as the enforcement point.
-- **Listing 9.2** is the `Response` dataclass and `call` signature in
-  `http_client.py`. The printed listing shows the interface (`...`); the
-  maintained file adds the injected transport, auth header, and bounded
-  transient retries.
-- **Listing 9.3** is an illustrative metadata-first skill shape. It teaches
-  progressive disclosure as a compact file shape rather than a universal
-  format, so it has no maintained companion source and nothing here runs it.
-- **Listing 9.4** is `format_evidence` and `answer` in `retrieval.py`, which
-  also carries the deterministic `InMemoryStore` and `recall_at_k` metric
-  used by the tests.
-- The MCP section is represented by `mcp_policy.py`; its tests keep
-  capability selection, read/propose/apply postures, and host-level
-  containment explicit.
+Run from this directory:
 
-## Red-to-green capture
+```bash
+python3 captures/house_rule_seam/run_capture.py
+```
 
-See [`captures/README.md`](captures/README.md) to reproduce the seam red
-result (a feature importing `requests` directly), the exact routing repair,
-and the recorded command/output transcript.
+Replay reconstructs the red and repaired alert states in disposable package-local space, verifies the stored patch and original evidence, runs focused and broader capture checks, runs the final top-level suite, checks package-local parity records, and removes temporary work. Default replay does not rewrite evidence.
 
-## Limits
+The capture metadata retains the repository commit, canonical checksums, and canonical-support green output from the original session as historical provenance. Replay verifies those records as stored evidence only. It does not locate or execute canonical chapter files, repository support code, other chapters, graphics, or Box.
 
-These checks do not prove a live alert service, credential validity,
-production transport behavior, or backoff timing. The retrieval example uses
-deterministic token overlap, not a production embedding model. The MCP example
-is a local policy model, not a networked MCP client or server.
+## Dependencies
 
-See the [main README](../README.md) for setup instructions.
+- Python 3
+- pytest
+- the system `patch` command
+
+No command requires a model SDK, network access, repository-root configuration, or a third-party HTTP client.
+
+## Remaining limitations
+
+- The alert tests use an injected transport. They do not prove live endpoint availability, credential validity, production backoff timing, or observability.
+- The local retriever ranks lexical token overlap rather than production embeddings, metadata filters, hybrid search, or reranking.
+- `recall_at_k` assumes evaluators already labeled the required source identifiers. It does not score whether a model used the evidence correctly.
+- The MCP policy model demonstrates host-owned boundaries. It is not a networked MCP client or server and does not implement protocol transport, discovery, authentication, or schema negotiation.
+- Tool approval and target checks run in one process. Production systems still need durable audit records, credential isolation, redaction, recovery, and post-action verification.
+- Host-level rejection prevents the three capabilities from coexisting in this modeled host. It does not prove that a larger system cannot reconnect the circuit across several hosts or sessions.
+- The capture proves one bounded shared-client repair. It does not make that trust policy portable to another system.

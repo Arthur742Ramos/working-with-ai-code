@@ -1,0 +1,11 @@
+--- before/validator.py
++++ after/validator.py
+@@ -11,7 +11,7 @@
+ 
+ CHECKS = {
+     "str": lambda value: isinstance(value, str),
+-    "int": lambda value: isinstance(value, int),
++    "int": lambda value: type(value) is int,
+     "bool": lambda value: isinstance(value, bool),
+     "dict": lambda value: isinstance(value, dict),
+     "float": lambda value: type(value) is float,

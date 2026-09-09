@@ -1,0 +1,15 @@
+test_failed_attempts_remain_in_denominator (test_workflow_metrics.QualitySuccessRateTests.test_failed_attempts_remain_in_denominator) ... FAIL
+
+======================================================================
+FAIL: test_failed_attempts_remain_in_denominator (test_workflow_metrics.QualitySuccessRateTests.test_failed_attempts_remain_in_denominator)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORK>/test_workflow_metrics.py", line 21, in test_failed_attempts_remain_in_denominator
+    self.assertEqual(rate, 0.50)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: 1.0 != 0.5
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (failures=1)

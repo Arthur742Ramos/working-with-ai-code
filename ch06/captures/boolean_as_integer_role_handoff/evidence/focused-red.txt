@@ -1,0 +1,3 @@
+FAIL: test_bool_is_not_accepted_as_int
+expected: port: expected int
+observed: no validation errors; True was accepted

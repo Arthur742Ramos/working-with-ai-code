@@ -1,0 +1,146 @@
+{
+  "target_chapter": {
+    "number": 8,
+    "title": "From checks to evaluations"
+  },
+  "session_name": "lost_cent_allocation",
+  "capture_stage": "complete_independently_reviewed",
+  "coding_agent": {
+    "tool": "Claude Code",
+    "version": "2.1.210"
+  },
+  "capture_date": "2026-07-15",
+  "repository_commit_before_session": "38da4cbd91cc22da2687f5c76b8e5c5f93ab44d6",
+  "record_command": "python3 captures/lost_cent_allocation/run_capture.py --record",
+  "replay_command": "python3 captures/lost_cent_allocation/run_capture.py",
+  "before_fixture": {
+    "provenance": "Promoted from the session package's previously reviewed binary-float largest-remainder after-state.",
+    "checksums_sha256": {
+      "before/allocation.py": "0a2b1eca73f5e7dd639efc7b2ee807689715d0fb28b124ea8b5b82e00ee4d6d1",
+      "tests/test_lost_cent.py": "d09b09807def03b448edce5754465dced142c359c77c88d812d8696e913116f3"
+    }
+  },
+  "after_fixture": {
+    "checksums_sha256": {
+      "after/allocation.py": "c47c8d22519ad1aa398f8aea5f4eddbe2f6a36f43737cd8a5274933fa8785050",
+      "tests/test_neighboring_behavior.py": "55aee8afceb8be3e3df3bae1232186659753837bfdf2ad59b5bfe8dcb984e817"
+    }
+  },
+  "focused_red": {
+    "command": "python3 -m pytest -q -p no:cacheprovider test_lost_cent.py::test_equal_exact_remainders_keep_input_order",
+    "exit_status": 1,
+    "raw_output": "evidence/focused_red.txt",
+    "output_sha256": "63e990e8dec6f7de1b1e0116ad16a5c70e043a0220acb3aed886ff3eb4b0be06",
+    "exit_status_sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+  },
+  "patch": {
+    "path": "patches/allocation.patch",
+    "checksum_sha256": "3632939cdfc57a4bec1979c4b34e1a93ac23ceabc791eccab0d7a8cef8234c4c",
+    "generation": "diff -u with stable a/allocation.py and b/allocation.py labels",
+    "status": "applied_only_in_disposable_capture_space"
+  },
+  "focused_green": {
+    "command": "python3 -m pytest -q -p no:cacheprovider test_lost_cent.py::test_equal_exact_remainders_keep_input_order",
+    "exit_status": 0,
+    "raw_output": "evidence/focused_green.txt",
+    "output_sha256": "bea5a77cc68582c0c66ca0fc860c9b8f449e679bec8d6a9178605ee7b7dc69a3",
+    "exit_status_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  "broader_green": {
+    "command": "python3 -m pytest -q -p no:cacheprovider",
+    "exit_status": 0,
+    "raw_output": "evidence/broader_green.txt",
+    "output_sha256": "3ab69c44c0781c70d7a226d92c2a74efdd9fbb158b6a5cd1669d62cace44568c",
+    "exit_status_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  "origin_canonical_support_green": {
+    "command": "python3 -m pytest -q -p no:cacheprovider test_allocation.py test_golden.py",
+    "exit_status": 0,
+    "raw_output": "evidence/canonical_support_green.txt",
+    "output_sha256": "656c85820780a51906a1a3fc1b3935c8fe46427b8370c0a25df20ad51968da95",
+    "exit_status_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "test_count": 9,
+    "provenance": "Recorded during the original session against the unchanged maintained baseline.",
+    "replay_status": "preserved_not_executed"
+  },
+  "final_package_green": {
+    "command": "python3 -m pytest -q -p no:cacheprovider test_allocation.py test_golden.py",
+    "exit_status": 0,
+    "raw_output": "evidence/final_package_green.txt",
+    "output_sha256": "f95bc839fff53087f6837dfb5f95e71b0d2ed34d90d0136334c109d14c9dece0",
+    "exit_status_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "test_count": 10,
+    "provenance": "Post-capture verification against the promoted final-package implementation."
+  },
+  "final_package_support": {
+    "checksums_sha256": {
+      "allocation.py": "ef91e6ff73c506cc1b429e5559b160eee807461ff6b8ab16d34c32cfa39bb3d5",
+      "test_allocation.py": "a971ac36680096a059de2739ba61509b41463de7df38b456a800f7981b2089a3",
+      "test_golden.py": "00185f0dff41b46d79410ebd5fe648f74962648fc4c06763e5ac21468bc54323",
+      "pytest.ini": "e1b4e3128564596f36beb28c931208b8626875aeb097b5130558d2be995ae544"
+    },
+    "canonical_equivalent_test_count": 9,
+    "promoted_exact_tie_test_count": 1,
+    "total_test_count": 10,
+    "status": "package_local_and_unchanged_during_replay"
+  },
+  "origin_repository_checksums_sha256": {
+    "chapter_source": "70250f9287a3e7ee65f82f443fc09b3db3542293df71b7424833b510ac109e90",
+    "allocation_source": "a0ef30740a4e6be19eaf27896350870e13f877412c82c471e4f2ae9bb99f49b2",
+    "behavior_tests": "7c08280a476d41b4df4977f21f62df55b389994096e473ade03d65a43146ec60",
+    "golden_tests": "b4f1c90e00a2251de2c3599e62d2b192cef55eaef67b25313b330237a7689017",
+    "status": "historical_provenance_only_not_a_replay_dependency"
+  },
+  "human_contract": {
+    "status": "retained_and_condensed",
+    "original_or_reconstructed": "original_retained",
+    "basis": "The retained task instruction required exact arithmetic, stable input-order ties, the named new assertion plus prior discriminating cases, genuine regenerated evidence, complete maintained checks including test_golden.py, and no changes to the original maintained files."
+  },
+  "transcript": {
+    "status": "condensed_from_direct_tool_logs_and_record_run",
+    "details": "Commands, diff, outputs, and exit statuses are direct. Session narration preserves the inspected failure, reviewed repair, one harmless failed shell-wrapper variable assignment, intentional record run, and immutable replay. No vendor quotation is reconstructed."
+  },
+  "approval_basis": {
+    "basis": "The author's direct task instruction authorized this bounded repair without another approval checkpoint.",
+    "selected_by": "coding_agent",
+    "selected_policy": "largest remainder using exact rationalized numeric weights with stable input order for equal remainders",
+    "rationale": "Fraction(str(weight)) avoids ranking mathematically equal decimal weight claims by binary-float residue while preserving the existing readable ideal, leftover, and order stages."
+  },
+  "policy_decision": {
+    "owner": "domain_owners",
+    "implemented_for_this_capture": "exact_rational_remainders_with_stable_input_order",
+    "boundary": "Domain owners decide whether decimal-string interpretation and stable input order match the product's accepted numeric types and fairness rules.",
+    "status": "implemented_under_direct_direction"
+  },
+  "normalization": "Stored output is raw. Pytest color and Python bytecode output were disabled. Replay normalizes only elapsed-time text for comparison.",
+  "agent_action_record": {
+    "status": "preserved_in_session_md",
+    "includes_failed_patch_wrapper_variable": true,
+    "summary": "The original session reproduced [2, 1, 7] from the float implementation, added the exact-tie test while retaining prior cases, reviewed a Fraction(str(weight)) repair against six staged and nine maintained tests, regenerated the patch, ran record mode once, updated every record surface, and ran immutable replay. This final package later promoted that repair and now runs the nine canonical-equivalent checks plus the exact-tie regression locally."
+  },
+  "independent_review": {
+    "status": "completed",
+    "verdict": "Pass",
+    "reviewer_role": "Independent canonical capture reviewer, read-only",
+    "reviewer_tool": "Claude Code 2.1.210.bee",
+    "reviewer_model": "gpt-5.6-sol[1m]",
+    "review_date": "2026-07-15",
+    "runtime": {
+      "python": "3.14.6",
+      "pytest": "9.1.1",
+      "patch": "Apple patch 2.0"
+    },
+    "mode": "Clean disposable copies with manual red, patch, green, rejection, isolation, parity, provenance, minimality, and cleanup checks",
+    "repository_modified_by_reviewer": false,
+    "artifact_path": "evidence/independent-review.md",
+    "artifact_checksum_sha256": "ad5f3c4f93bc6f49ae23e8a146aeae99d43a52e9a0a54fb2ed558f54283f8795",
+    "metadata_checksum_claims_matched": 20,
+    "historical_hashes_matched": 4,
+    "canonical_mirror_files_matched": 28,
+    "minimality_verdict": "Pass, narrowly",
+    "shared_ledger_state": "Pending publication workflow state, not the package verdict",
+    "blocking_findings": []
+  },
+  "independent_review_status": "completed",
+  "status": "Pass"
+}

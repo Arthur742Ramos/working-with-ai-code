@@ -1,23 +1,41 @@
-# Chapter 5 — Code Listings
+# Order-summary incident support
 
-Diagnosing failure under uncertainty: a falsifiable hypothesis for a
-repeatable order failure, a timestamp parser that passes common examples
-but hides edge cases, structural versus behavioral assertions, the shipped
-per-item lookup that dereferences a missing product, the exact fail-closed
-policy repair, and the order and query-plan evidence for the repeated scan.
+This internal package preserves the runnable order-summary incident in its accepted green state. The top-level implementation raises `MissingProductError` for an orphaned product and maps that failure to a fail-closed `422` response. The capture under `captures/` retains the immutable red before-state, exact patch, and recorded red-to-green evidence.
 
-- **`listing_5_1_falsifiable_hypothesis.txt`** — Listing 5.1: A falsifiable hypothesis for a repeatable order failure
-- **`listing_5_2_timestamp_parser.py`** — Listing 5.2: A timestamp parser that passes common examples
-- **`listing_5_3_structural_vs_behavior.py`** — Listing 5.3: Structural assertions versus behavior assertions
-- **`listing_5_4_per_item_lookup.py`** — Listing 5.4: The per-item lookup in the shipped summary path
-- **`listing_5_5_missing_product_repair.diff`** — Listing 5.5: The exact missing-product policy repair
-- **`listing_5_6_query_plan_evidence.txt`** — Listing 5.6: Order and query-plan evidence for the repeated scan
-- **`PROMPTS.md`** — Prompt blocks from the current manuscript draft
+## Files
 
-Listings 5.3 and 5.4 are excerpts of the order module under diagnosis
-(`process_order`, `sample_order`, `lookup_product`, and the surrounding
-loop variables are defined there), so they mirror the printed listings
-rather than standing alone. Listing 5.5 is the exact applied diff against
-`server.py`, and Listing 5.6 is captured SQLite session evidence.
+- `server.py` contains the complete green service implementation.
+- `seed.py` builds the deterministic SQLite database.
+- `tests/test_orphan_policy.py` checks the named domain failure.
+- `tests/test_orphan_policy_broader.py` protects a valid summary and the API boundary.
+- `captures/incident_orphan_product_policy/` preserves and replays the verified session.
 
-See the [main README](../README.md) for setup instructions.
+## Run the green checks
+
+From this directory:
+
+```bash
+python3 tests/test_orphan_policy.py
+python3 tests/test_orphan_policy_broader.py
+```
+
+These two scripts are the intended top-level suite. Run them explicitly rather than recursively collecting `captures/`, whose tests drive the retained red before-state as part of replay evidence.
+
+To rebuild the database and run the service:
+
+```bash
+python3 seed.py
+python3 server.py 8080
+```
+
+## Replay the captured session
+
+```bash
+python3 captures/incident_orphan_product_policy/run_capture.py
+```
+
+Replay uses a disposable work directory, verifies the package-local final implementation and publication transcript, and does not replace the top-level green files. The complete package can be copied elsewhere and run without the repository root or another chapter.
+
+## Remaining limitations
+
+The checks cover one deterministic orphan, one neighboring valid order, and the selected `422` handler response. They do not settle the public status contract, cover every corruption shape, repair upstream referential integrity, verify cache or concurrency behavior, or demonstrate a latency improvement. The per-item unindexed lookup remains unchanged and requires a separate controlled optimization and measurement.

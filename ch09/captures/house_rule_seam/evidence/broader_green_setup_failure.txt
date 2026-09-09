@@ -1,0 +1,20 @@
+....F....                                                                [100%]
+=================================== FAILURES ===================================
+______________ test_direct_requests_fixture_proves_guard_is_live _______________
+
+    def test_direct_requests_fixture_proves_guard_is_live():
+        fixture_root = HERE / "fixtures" / "direct_requests"
+        violations = find_unapproved_http_imports(fixture_root)
+    
+>       assert [item.display(fixture_root) for item in violations] == [
+            "alerts.py:3: unapproved outbound HTTP import: requests"
+        ]
+E       AssertionError: assert [] == ['alerts.py:3...rt: requests']
+E         
+E         Right contains one more item: 'alerts.py:3: unapproved outbound HTTP import: requests'
+E         Use -v to get more diff
+
+tests/test_house_rules.py:78: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_house_rules.py::test_direct_requests_fixture_proves_guard_is_live
+1 failed, 8 passed in 0.02s

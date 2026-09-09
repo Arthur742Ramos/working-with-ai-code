@@ -1,0 +1,161 @@
+{
+  "schema_version": 2,
+  "target_chapter": {
+    "number": 5,
+    "title": "Diagnosing failure under uncertainty"
+  },
+  "session_name": "incident_orphan_product_policy",
+  "capture_stage": "complete_independently_reviewed",
+  "coding_agent": {
+    "tool": "Claude Code",
+    "version": "2.1.210.642"
+  },
+  "capture_date": "2026-07-15",
+  "repository_commit_before_session": "38da4cbd91cc22da2687f5c76b8e5c5f93ab44d6",
+  "origin_provenance": {
+    "description": "The immutable before fixture is a byte-identical retained copy of the incident demo used for the original session before the twelve-chapter restructure.",
+    "role": "historical_provenance_only",
+    "runtime_path_retained": false,
+    "replay_resolves_origin": false,
+    "original_source_modified_during_capture": false
+  },
+  "before_fixture_sha256": {
+    "before/server.py": "c1db53308867ffe7d4e5123f5295630ee758f3cd7dfd67d9712fec6545fdd9f4",
+    "before/seed.py": "725779b8202a0a2ef77ea6e089153e36d995215cfcf310f07a54c4e6b3bc27b3"
+  },
+  "test_sha256": {
+    "tests/test_orphan_policy.py": "22e9b50365e2fb9e34c3a8098b66d48ecbd29f73da0c05a0918a0766bdfb5c60",
+    "tests/test_orphan_policy_broader.py": "ab66761982ce85c4c5b3d6705233a9d7d7c5d33815a2e121f2176a83433658da"
+  },
+  "record_command": "python3 captures/incident_orphan_product_policy/run_capture.py --record",
+  "replay_command": "python3 captures/incident_orphan_product_policy/run_capture.py",
+  "focused_red_command": "python3 tests/test_orphan_policy.py .work",
+  "focused_red_exit_status": 1,
+  "patch_file": "patches/missing-product-policy.diff",
+  "patch_sha256": "8d60f09a62115a6ec83da53e60c2fd7a164333af14841ea60c0b81ea557c3a84",
+  "focused_green_command": "python3 tests/test_orphan_policy.py .work",
+  "focused_green_exit_status": 0,
+  "broader_green_command": "python3 tests/test_orphan_policy_broader.py .work",
+  "broader_green_exit_status": 0,
+  "final_package_green_commands": [
+    "python3 tests/test_orphan_policy.py",
+    "python3 tests/test_orphan_policy_broader.py"
+  ],
+  "final_package_green_exit_statuses": [
+    0,
+    0
+  ],
+  "final_package_sha256": {
+    "README.md": "82f6c3477cf05bb562fdbd6b118cba80014dd50cecb5b659efa2655e40c62fef",
+    "server.py": "1fc1fc84d1cd04aa51580232d21bdba85d62569a108e460b263c0fd475c10937",
+    "seed.py": "725779b8202a0a2ef77ea6e089153e36d995215cfcf310f07a54c4e6b3bc27b3",
+    "tests/test_orphan_policy.py": "22e9b50365e2fb9e34c3a8098b66d48ecbd29f73da0c05a0918a0766bdfb5c60",
+    "tests/test_orphan_policy_broader.py": "ab66761982ce85c4c5b3d6705233a9d7d7c5d33815a2e121f2176a83433658da"
+  },
+  "package_inventory": [
+    ".gitignore",
+    "README.md",
+    "captures/incident_orphan_product_policy/.gitignore",
+    "captures/incident_orphan_product_policy/README.md",
+    "captures/incident_orphan_product_policy/before/seed.py",
+    "captures/incident_orphan_product_policy/before/server.py",
+    "captures/incident_orphan_product_policy/chapter-session.md",
+    "captures/incident_orphan_product_policy/evidence/broader-green.exitstatus",
+    "captures/incident_orphan_product_policy/evidence/broader-green.txt",
+    "captures/incident_orphan_product_policy/evidence/focused-green.exitstatus",
+    "captures/incident_orphan_product_policy/evidence/focused-green.txt",
+    "captures/incident_orphan_product_policy/evidence/focused-red.exitstatus",
+    "captures/incident_orphan_product_policy/evidence/focused-red.txt",
+    "captures/incident_orphan_product_policy/evidence/independent-review.md",
+    "captures/incident_orphan_product_policy/metadata.json",
+    "captures/incident_orphan_product_policy/parity.md",
+    "captures/incident_orphan_product_policy/patches/README.md",
+    "captures/incident_orphan_product_policy/patches/missing-product-policy.diff",
+    "captures/incident_orphan_product_policy/run_capture.py",
+    "captures/incident_orphan_product_policy/session.md",
+    "captures/incident_orphan_product_policy/tests/test_orphan_policy.py",
+    "captures/incident_orphan_product_policy/tests/test_orphan_policy_broader.py",
+    "seed.py",
+    "server.py",
+    "tests/test_orphan_policy.py",
+    "tests/test_orphan_policy_broader.py"
+  ],
+  "runtime_artifact_policy": {
+    "files": [
+      "shop.db",
+      "server.log"
+    ],
+    "directories": [
+      ".work",
+      ".pytest_cache",
+      "__pycache__"
+    ],
+    "suffixes": [
+      ".pyc"
+    ],
+    "cleanup_required": "success_failure_and_preflight_failure"
+  },
+  "publication_surface": {
+    "file": "chapter-session.md",
+    "sha256": "1f3671006cd53578851f1d16910976704f2bcdd81a9e5ab29878efb4677b7506",
+    "status": "integrated_into_staged_chapter_5",
+    "authorial_inspection_included": true,
+    "runtime_dependency_outside_package": false
+  },
+  "evidence_sha256": {
+    "focused-red.txt": "b06fc49cf7435191ee621600f77ea2f5f3a92d55d4809a1991329d2d0b409abd",
+    "focused-red.exitstatus": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "focused-green.txt": "a1dab56b6d0a3edf3138e1242139290ac95305da562ef73fd2c5a7e53928f0c6",
+    "focused-green.exitstatus": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "broader-green.txt": "4da3c96aa596b58a89291292f87bf75628a324a21a7a5b79bccdcc3832f4bb0f",
+    "broader-green.exitstatus": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  "parity_sha256": "b979f766c9cd7754c5033bda574c9f096c9dc77e79bec84a5fada20ad6286545",
+  "runner_sha256": "56bccfc28de3086b973c7af6c43280dcb69afefdddc6374e9b4f5a4427d5a1b3",
+  "package_document_sha256": {
+    "README.md": "173464e750ad3ecc2c12ce001a5d9da5842493db37cac9b00bfbe14e07b0267e",
+    "session.md": "b781471302a7d3303231cafb93c8b6059f4df18461ad54530b978329bfd1f2a5",
+    "parity.md": "b979f766c9cd7754c5033bda574c9f096c9dc77e79bec84a5fada20ad6286545",
+    "patches/README.md": "87a943ad3e1361ac13c5145f1c967c04a6a77be8c600c4bd53716466aca4571c",
+    "chapter-session.md": "1f3671006cd53578851f1d16910976704f2bcdd81a9e5ab29878efb4677b7506"
+  },
+  "human_contract_origin": {
+    "top_level_task": "original_user_direction",
+    "bounded_focused_behavior": "reconstructed_from_approved_behavior_and_staged_incident_evidence",
+    "approval_basis": "standing_author_direction_to_choose_best_implementation_plus_explicit_fail_closed_policy",
+    "author_named_http_status": false
+  },
+  "selected_policy": {
+    "domain_error": "MissingProductError",
+    "api_status": 422,
+    "api_status_selected_by": "coding_agent_under_standing_author_direction",
+    "upstream_repair": "human_owned"
+  },
+  "transcript_status": "condensed_from_actual_tool_logs_with_reconstructed_bounded_contract_labeled",
+  "agent_action_record": "condensed_from_actual_tool_sequence_in_session.md",
+  "evidence_normalization": "none",
+  "minimality_review": {
+    "status": "pass",
+    "standard": "smallest_reviewable_diff",
+    "scope_result": "Three production responsibilities remain: name the domain error, guard before total calculation, and map it at the API boundary.",
+    "rejected_provisional_scope": "Duplicate timing and logging were removed before the final patch was recorded.",
+    "readability_decision": "Keep self._send(...) and return on separate lines to match surrounding early-exit control flow.",
+    "line_count_decision": "Do not collapse the send side effect into return merely to remove one changed line."
+  },
+  "stopped_before_production_edit": false,
+  "final_package_modified_during_replay": false,
+  "independent_review": {
+    "status": "completed",
+    "verdict": "Pass",
+    "reviewer_role": "Independent canonical-capture certifier",
+    "reviewer_tool": "Claude Code 2.1.210.bee, gpt-5.6-sol[1m]",
+    "review_date": "2026-07-15",
+    "mode": "Clean disposable workspace with default replay, independent manual red-patch-green chain, record replay, negative controls, minimality challenge, parity checks, and quality checks",
+    "artifact_path": "evidence/independent-review.md",
+    "artifact_checksum_sha256": "07247b5df86596c6d7c91959d0accd464b1fd09b4e04d968a4fe457883b1fd5d",
+    "blocking_findings": [],
+    "advisory_resolution": "Active package metadata, README, parity, receipt, inventory, and replay invariants synchronized. Historical session language remains unchanged."
+  },
+  "independent_review_status": "completed",
+  "status": "Pass"
+}

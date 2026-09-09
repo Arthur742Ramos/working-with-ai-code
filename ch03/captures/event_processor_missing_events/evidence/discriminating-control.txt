@@ -1,0 +1,6 @@
+PASS: test_missing_events_collection_raises_value_error
+observed: ValueError: input must be an object with an 'events' key
+FAIL: test_explicit_empty_events_is_not_missing
+expected: explicit empty events to reach later empty-result arithmetic
+observed: ValueError: input must be an object with an 'events' key
+1 failed, 1 passed

@@ -1,0 +1,137 @@
+{
+  "schema_version": 2,
+  "target_chapter": {
+    "number": 3,
+    "title": "Conversations that converge"
+  },
+  "session_name": "event_processor_missing_events",
+  "session_stage": "complete_independently_reviewed",
+  "coding_agent": {
+    "tool": "Claude Code",
+    "version": "2.1.210.642",
+    "model": "gpt-5.6-sol[1m]"
+  },
+  "capture_date": "2026-07-14",
+  "completion_date": "2026-07-15",
+  "repository_commit_before": "38da4cbd91cc22da2687f5c76b8e5c5f93ab44d6",
+  "before_fixture_checksums": {
+    "before/event_processor.py": "sha256:c8e7455f4980333b2159e2dd68f7dfc8a066d94457c8831edb12ae88701ede24"
+  },
+  "test_checksums": {
+    "tests/focused_test.py": "sha256:7ac6019001aec00444b9cd16f025381c18f38776b1a6a884875dd64d82850c9d",
+    "tests/full_capture_check.py": "sha256:81a81329e042362ffd73fd15738a14300d4e61df86e3bb794e9cfd76dc0bf4d7"
+  },
+  "red": {
+    "command": "python3 tests/focused_test.py before/event_processor.py",
+    "exit_status": 1,
+    "output_path": "evidence/focused-red.txt",
+    "output_checksum": "sha256:9c08a69efbe1d4ab5419f009638eebda26efecdcf46fbad3fbee0e05bc492591",
+    "exit_status_path": "evidence/focused-red.exit-status",
+    "exit_status_checksum": "sha256:4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+  },
+  "discriminating_control": {
+    "command": "python3 tests/focused_test.py .work/rejected_event_processor.py",
+    "candidate": "if not data.get(\"events\")",
+    "expected_failure": "explicit empty events are rejected as missing",
+    "exit_status": 1,
+    "output_path": "evidence/discriminating-control.txt",
+    "output_checksum": "sha256:1133a2c47ea20c973e54698b1abe383f994ecc0e381907ca377508f8c4667cb9",
+    "exit_status_path": "evidence/discriminating-control.exit-status",
+    "exit_status_checksum": "sha256:4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+  },
+  "patch": {
+    "path": "patches/event_processor.diff",
+    "checksum": "sha256:5632ec655a6193dee447ddef112bafa5a20137e5a95c80db3dcd6e28b4230b58",
+    "generation": "diff -u --label a/event_processor.py --label b/event_processor.py before/event_processor.py .work/event_processor.py",
+    "scope": "one readable missing-key guard; four added lines; no deletions",
+    "review_standard": "Smallest reviewable change: the narrowest behaviorally complete change that matches the surrounding multiline style; changed-line count is not the optimization target."
+  },
+  "focused_green": {
+    "command": "python3 tests/focused_test.py .work/event_processor.py",
+    "exit_status": 0,
+    "output_path": "evidence/focused-green.txt",
+    "output_checksum": "sha256:cb4dc5436d6bd2fef106393df660c240d1948759214dab95a8964d7fa6936714",
+    "exit_status_path": "evidence/focused-green.exit-status",
+    "exit_status_checksum": "sha256:9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  "broader_green": {
+    "command": "python3 tests/full_capture_check.py .work/event_processor.py",
+    "exit_status": 0,
+    "output_path": "evidence/broader-green.txt",
+    "output_checksum": "sha256:78881222204552eb3c8682b8fbd882810a0811cd4e803ad9fe29e908171bf9fc",
+    "exit_status_path": "evidence/broader-green.exit-status",
+    "exit_status_checksum": "sha256:9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  "canonical_support_green": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 PY_COLORS=0 NO_COLOR=1 python3 -m pytest -qq -p no:cacheprovider -c pytest.ini test_event_processor.py",
+    "exit_status": 0,
+    "output_path": "evidence/canonical-support-green.txt",
+    "output_checksum": "sha256:06955fb47f16312e5d13266c774a2aa4648c46e423cbe6564a92e25b68e39131",
+    "exit_status_path": "evidence/canonical-support-green.exit-status",
+    "exit_status_checksum": "sha256:9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "output_normalization": "No post-processing. Color was disabled before the retained rerun."
+  },
+  "canonical_support_checksums_before": {
+    "event_processor.py": "sha256:77e9803778c0513351ba0a96f9d736b921811a1193a663edc2bf42dae045b62b",
+    "focused_test.py": "sha256:d7d26380a1366eb5af90235283b4d67847ba5fd8bee7f5cf3143d4398b7d5f36",
+    "full_capture_check.py": "sha256:6940dcf7a95b60b8cfccef8661bc71e7c26d423e932c3b008ced4f358fa64a4e",
+    "pytest.ini": "sha256:4d7f8f1552f5f00062e6f24c6c4242b0763dd738b4254ba75612951d193157e2",
+    "test_event_processor.py": "sha256:090b9f149a8c64ac568a574460fb650cdccfcdecf72c456f01ecd61796f54dbe"
+  },
+  "canonical_support_checksums_after": {
+    "event_processor.py": "sha256:77e9803778c0513351ba0a96f9d736b921811a1193a663edc2bf42dae045b62b",
+    "focused_test.py": "sha256:d7d26380a1366eb5af90235283b4d67847ba5fd8bee7f5cf3143d4398b7d5f36",
+    "full_capture_check.py": "sha256:6940dcf7a95b60b8cfccef8661bc71e7c26d423e932c3b008ced4f358fa64a4e",
+    "pytest.ini": "sha256:4d7f8f1552f5f00062e6f24c6c4242b0763dd738b4254ba75612951d193157e2",
+    "test_event_processor.py": "sha256:090b9f149a8c64ac568a574460fb650cdccfcdecf72c456f01ecd61796f54dbe"
+  },
+  "record_checksums": {
+    "run_capture.py": "sha256:3639f27dea51c47baaab5e16ab7daa7ebd87fb15969beca1f56d07db82423845",
+    "README.md": "sha256:f778721b7195973d85bbc0cfab933754c2333b0502a6fc6b4c3c1aeff2e2a969",
+    "session.md": "sha256:3256de3d5b5a1b8cb4a1bff17d5f5a7d0d2b83653637cbe792f03056d868fdb4",
+    "chapter-session.md": "sha256:7630c8eb0b367250e29312530b01beffe78748772dfe32080dea3bb4a150703a",
+    "parity.md": "sha256:d67dd655f21f6af5f3e7d8a2a1803eb652b3ac3854698214b6c1eda9de8e5120"
+  },
+  "publication_source": {
+    "file": "chapter-session.md",
+    "status": "current_semantic_excerpt",
+    "package_surfaces": [
+      "event_processor.py",
+      "focused_test.py",
+      "full_capture_check.py",
+      "pytest.ini",
+      "test_event_processor.py"
+    ],
+    "runner_checks": [
+      "single captured repair inside reconstructed review",
+      "exact machine-generated patch",
+      "stored historical red and green evidence",
+      "final-package command and support checksums"
+    ]
+  },
+  "approval_basis": "Standing author direction authorized choosing the best bounded implementation. The slice policy distinguishes a missing top-level events key as malformed input from an explicit empty events list. The agent selected the readable one-guard implementation without claiming that the author named a numbered option.",
+  "authorial_inspection": {
+    "status": "complete",
+    "origin": "Drafted by the editorial agent under standing delegation from the exact machine diff, discriminating negative control, and verified replay evidence.",
+    "author_personal_inspection_claimed": false,
+    "policy_approval_claimed": false
+  },
+  "human_contract_origin": "Reconstructed from the maintained focused behavior because the original bounded prompt was not retained; the completion instruction is retained.",
+  "transcript_status": "One verified Claude Code 2.1.210.642 repair inside a broader reconstructed review. Contract wording reconstructed; inspection, commands, outputs, exit statuses, exact diff, negative control, and observable repair sequence retained from tool logs; narrative condensed.",
+  "independent_review": {
+    "status": "completed",
+    "verdict": "Pass",
+    "reviewer_role": "Independent canonical capture reviewer",
+    "reviewer_tool": "Claude Code CLI 2.1.210.814",
+    "reviewer_model": "gpt-5.6-sol[1m]",
+    "review_date": "2026-07-15",
+    "mode": "Read-only repository review using disposable copies",
+    "artifact_path": "evidence/independent-review.md",
+    "artifact_checksum": "sha256:85cf13422c296aafe44b9f980d5ac5bf85be26ee15af730c237d313c5a333a47",
+    "blocking_findings": [],
+    "advisory_resolution": "Current README, session, chapter-session, parity, and transcript metadata classify the broader review as reconstructed. The historical receipt's earlier illustrative wording is retained as superseded provenance, not the current classification."
+  },
+  "canonical_files_modified": false,
+  "disposable_after_state_applied": true,
+  "replay_writes_evidence_by_default": false
+}

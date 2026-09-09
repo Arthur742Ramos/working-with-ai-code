@@ -1,1 +1,4 @@
-jsonschema
+jsonschema>=4.0
+pytest>=8,<10
+# Optional live-provider adapter.
+anthropic>=0.75

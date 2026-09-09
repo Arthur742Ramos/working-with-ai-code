@@ -1,0 +1,20 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+________________ test_schema_valid_deployment_satisfies_policy _________________
+
+    def test_schema_valid_deployment_satisfies_policy() -> None:
+        data = json.loads(CONFIG.read_text(encoding="utf-8"))
+    
+        assert _schema_accepts_max_unavailable(data)
+        plan = load_plan(CONFIG)
+        assert plan.max_unavailable == data["rollout"]["max_unavailable"]
+>       assert policy_violations(plan) == []
+E       AssertionError: assert ['max_unavail...st be 0 or 1'] == []
+E         
+E         Left contains one more item: 'max_unavailable must be 0 or 1'
+E         Use -v to get more diff
+
+test_deployment_policy.py:28: AssertionError
+=========================== short test summary info ============================
+FAILED test_deployment_policy.py::test_schema_valid_deployment_satisfies_policy
+1 failed in <TIME>s

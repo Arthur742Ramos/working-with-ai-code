@@ -1,0 +1,20 @@
+{
+  "service": {
+    "type": "dict",
+    "required": true,
+    "fields": {
+      "host": {
+        "type": "str",
+        "required": true
+      },
+      "port": {
+        "type": "int",
+        "required": true
+      },
+      "ratio": {
+        "type": "float",
+        "required": true
+      }
+    }
+  }
+}

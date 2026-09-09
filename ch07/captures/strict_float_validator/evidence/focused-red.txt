@@ -1,0 +1,16 @@
+FAIL: test_real_float_is_accepted
+expected: []
+observed: [('ratio', 'malformed schema rule')]
+FAIL: test_int_is_rejected_as_float
+expected: [('ratio', 'expected float')]
+observed: [('ratio', 'malformed schema rule')]
+FAIL: test_bool_is_rejected_as_float
+expected: [('ratio', 'expected float')]
+observed: [('ratio', 'malformed schema rule')]
+FAIL: test_string_is_rejected_as_float
+expected: [('ratio', 'expected float')]
+observed: [('ratio', 'malformed schema rule')]
+FAIL: test_float_subclass_is_rejected_as_float
+expected: [('ratio', 'expected float')]
+observed: [('ratio', 'malformed schema rule')]
+5 failed

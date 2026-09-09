@@ -1,0 +1,6 @@
+PASS: test_real_float_is_accepted
+PASS: test_int_is_rejected_as_float
+PASS: test_bool_is_rejected_as_float
+PASS: test_string_is_rejected_as_float
+PASS: test_float_subclass_is_rejected_as_float
+0 failed

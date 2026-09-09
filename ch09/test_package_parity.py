@@ -1,23 +1,30 @@
-"""Package-local checks for the maintained Chapter 9 teaching surfaces."""
+"""Package-local checks for staged parity and isolation."""
 
-from pathlib import Path
+from copy import deepcopy
 import importlib.util
-from types import SimpleNamespace
+import json
+from pathlib import Path
 
 import pytest
 
 
 HERE = Path(__file__).parent
 CAPTURE_DIR = HERE / "captures" / "house_rule_seam"
-SPEC = importlib.util.spec_from_file_location(
-    "house_rule_capture_runner", CAPTURE_DIR / "run_capture.py",
-)
-assert SPEC is not None and SPEC.loader is not None
-RUNNER = importlib.util.module_from_spec(SPEC)
-SPEC.loader.exec_module(RUNNER)
 
 
-def test_outbound_rule_matches_the_staged_listing():
+def load_capture_runner():
+    path = CAPTURE_DIR / "run_capture.py"
+    spec = importlib.util.spec_from_file_location(
+        "ch09_capture_runner",
+        path,
+    )
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_outbound_rule_matches_staged_listing():
     assert (HERE / "AGENTS.md").read_text(encoding="utf-8") == (
         "## Outbound HTTP\n\n"
         "- Feature modules route outbound HTTP through\n"
@@ -28,8 +35,8 @@ def test_outbound_rule_matches_the_staged_listing():
     )
 
 
-def test_green_alert_keeps_the_three_line_repair():
-    source = (HERE / "alerts.py").read_text(encoding="utf-8")
+def test_green_alert_keeps_the_captured_interface_repair():
+    top_level = (HERE / "alerts.py").read_text(encoding="utf-8")
     captured_after = (
         CAPTURE_DIR / "after" / "alerts.py"
     ).read_text(encoding="utf-8")
@@ -40,106 +47,93 @@ def test_green_alert_keeps_the_three_line_repair():
     )
 
     for line in required_lines:
-        assert line in source
+        assert line in top_level
         assert line in captured_after
 
 
-def test_parity_map_covers_current_chapter_surfaces():
+def test_parity_map_covers_each_staged_code_surface():
     parity = (HERE / "parity.md").read_text(encoding="utf-8")
 
     for token in (
-        "Listing 9.1 outbound rule",
-        "Listing 9.2 shared HTTP seam",
+        "Listing 9.1 outbound HTTP rule",
+        "Listing 9.2 `Response` and `call` interface",
         "Listing 9.3 illustrative skill shape",
-        "Listing 9.4 retrieval flow",
+        "Listing 9.4 retrieve, preserve provenance, then inject",
         "MCP resources, prompts, and tools",
         "Lethal-trifecta containment",
-        "Real alert seam session",
+        "Real shared-client session",
     ):
         assert token in parity
 
 
-def test_capture_is_public_and_package_local():
-    session = (
-        CAPTURE_DIR / "session.md"
-    ).read_text(encoding="utf-8")
+def test_replay_and_collection_are_package_local():
     runner = (
         CAPTURE_DIR / "run_capture.py"
     ).read_text(encoding="utf-8")
+    pytest_config = (HERE / "pytest.ini").read_text(encoding="utf-8")
 
     for forbidden in (
-        "AI_Book_Official",
-        "manuscripts/",
-        "chapters/",
-        "code/ch09",
+        "REPO_ROOT",
+        "CANONICAL_DIR",
+        "CANONICAL_CHAPTER",
+        "parents[5]",
     ):
-        assert forbidden not in session
         assert forbidden not in runner
-
-
-def test_capture_patch_preserves_the_exact_boundary_change():
-    patch = (
-        CAPTURE_DIR / "patches" / "house_rule_seam.patch"
-    ).read_text(encoding="utf-8")
-
-    assert "-import requests" in patch
-    assert "+from http_client import call" in patch
-    assert (
-        '-    response = requests.post('
-        in patch
-    )
-    assert (
-        '+    response = call("POST", ALERTS_URL, json={"text": message})'
-        in patch
-    )
-    assert "-    return response.status_code < 400" in patch
-    assert "+    return response.status < 400" in patch
-
-
-def test_pytest_collection_excludes_capture_internals():
-    pytest_config = (HERE / "pytest.ini").read_text(encoding="utf-8")
     assert "norecursedirs = captures" in pytest_config
+    assert "test_package_parity.py" in pytest_config
 
 
-def test_capture_keeps_the_shared_client_unchanged():
-    before = (CAPTURE_DIR / "before" / "http_client.py").read_bytes()
-    after = (CAPTURE_DIR / "after" / "http_client.py").read_bytes()
-    assert before == after
-    assert b"TRANSIENT_STATUSES = frozenset({429, 502, 503, 504})" in before
-    assert b"inject one with set_transport" in before
-
-
-def test_capture_accepts_only_the_expected_red():
-    diagnostic = (
-        "send_alert must route method, URL, and JSON through http_client.call"
+def test_completed_review_state_requires_active_pass_receipt():
+    runner = load_capture_runner()
+    metadata = json.loads(
+        (CAPTURE_DIR / "metadata.json").read_text(encoding="utf-8")
     )
-    RUNNER.require_result(
-        SimpleNamespace(returncode=1, stdout=f"{diagnostic}\n1 failed in 0.01s\n"),
-        1, "1 failed", diagnostic,
-    )
-    with pytest.raises(RuntimeError, match="did not match"):
-        RUNNER.require_result(
-            SimpleNamespace(returncode=1, stdout="unrelated failure\n1 failed\n"),
-            1, "1 failed", diagnostic,
-        )
+
+    assert runner.verify_review_state(metadata) == "PASS"
+
+    invalid = deepcopy(metadata)
+    invalid["review_state"]["active_review"]["status"] = "pending"
+    with pytest.raises(RuntimeError, match="completed status"):
+        runner.verify_review_state(invalid)
+
+    invalid = deepcopy(metadata)
+    invalid["review_state"]["active_review"]["verdict"] = "Fail"
+    with pytest.raises(RuntimeError, match="Pass verdict"):
+        runner.verify_review_state(invalid)
+
+    invalid = deepcopy(metadata)
+    invalid["review_state"]["active_review"][
+        "blocking_findings"
+    ] = ["unresolved finding"]
+    with pytest.raises(RuntimeError, match="retains blocking findings"):
+        runner.verify_review_state(invalid)
+
+    invalid = deepcopy(metadata)
+    invalid["review_state"]["active_review"]["artifact"] = "pending"
+    with pytest.raises(RuntimeError, match="artifact cannot be pending"):
+        runner.verify_review_state(invalid)
+
+    invalid = deepcopy(metadata)
+    invalid["review_state"]["active_review"]["artifact"] = "README.md"
+    with pytest.raises(RuntimeError, match="under evidence"):
+        runner.verify_review_state(invalid)
+
+    invalid = deepcopy(metadata)
+    invalid["review_state"]["active_review"][
+        "artifact_checksum"
+    ] = "0" * 64
+    with pytest.raises(RuntimeError, match="checksum drifted"):
+        runner.verify_review_state(invalid)
 
 
-def test_capture_rejects_drifted_after_state(tmp_path, monkeypatch):
-    for filename in ("alerts.py", "http_client.py"):
-        (tmp_path / filename).write_bytes(
-            (CAPTURE_DIR / "after" / filename).read_bytes(),
-        )
-    monkeypatch.setattr(RUNNER, "WORK_DIR", tmp_path)
-    RUNNER.verify_after_state()
-    (tmp_path / "http_client.py").write_text("changed\n", encoding="utf-8")
-    with pytest.raises(RuntimeError, match="after state drifted"):
-        RUNNER.verify_after_state()
+def test_disposable_work_is_cleaned_after_failure():
+    runner = load_capture_runner()
+    runner.verify_no_work_directories()
+    work = None
 
+    with pytest.raises(RuntimeError, match="intentional cleanup probe"):
+        with runner.disposable_work() as work:
+            raise RuntimeError("intentional cleanup probe")
 
-def test_capture_cleanup_retains_evidence(tmp_path):
-    (tmp_path / ".work").mkdir()
-    (tmp_path / ".work-review").mkdir()
-    (tmp_path / "evidence").mkdir()
-    RUNNER.clean_work_directories(tmp_path)
-    RUNNER.require_work_cleanup(tmp_path)
-    assert (tmp_path / "evidence").is_dir()
+    assert work is not None and not work.exists()
+    runner.verify_no_work_directories()

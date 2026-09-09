@@ -1,59 +1,37 @@
-# Chapter 12 — Measuring and governing AI-assisted work
+# Chapter 12 final support package
 
-A workflow quality metric whose population is wrong: it reports `1.0` for a
-sample with one qualifying success and one failed terminal attempt. An
-independent test states the denominator policy, the bounded repair counts
-every terminal attempt, and a reviewable decision record keeps the scope
-judgment with a human owner.
+This internal package keeps the final workflow-quality metric, its maintained tests, and the verified denominator capture together.
 
-- **`workflow_metrics.py`** — Listing 12.3 target: the green metric that counts every terminal attempt in the denominator
-- **`test_workflow_metrics.py`** — Listing 12.2: the denominator test, plus the three maintained checks
-- **`listing_12_3_terminal_denominator.diff`** — Listing 12.3: Counting terminal attempts in the denominator
-- **`listing_12_4_decision_record.py`** — Listing 12.4: A reviewable workflow decision record
-- **`captures/before/workflow_metrics.py`** — Listing 12.1: the defective before-state metric
-- **`PROMPTS.md`** — Prompt blocks from the current manuscript draft
+## Files
 
-## Setup and checks
+- `workflow_metrics.py` is the green book-state implementation. It counts every explicit `succeeded` or `failed` terminal attempt in the denominator.
+- `test_workflow_metrics.py` contains the four maintained tests used by the chapter.
+- `pytest.ini` keeps top-level pytest collection out of `captures/`, whose fixture is intentionally red before replay applies the patch.
+- `captures/benchmark_denominator/` preserves the defective red before-state, exact patch, raw evidence, session record, and replay runner.
 
-Run from this directory (needs only the standard library; `pytest` is
-optional):
+## Verify the final implementation
+
+Run from this directory:
 
 ```bash
 python3 -m unittest -v test_workflow_metrics
-# or, equivalently:
-python3 -m pytest -q
 ```
 
-Either command reports **4 passing tests**: failed-attempt inclusion,
-quality-threshold evaluation, pending-attempt exclusion, and the
-no-terminal-attempt result.
+The expected result is four passing tests. The suite checks failed-attempt inclusion, quality-threshold evaluation, pending-attempt exclusion, and the no-terminal-attempt result. Run this explicit module command rather than recursively collecting `captures/`. If you use pytest, the package-local `pytest.ini` enforces the same boundary.
 
-## Listing map
+## Replay the captured repair
 
-- **Listing 12.1** is the defective metric that filters to successful
-  attempts before computing the denominator. It is preserved as the red
-  before-state at `captures/before/workflow_metrics.py`; the maintained
-  `workflow_metrics.py` is the green after-state.
-- **Listing 12.2** is `test_failed_attempts_remain_in_denominator` in
-  `test_workflow_metrics.py`, which states the denominator policy with two
-  terminal outcomes.
-- **Listing 12.3** is the one-change repair (`listing_12_3_terminal_denominator.diff`):
-  the denominator becomes the count of attempts whose status is explicitly
-  `succeeded` or `failed`.
-- **Listing 12.4** is `listing_12_4_decision_record.py`, a decision record
-  that records a `pause` action and its evidence boundary.
+Run from this directory:
 
-## Red-to-green capture
+```bash
+python3 captures/benchmark_denominator/run_capture.py
+```
 
-See [`captures/README.md`](captures/README.md) to reproduce the denominator
-red result (`1.0` instead of `0.5`) and the bounded repair.
+Replay rebuilds the red state in disposable space, applies the exact stored patch, reproduces the focused and broader green results, verifies the package-local source, test, and pytest configuration checksums, and removes temporary work on success or failure. Default replay does not rewrite evidence. It reads no repository-root, staged-chapter, canonical-code, or other-chapter file.
 
-## Limits
+## Remaining limitations
 
-Only `succeeded` and `failed` are treated as terminal; any other status must
-be classified before changing the denominator policy. The `0.80` quality
-minimum is a test input, not a validated production threshold. Four examples
-do not establish benchmark representativeness, and passing tests do not
-authorize standardization, wider rollout, or stronger write authority.
-
-See the [main README](../README.md) for setup instructions.
+- Only `succeeded` and `failed` are classified as terminal. The workflow owner must classify any additional status before changing the denominator policy.
+- The `0.80` quality minimum is an input used by the tests, not a validated production threshold.
+- Four examples do not establish benchmark representativeness, sample adequacy, or complete failure taxonomy coverage.
+- Passing tests verify this metric behavior. They do not authorize standardization, wider rollout, or stronger write authority.
