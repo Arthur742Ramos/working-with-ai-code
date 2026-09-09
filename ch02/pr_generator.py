@@ -24,7 +24,8 @@ title, summary, tests, risks.
 
 Constraints:
 - Use only the provided diff
-- Do not invent tests or behavior not in code
+- Propose test scenarios; do not claim they ran
+- Do not invent behavior absent from the diff
 - Keep each list item under 12 words
 - summary, tests, risks must each have 2+ items
 

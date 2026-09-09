@@ -16,7 +16,7 @@ reconstructed review: a missing top-level `events` key becomes a stable
 - `event_processor_initial.py` is the intentionally flawed starting module.
 - `event_processor_ship_blockers.py` preserves Listing 3.6's intermediate
   after-state, including the previously accepted missing-events guard.
-- `rate_limit_decorator.py` and `rate_limit_redis.py` are the compile-only
+- `rate_limit_decorator.py` and `rate_limit_redis.py` are the illustrative
   Branch A and Branch B artifacts from the checkpoint-and-branch example.
 - `focused_test.py` runs the focused checks against a named module.
 - `full_capture_check.py` runs the broader three-case check against a named module.
@@ -98,3 +98,22 @@ No command requires the repository root, canonical chapter code, another chapter
 - The two branch files are design artifacts, not deployment-ready limiters.
   Branch A is process-local. Branch B needs a unique Redis sorted-set member
   per hit, explicit Redis failure policy, and a running service before use.
+
+## Middleware response regression checks
+
+The Redis branch returns a response directly when it denies a request. Raising
+`HTTPException` from user middleware bypasses the endpoint exception handler
+and produced HTTP 500 in the original example. These checks exercise a real
+FastAPI middleware stack with a fake shared-counter result. They verify 429
+without entering the endpoint, and 200 with the authenticated identity on the
+allowed path. They do not execute Redis, resolve its downtime policy, or test
+concurrent load.
+
+```bash
+python3 -m pip install -r requirements-branches.txt
+python3 -m pytest -q -p no:cacheprovider branch_tests
+```
+
+The tests remain separate from the retained event-processor capture and its
+historical test counts. The distinction between endpoint exceptions and direct
+middleware responses follows the [Starlette exception documentation](https://starlette.dev/exceptions/#httpexception).
