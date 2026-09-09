@@ -1,0 +1,10 @@
+--- a/app.py
++++ b/app.py
+@@ -78,6 +78,7 @@
+     # Keep uploads bounded if shared storage is unavailable.
+     in_memory_fallback_enabled=True,
+ )
++limiter.logger = app.logger
+ 
+ 
+ @app.route("/api/upload", methods=["POST"])

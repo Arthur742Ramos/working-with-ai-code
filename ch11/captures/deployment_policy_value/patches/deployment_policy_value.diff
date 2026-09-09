@@ -1,0 +1,11 @@
+--- a/deployment.json
++++ b/deployment.json
+@@ -6,7 +6,7 @@
+   "replicas": 6,
+   "rollout": {
+     "batch_size": 2,
+-    "max_unavailable": 2
++    "max_unavailable": 1
+   },
+   "health": {
+     "readiness_path": "/ready",

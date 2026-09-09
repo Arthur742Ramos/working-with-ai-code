@@ -1,0 +1,35 @@
+--- a/server.py
++++ b/server.py
+@@ -36,6 +36,10 @@
+ _log_file = open(LOG_PATH, "a", buffering=1)
+ 
+ 
++class MissingProductError(Exception):
++    pass
++
++
+ def log(line):
+     ts = time.strftime("%Y-%m-%dT%H:%M:%S")
+     msg = "%s %s" % (ts, line)
+@@ -106,6 +110,11 @@
+     # each an unindexed full scan.
+     for item in items:
+         product = lookup_product(con, item["code"])
++        if product is None:
++            raise MissingProductError(
++                "order %d references missing product %d"
++                % (order_id, item["code"])
++            )
+         price = product["price"]
+         line_total = price * item["qty"]
+         total += line_total
+@@ -184,6 +193,9 @@
+ 
+         try:
+             summary, hit = get_summary(order_id)
++        except MissingProductError as exc:
++            self._send(422, {"error": str(exc)})
++            return
+         except Exception as exc:
+             elapsed = (time.time() - start) * 1000
+             tb = traceback.format_exc()

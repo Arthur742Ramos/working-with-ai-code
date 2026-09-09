@@ -1,0 +1,11 @@
+--- a/pr_generator.py
++++ b/pr_generator.py
+@@ -160,7 +160,7 @@
+         print("No staged changes found.", file=sys.stderr)
+     else:
+         try:
+-            pr = generate_pr_description(diff)
++            pr = generate_with_retry(diff)
+             print(format_for_github(pr))
+ 
+             with open("pr_description.json", "w") as f:   #C

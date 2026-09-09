@@ -1,0 +1,184 @@
+{
+  "schema_version": 2,
+  "target_chapter": {
+    "number": 11,
+    "title": "Taking AI-assisted changes to production"
+  },
+  "session_name": "deployment_policy_value",
+  "capture_stage": "complete_pending_recertification",
+  "coding_agent": {
+    "tool": "Claude Code",
+    "version": "2.1.210.642"
+  },
+  "capture_started_date": "2026-07-14",
+  "capture_completed_date": "2026-07-15",
+  "final_package_refresh_date": "2026-08-28",
+  "repository_commit_before_session": "38da4cbd91cc22da2687f5c76b8e5c5f93ab44d6",
+  "working_tree_clean_before_session": false,
+  "environment": {
+    "python": "3.14.6",
+    "pytest": "9.1.1"
+  },
+  "record_command": "python3 captures/deployment_policy_value/run_capture.py --record",
+  "replay_command": "python3 captures/deployment_policy_value/run_capture.py",
+  "before_fixture": {
+    "provenance": "The source and deployment configuration are historical byte-for-byte copies from the original Chapter 11 support at the recorded repository commit. The broad-test file is a package-test snapshot frozen immediately before the 2026-08-28 support-contract revision; it preserves replay behavior but is not claimed as an original-session byte copy. Original source paths are retained only under origin_repository_checksums_sha256; replay reads these package-local copies.",
+    "historical_byte_copy": true,
+    "checksums_sha256": {
+      "before/deployment_guard.py": "de9ada615fd3864cb03c354fc420370a007cb9494a1d36a714be97f5e47ed498",
+      "before/deployment.json": "2f56d9913b63f6504673125ad94e9daa55f82b29006865092b2d94e7e39a4124",
+      "before/test_deployment_guard.py": "6c8f5183f0d3cee57a93787c25675473edf60e1d0e7f06d712adb69b1e710b63"
+    }
+  },
+  "capture_input_checksums_sha256": {
+    "README.md": "b1d5f5338a00064d46a34f1c4a3758d57f82899743cc6ac09d572f5d34c52111",
+    "parity.md": "1929e9490b9c05386a98c7c3532e42f4c87f8f734a9091f5b385fc8341f6352b",
+    "run_capture.py": "f066e522be4a4e2ebb3637dcf19843df328e7eb04287592ba48d4e29918c3a5d",
+    "session.md": "5a287074bb81e22cc7a7b3f257265714bbd9ab274a4a5f2883b9e703f3870120",
+    "tests/test_deployment_policy.py": "d95f69fcf14e4a914479175a06317425307a7af79abea24dc86919d9cb2e6133"
+  },
+  "red": {
+    "command": "python3 -m pytest -q -p no:cacheprovider test_deployment_policy.py::test_schema_valid_deployment_satisfies_policy",
+    "working_directory": "disposable before-state copy",
+    "exit_status": 1,
+    "output_path": "evidence/focused-red.txt",
+    "exit_status_path": "evidence/focused-red.exit-status"
+  },
+  "patch": {
+    "path": "patches/deployment_policy_value.diff",
+    "sha256": "dfa862e6aadcae06a2ac7be62ff4daf47714dc4f23db589ba902a15b735225d2",
+    "after_state_sha256": "53aa995496d8602e6a2ee95b1c7ebf49de4a252c79ba3c4469eb9b8a5346a5d2",
+    "generator": "Python difflib unified_diff with stable a/deployment.json and b/deployment.json labels",
+    "production_lines_added": 1,
+    "production_lines_removed": 1,
+    "minimality_review": "Independent review confirmed that a zero-line change leaves the focused policy violation intact. Changing the value to 0 alters the selected approval surface, widening the guard to accept 2 weakens policy, and changing the test hides the violation. The one-line value substitution from 2 to 1 is the smallest behaviorally complete production diff."
+  },
+  "focused_green": {
+    "command": "python3 -m pytest -q -p no:cacheprovider test_deployment_policy.py::test_schema_valid_deployment_satisfies_policy",
+    "working_directory": "disposable after-state copy",
+    "exit_status": 0,
+    "output_path": "evidence/focused-green.txt",
+    "exit_status_path": "evidence/focused-green.exit-status"
+  },
+  "broader_green": {
+    "command": "python3 -m pytest -q -p no:cacheprovider test_deployment_guard.py test_incident_triage.py test_pipeline.py",
+    "working_directory": "disposable after-state copy of package-local operational support",
+    "exit_status": 0,
+    "output_path": "evidence/broader-green.txt",
+    "exit_status_path": "evidence/broader-green.exit-status",
+    "test_count": 24
+  },
+  "origin_canonical_support_green": {
+    "command": "python3 -m pytest -q -p no:cacheprovider test_deployment_guard.py test_incident_triage.py test_pipeline.py",
+    "working_directory_at_capture_time": "code/ch11",
+    "exit_status": 0,
+    "output_path": "evidence/canonical-support-green.txt",
+    "exit_status_path": "evidence/canonical-support-green.exit-status",
+    "test_count": 24,
+    "provenance": "Recorded read-only against the unchanged canonical support during the original session.",
+    "replay_status": "preserved_not_executed"
+  },
+  "final_package_green": {
+    "command": "python3 -m pytest -q -p no:cacheprovider",
+    "working_directory": "isolated final Chapter 11 package",
+    "exit_status": 0,
+    "output_path": "evidence/final-package-green.txt",
+    "exit_status_path": "evidence/final-package-green.exit-status",
+    "operational_test_count": 24,
+    "listing_parity_test_count": 5,
+    "total_test_count": 29
+  },
+  "artifact_checksums_sha256": {
+    "evidence/focused-red.txt": "628252dbd7340e101af54d9c9cc7ce9db4f0fa43b862975aff1ca43529196938",
+    "evidence/focused-red.exit-status": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "patches/deployment_policy_value.diff": "dfa862e6aadcae06a2ac7be62ff4daf47714dc4f23db589ba902a15b735225d2",
+    "evidence/focused-green.txt": "34423ae2823934c8bcf724d1b5ea6959c87621a972ef23277995f842d0018922",
+    "evidence/focused-green.exit-status": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "evidence/broader-green.txt": "2429c00fc6d0302212597557c76432991bdaa1f95bbc5f127ceac772bce5898a",
+    "evidence/broader-green.exit-status": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "evidence/canonical-support-green.txt": "2429c00fc6d0302212597557c76432991bdaa1f95bbc5f127ceac772bce5898a",
+    "evidence/canonical-support-green.exit-status": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "evidence/final-package-green.txt": "9f8c6055bb1f7bcd81b2add4d56eb5de615edcc8dc9510f8162263871c88a3e7",
+    "evidence/final-package-green.exit-status": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "evidence/independent-review.md": "46d01c80d19f1e4969a35c09a0db050e60fa3d12d8ba67445dd51377dceb0fd8"
+  },
+  "final_package_support": {
+    "checksums_sha256": {
+      "README.md": "e12d8bfc7bfd756be33db71d2cc31e061da82f204f17e7dc4f55e183bc6cc236",
+      "deployment_guard.py": "ca883098446c860ea1a600c59a037bfa25786035183d3c371ed6c4c5fd01b83f",
+      "deployment.json": "53aa995496d8602e6a2ee95b1c7ebf49de4a252c79ba3c4469eb9b8a5346a5d2",
+      "incident_triage.py": "efd90d28b662017f8f4356df6b8bb07213cc02b19e11b762f50447b36a097c80",
+      "incident.jsonl": "3d1bb42fd59e882fff2fad700a6781267f3f8385b2c3f15609e85d50e339942c",
+      "listing_11_5.txt": "76ec4034ec0fce46598e0d48bffa81f348cf99f274d4782a2a3696839c1a4d41",
+      "observation.json": "b44d403ebea323b1c341c4a9148e3fed370b8b9baa24723d3485d96c98cad851",
+      "parity.md": "1bd9346be65e75991f5118feec4d0f2775abfb77fe9420f8e497a0c7a9599d93",
+      "pipeline.py": "60f17caa596ce43101e2214496602c598936dcbf9c0094138d22574330016e23",
+      "pytest.ini": "e1b4e3128564596f36beb28c931208b8626875aeb097b5130558d2be995ae544",
+      "requirements.txt": "26db60f3749b2d582ef13e54530725d1038086c5b72953678670871c2b85e15a",
+      "test_deployment_guard.py": "e59c7d7d55c901e77f50ffed70c9e9ae6651d8afc80af27d361ebc1b74cac8a4",
+      "test_incident_triage.py": "fc38f2c7ecbabe7093eac22a8b66f009ab5ff3f689748820cbfc411105fab3a7",
+      "test_listing_parity.py": "ef9d56cff37c2b563949137ba1ebb5d1d005e50388cb1e05bfbd4b2390176ceb",
+      "test_pipeline.py": "3f87c8ded633161591e93ce6e2289296aa313ac35d42cb5bf729cfa7e36a194a"
+    },
+    "operational_test_count": 24,
+    "listing_parity_test_count": 5,
+    "total_test_count": 29,
+    "status": "package_local_refreshed_after_support_contract_changes"
+  },
+  "origin_repository_checksums_sha256": {
+    "chapters/ch11.md": "f61055c06c90d98796ee2d332d0b6f10cd24d9bd2445107374b97d9f1f17930c",
+    "code/ch11/README.md": "c0452d6c4b1b9c4c03d8f8f081253dd2130af57e538a835e6b5320b01718038e",
+    "code/ch11/captures/README.md": "23d1832a0db8ddfe4c452def69944c7e48a895d523910763f3f5d3773549da7b",
+    "code/ch11/captures/deployment-before.json": "2f56d9913b63f6504673125ad94e9daa55f82b29006865092b2d94e7e39a4124",
+    "code/ch11/captures/session-transcript.md": "ecb2c4a36e70fdc7e6918c601e4ed5f415cb28a7e6e094bcde84cc85010c9756",
+    "code/ch11/deployment.json": "53aa995496d8602e6a2ee95b1c7ebf49de4a252c79ba3c4469eb9b8a5346a5d2",
+    "code/ch11/deployment_guard.py": "de9ada615fd3864cb03c354fc420370a007cb9494a1d36a714be97f5e47ed498",
+    "code/ch11/incident.jsonl": "3d1bb42fd59e882fff2fad700a6781267f3f8385b2c3f15609e85d50e339942c",
+    "code/ch11/incident_triage.py": "efd90d28b662017f8f4356df6b8bb07213cc02b19e11b762f50447b36a097c80",
+    "code/ch11/observation.json": "b44d403ebea323b1c341c4a9148e3fed370b8b9baa24723d3485d96c98cad851",
+    "code/ch11/pipeline.py": "2e489f54f32feaaa752a90281bb600e257e8361428fc1771d526fb030e817228",
+    "code/ch11/requirements.txt": "26db60f3749b2d582ef13e54530725d1038086c5b72953678670871c2b85e15a",
+    "code/ch11/test_deployment_guard.py": "bdac5c378ac01b3bea5f2109846454cc8498d851776aa95f8ae651040914a314",
+    "code/ch11/test_incident_triage.py": "fc38f2c7ecbabe7093eac22a8b66f009ab5ff3f689748820cbfc411105fab3a7",
+    "code/ch11/test_pipeline.py": "53aaac115e886f4e6abe8ddcdac19131424b9b534f5c4be18f8cd7c93a5705b6",
+    "status": "historical_provenance_only_not_a_replay_dependency"
+  },
+  "agent_action_record": {
+    "path": "evidence/agent-actions.jsonl",
+    "sha256": "0c486702365bdffad77ec80c1e6d8b78f01acfbd6b2d1ae496127e244aa847e1",
+    "status": "original_session_actions_preserved"
+  },
+  "approval_basis": {
+    "standing_direction": "Choose the best bounded implementation without another approval checkpoint.",
+    "agent_selected_policy": "Use max_unavailable 1 for the six-replica fixture; live capacity evidence still controls a real deployment.",
+    "attribution_guard": "The record attributes the implementation selection to the coding agent acting under standing direction. It does not claim the author named an option from a menu."
+  },
+  "human_contract": {
+    "original_retained": true,
+    "status": "retained current completion direction plus labeled reconstruction of the initial bounded prompt",
+    "basis": "The author direction supplied the implementation and approval policy. The initial inspect-red-plan wording is reconstructed from the staged package and labeled in session.md."
+  },
+  "transcript": {
+    "status": "condensed from original tool logs",
+    "details": "The initial contract is explicitly reconstructed. Inspection, harness correction, production action, and command order are retained. Red, patch, and original green evidence come from actual commands. Final-package green is separately labeled post-capture evidence."
+  },
+  "normalization": "Pytest color, third-party plugin loading, bytecode, and cache output are disabled. Stored output preserves genuine command text except that machine-dependent elapsed time is replaced with <TIME>. Replay compares normalized output and does not rewrite evidence.",
+  "capture_harness_correction": "The staged test originally asserted that the loaded unsafe value remained 2, which made green impossible after a production-only value repair. The package-local assertion now verifies loader-to-config parity in both states. The final red was reproduced after this correction before the production edit.",
+  "production_edit_applied_to_original_canonical_files": false,
+  "production_edit_applied_to_disposable_copy": true,
+  "passing_after_state_reproducible": true,
+  "independent_review": {
+    "status": "completed_historical",
+    "verdict": "Pass",
+    "reviewer_role": "Independent canonical capture reviewer, read-only",
+    "reviewer_tool": "Claude Code 2.1.210.814",
+    "review_date": "2026-07-15",
+    "mode": "Clean disposable copy with manual red, patch, green, isolation, parity, provenance, and minimality checks",
+    "artifact_path": "evidence/independent-review.md",
+    "artifact_checksum_sha256": "46d01c80d19f1e4969a35c09a0db050e60fa3d12d8ba67445dd51377dceb0fd8",
+    "blocking_findings": [],
+    "advisory_resolution": "This receipt covers the package state reviewed on 2026-07-15; support-contract changes on 2026-08-28 require a new review."
+  },
+  "independent_review_status": "superseded_by_support_contract_changes",
+  "status": "Pending recertification"
+}

@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "target_chapter": {
+    "number": 1,
+    "title": "Working with AI: from magic to engineering"
+  },
+  "session_name": "fallback_observability",
+  "session_stage": "complete_independently_reviewed",
+  "coding_agent": {
+    "tool": "Claude Code",
+    "version": "2.1.210.642",
+    "model": "gpt-5.6-sol[1m]"
+  },
+  "capture_date": "2026-07-15",
+  "runner_checksum": "sha256:d6e5f1ad14d3b33b78a84e2fa3ca18653fad936ca25317f700c0f752110ced59",
+  "document_checksums": {
+    "README.md": "sha256:5b693c2755888f0e9db01bd18f45cbfd335dec6b7a4248a163a5c585155fb055",
+    "parity.md": "sha256:90d69ed599e7e6d2ea9b9a67c7326fe0a5779b199f88aef8231f555c6ddc8cce",
+    "session.md": "sha256:3cae5447517fe59725f5c327fa1496ba786daed54ee71897894962c685244a22"
+  },
+  "repository_commit_before": "38da4cbd91cc22da2687f5c76b8e5c5f93ab44d6",
+  "origin_before_fixture_checksums": {
+    "before/app.py": "sha256:ef8e670fb6769cfde65930021cabd1e6d7e4b76aba0450326987bb1ab21b97bf",
+    "before/requirements.txt": "sha256:0c13d2c06e2dd7cb8bd7f24a805d8c86f747a896433ee61d7c5136c6218cc01d"
+  },
+  "origin_after_fixture_checksums": {
+    "after/app.py": "sha256:30adcaeae756be16a56104a0d96f6600fd18c815892c7cd96100132dcd6f71c2"
+  },
+  "before_fixture_checksums": {
+    "before/app.py": "sha256:666360566a1925279c2e427924c28d53f1cc8045ed3f6a01cfb157c8f7b2de00",
+    "before/requirements.txt": "sha256:efe1c0f6461b461805f7ab37a1f8865890a209800a28b425de981189c7003807"
+  },
+  "after_fixture_checksums": {
+    "after/app.py": "sha256:c7a1a70f355ef1762880bd26410852e6e8760c4facc5a256dc4cd5aa99e04033"
+  },
+  "test_checksums": {
+    "tests/focused_test.py": "sha256:8ce91c5b30a70c3970620b541fcb13ae33281be86d8cf3466979023787ccce13",
+    "tests/broader_test.py": "sha256:2d0ef4e79a4aa4e39406942b1436b4814733a2fce87864df241e36d1a4eac32e"
+  },
+  "red": {
+    "command": "python tests/focused_test.py .work/app.py",
+    "exit_status": 1,
+    "output_file": "evidence/focused-red.txt",
+    "output_checksum": "sha256:487e7b5f36cdada818ac757dda6063fc67dedf9812f86efa6734c4c4ea64bf81",
+    "exit_file": "evidence/focused-red.exit",
+    "exit_file_checksum": "sha256:4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+  },
+  "patch": {
+    "path": "patches/production.diff",
+    "checksum": "sha256:ee8b08b09abab2a0b770f85c9ad61aa0a49e311d237c8f84258727431b8235ab",
+    "origin_checksum": "sha256:c9c01361046aabb390642f7812997807ae2037b904f7d7ca50b06188e4c88ad0",
+    "apply_command": "patch -p1 -i patches/production.diff",
+    "exit_status": 0,
+    "output_file": "evidence/patch-apply.txt",
+    "output_checksum": "sha256:3fe558f82dd0bc042bb32af4d1a5d9e2a771edac386c07bd75d5363b711b0f25",
+    "exit_file": "evidence/patch-apply.exit",
+    "exit_file_checksum": "sha256:9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  "focused_green": {
+    "command": "python tests/focused_test.py .work/app.py",
+    "exit_status": 0,
+    "output_file": "evidence/focused-green.txt",
+    "output_checksum": "sha256:00a7b8215359d71b85cefd9f9e8363c2dca02611b3aaa9cfd8895f46ef66cdf9",
+    "exit_file": "evidence/focused-green.exit",
+    "exit_file_checksum": "sha256:9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  "broader_green": {
+    "command": "python tests/broader_test.py .work/app.py",
+    "exit_status": 0,
+    "output_file": "evidence/broader-green.txt",
+    "output_checksum": "sha256:673173a00d4c0eeb22b9be0bca068d76c722fb5b44f930c6e25f682e6d9c6183",
+    "exit_file": "evidence/broader-green.exit",
+    "exit_file_checksum": "sha256:9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  "canonical_support_green": null,
+  "canonical_support_green_reason": "No separate canonical support test suite existed at capture time; original canonical hashes are retained as provenance only.",
+  "package_checksums": {
+    "app.py": "sha256:c7a1a70f355ef1762880bd26410852e6e8760c4facc5a256dc4cd5aa99e04033",
+    "requirements.txt": "sha256:efe1c0f6461b461805f7ab37a1f8865890a209800a28b425de981189c7003807",
+    "tests/focused_test.py": "sha256:31dc8487b8783477b57ab455e8daf412c1bc58f36494fc5ec3d798595f755e84",
+    "tests/broader_test.py": "sha256:42096a710e710ca779d67421aa4d0c075fa40356855767ee0178ee4ab3481baf"
+  },
+  "canonical_checksums_before": {
+    "chapters/ch01.md": "sha256:913ed0eed4c8bcedf46cc84f5dab75c7a1c84a487ec39930cdf9a4d8c744c90e",
+    "code/ch01/rate_limiting/app.py": "sha256:ef8e670fb6769cfde65930021cabd1e6d7e4b76aba0450326987bb1ab21b97bf",
+    "code/ch01/rate_limiting/requirements.txt": "sha256:0c13d2c06e2dd7cb8bd7f24a805d8c86f747a896433ee61d7c5136c6218cc01d",
+    "code/ch01/rate_limiting/README.md": "sha256:172edbb2ff318315858c5874e36392ff5b7a32ff6bcae2f90b081c9a8d43687e"
+  },
+  "canonical_checksums_after": {
+    "chapters/ch01.md": "sha256:913ed0eed4c8bcedf46cc84f5dab75c7a1c84a487ec39930cdf9a4d8c744c90e",
+    "code/ch01/rate_limiting/app.py": "sha256:ef8e670fb6769cfde65930021cabd1e6d7e4b76aba0450326987bb1ab21b97bf",
+    "code/ch01/rate_limiting/requirements.txt": "sha256:0c13d2c06e2dd7cb8bd7f24a805d8c86f747a896433ee61d7c5136c6218cc01d",
+    "code/ch01/rate_limiting/README.md": "sha256:172edbb2ff318315858c5874e36392ff5b7a32ff6bcae2f90b081c9a8d43687e"
+  },
+  "human_contract_origin": "Earlier red-stage wording reconstructed from approved architecture; retained completion direction condensed from the current human instruction.",
+  "transcript_status": "Condensed from actual tool logs with commands, raw stable outputs, exits, original action sequence, independent verdict, repair sequence, and accepted exact diff retained.",
+  "evidence_normalization": "No timing or color normalization. Successful workers expose stable harness stdout; dependency stderr is included only on worker failure.",
+  "terminology_clarification": "Final-polish terminology is application-visible fallback observability: Flask-Limiter owns transition detection and warning frequency, the logger assignment makes its record visible through app.logger, and historical receipt wording remains unchanged.",
+  "package_normalization": "The final support copy replaces obsolete section and turn-by-turn comments in before, after, and top-level app.py. Final polish also replaces the same helper docstring in all three states with application-visible wording. Dependency hardening pins Flask-Limiter to the independently reviewed 4.1.1 runtime in the active package and before fixture. Runtime behavior, stable red and green output, and the accepted one-line production change are unchanged. Origin fixture and patch hashes are retained separately.",
+  "replay_dependency_scope": "All replay inputs are inside the final Chapter 1 package. Original repository hashes are provenance records and are not resolved or verified at replay time.",
+  "runtime": {
+    "python": "3.14.6",
+    "flask": "3.1.3",
+    "flask_limiter": "4.1.1",
+    "flask_login": "0.6.3",
+    "redis_py": "8.0.1"
+  },
+  "approved_policy": "Keep bounded fail-open overload protection and add one real fallback observability signal.",
+  "original_agent_selected_implementation": "Invoke the existing application hook once per healthy-to-fallback transition through a Limiter subclass.",
+  "historical_repair_review_verdict": "Replace the subclass with the smaller logger assignment and assert Flask-Limiter's existing healthy-to-fallback warning as the application-owned signal.",
+  "accepted_implementation": "Assign limiter.logger = app.logger so Flask-Limiter's existing transition warning is emitted through the application logger.",
+  "human_owned_policy_boundary": "Select the production monitoring backend and alert, recovery, and escalation thresholds.",
+  "production_repair_applied_to_staged_after_only": true,
+  "canonical_production_files_modified": false,
+  "green_run_performed": true,
+  "historical_repair_review_status": "repair_rechecked_in_isolated_final_package",
+  "independent_review": {
+    "role": "Independent canonical capture reviewer",
+    "tool": "Claude Code CLI",
+    "tool_version": "2.1.210.814",
+    "model": "gpt-5.6-sol[1m]",
+    "review_date": "2026-07-15",
+    "method": "Read-only repository review using a clean disposable copy",
+    "repository_modified": false,
+    "artifact": "evidence/independent-review.md",
+    "artifact_checksum": "sha256:b7579f678ebee383a2d97db1cc8d34e8172fc35c0bed91a5c4bc7f4fa2509777",
+    "status": "completed",
+    "verdict": "Pass",
+    "attribution_limit": "Reviewer identity and tool version are package-attributed rather than cryptographically proven because raw vendor session logs are not retained."
+  },
+  "independent_review_status": "completed",
+  "status": "Pass"
+}

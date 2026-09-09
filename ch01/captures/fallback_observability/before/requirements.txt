@@ -1,0 +1,5 @@
+flask>=3.0
+flask-limiter==4.1.1
+redis>=5.0
+# Optional: real auth instead of the built-in stubs.
+flask-login>=0.6

@@ -1,0 +1,153 @@
+{
+  "schema_version": 2,
+  "target_chapter": {
+    "number": 2,
+    "title": "Contracts that produce checkable work"
+  },
+  "session_name": "pr_generator_retry_wiring",
+  "stage": "complete_independently_reviewed",
+  "capture_stage": "complete_independently_reviewed",
+  "coding_agent": {
+    "tool": "Claude Code",
+    "version": "2.1.210.642",
+    "model": "gpt-5.6-sol[1m]"
+  },
+  "capture_date": "2026-07-14",
+  "completion_date": "2026-07-15",
+  "repository_commit_before_session": "38da4cbd91cc22da2687f5c76b8e5c5f93ab44d6",
+  "before_fixture_checksums": {
+    "before/pr_generator.py": "9fbcd6df24a6ca772f20770b260bb95d94339949f89e4e30cf193ff9e81ba09f",
+    "before/schema.py": "e87b7d4428f7af9310967e49bef0d5feea1af8c52d774f7982671ae13ca8b9b2",
+    "before/llm_client.py": "a795563c91a9d853d984e5fe7988b9ed17aef454e8ae4381e936dee32f5a2e56"
+  },
+  "after_fixture_checksums": {
+    "after/pr_generator.py": "397dd84ed997acb5ce7a7911598917d8abe7832da9ecc68a378ad10fc532ea02",
+    "after/schema.py": "e87b7d4428f7af9310967e49bef0d5feea1af8c52d774f7982671ae13ca8b9b2",
+    "after/llm_client.py": "a795563c91a9d853d984e5fe7988b9ed17aef454e8ae4381e936dee32f5a2e56"
+  },
+  "test_checksums": {
+    "tests/focused_test.py": "fc9151d05b76410410db39514abf8611fa606874e7ddc94eb26d62e0085e4697",
+    "tests/broader_test.py": "26f56712466d1ea49fea53171c5427998caa786090e3927b5fc79eef02c15b69"
+  },
+  "red": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 python3 tests/focused_test.py .work/pr_generator.py",
+    "exit_status": 1,
+    "output_file": "evidence/focused-red.txt",
+    "output_checksum": "285c3e64b95a09d06531a8c32819f3810621774f21e2e5f22ba1ae3726f7e24d",
+    "exit_file": "evidence/focused-red.exit",
+    "exit_file_checksum": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+  },
+  "patch": {
+    "file": "patches/pr_generator_retry_wiring.patch",
+    "checksum": "409e0c84e2b960866af90d90e45994345e3c47407bb366adfd3d25ecbc122636",
+    "production_files_changed": 1,
+    "removed_lines": 1,
+    "added_lines": 1,
+    "minimality_basis": "Only the CLI callee name changes; the existing retry helper and all other production lines remain byte-identical."
+  },
+  "focused_green": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 python3 tests/focused_test.py .work/pr_generator.py",
+    "exit_status": 0,
+    "output_file": "evidence/focused-green.txt",
+    "output_checksum": "d7467faabeafb78909cdd6811ec5708f7d96615a03b31accdc94270f171e965c",
+    "exit_file": "evidence/focused-green.exit",
+    "exit_file_checksum": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  "broader_green": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 python3 tests/broader_test.py .work/pr_generator.py",
+    "exit_status": 0,
+    "output_file": "evidence/broader-green.txt",
+    "output_checksum": "3248974a5be6198edf82c7dbd4ab99b415481b52dfb52bdd45221b3edb811b96",
+    "exit_file": "evidence/broader-green.exit",
+    "exit_file_checksum": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  "origin_support_green": {
+    "status": "not_applicable",
+    "reason": "The original session had no separate canonical support suite. Historical immutability is retained through the captured before, after, test, patch, and evidence checksums."
+  },
+  "origin_support_checksums": {
+    "code/ch02/pr_generator.py": "9fbcd6df24a6ca772f20770b260bb95d94339949f89e4e30cf193ff9e81ba09f",
+    "code/ch02/schema.py": "e87b7d4428f7af9310967e49bef0d5feea1af8c52d774f7982671ae13ca8b9b2",
+    "code/ch02/llm_client.py": "a795563c91a9d853d984e5fe7988b9ed17aef454e8ae4381e936dee32f5a2e56"
+  },
+  "origin_chapter_checksums": {
+    "before": "18ac22cc46f61b2604055348664a047a1bafc4a9152f5e7f55418bf660aefceb",
+    "after": "18ac22cc46f61b2604055348664a047a1bafc4a9152f5e7f55418bf660aefceb"
+  },
+  "package_support_checksums": {
+    "README.md": "1afb61eae9f0228340b70ea06c0690f9b927c2a685330285e3be3024e8f0aa2a",
+    "local_fixture.py": "8d137853f4deca00100cd8107e21233f4c2f0c3ab906f316b99d6d76508f9866",
+    "schema.py": "3df5ac79f2648078f991fb23bd2685105b2dea8cbc3c712e3110073253800325",
+    "pr_generator.py": "e22b2c23cfb21c5de636c7a3a7c7af4c83700e937a233c007dd65d6cc64eb5b8",
+    "anthropic_adapter.py": "e336cfddc59fb2f6339bf497feaea1f951261f55a711d9f4cc8d738b33b26d6b",
+    "test_pr_generator.py": "e0caa5f348822cd659cd54a4086c96ce8b30891169901a78a0cb1f78fc87b347",
+    "pytest.ini": "6f643b069a9c1eb4327b395febd3431bc2085acbcfd30074ffe97e0d2f77b146",
+    "requirements.txt": "3dc715950e89138c56bb82c161960754ced20d50bf328e75f557dfa88d26f40f"
+  },
+  "human_contract": "original retained inspection and completion directions",
+  "architecture_constraint": "reconstructed from approved architecture",
+  "approval_basis": "Standing direction authorized the agent to choose the best implementation. The agent selected the helper's existing JSON and schema retry policy with two retries; no named menu option is attributed to the author.",
+  "transcript": "condensed from tool logs",
+  "evidence_normalization": "none",
+  "agent_action_record": {
+    "file": "evidence/agent-actions.md",
+    "checksum": "7bd9b492621b4e564fb27a98580421d9dc59a991218e2574888d476ba43a646c"
+  },
+  "runner": {
+    "file": "run_capture.py",
+    "checksum": "ffd4e4abf9904822d8c94ff5a5f7d510d216770ce4b1dbda24954141df26ccaa",
+    "record_mode": "--record refreshes verified capture evidence only",
+    "replay_mode": "default rebuilds historical states in .work, certifies the promoted package in .package-work, and never rewrites evidence"
+  },
+  "record_checksums": {
+    "README.md": "4a00037e1492a5edcd0244ea2f922c49228aa8b3d57318a91774dbe3591b0ea0",
+    "session.md": "0edc8c8b95f908f36bb3edc92b6eaeb6ec017e1ed0159c4934e2e0b20cf95ab9",
+    "parity.md": "328aa159fa438f111228893e1e6cb59ceaeadc30f1236dd55a683830cc157d5c"
+  },
+  "production_repair_applied": true,
+  "after_implementation_created": true,
+  "package_promotion_applied": true,
+  "canonical_files_modified": false,
+  "executable_repository_coupling_removed": true,
+  "first_independent_review": {
+    "status": "completed",
+    "verdict": "Fail",
+    "reviewer_role": "Independent canonical capture reviewer, read-only",
+    "reviewer_tool": "Claude Code 2.1.210.814",
+    "reviewer_model": "gpt-5.6-sol[1m]",
+    "review_date": "2026-07-15",
+    "artifact_path": "evidence/first-independent-review.md",
+    "artifact_checksum_sha256": "12ed08c46c638c74644ecaee0e5d4f8dead6e2110e1700f91bf1c03854d6c659",
+    "blocking_findings": [
+      "The publication mapping selected a stale repository-coupled support package.",
+      "The chapter omitted the exact focused-test command.",
+      "The printed patch lost one space on a blank context line."
+    ],
+    "repair_status": "resolved"
+  },
+  "independent_review": {
+    "status": "completed",
+    "verdict": "Pass",
+    "reviewer_role": "Independent canonical capture reviewer, read-only",
+    "reviewer_tool": "Claude Code 2.1.210",
+    "reviewer_model": "gpt-5.6-sol[1m]",
+    "review_date": "2026-07-15",
+    "mode": "Canonical and mirrored package replay with isolation, adversarial mutation, parity, provenance, cleanup, and publication checks",
+    "repository_modified": false,
+    "artifact_path": "evidence/independent-review.md",
+    "artifact_checksum_sha256": "283977528018dfc7300beefbf9e07eb22f2d78d1f1f48ad4e484e6fb8aae1bc7",
+    "blocking_findings": [],
+    "non_blocking_findings": [],
+    "first_review_blockers": "resolved",
+    "historical_session_status": "preserved_unchanged"
+  },
+  "final_polish_recertification": {
+    "status": "Pass",
+    "test_count": 18,
+    "artifact_path": "evidence/final-polish-recertification.json",
+    "checksum_sha256": "35db8925ec7a6ac2fef7a66974e0f184f134d1f655f24e9768fe9ec5a371859e",
+    "historical_capture_status": "preserved_unchanged"
+  },
+  "independent_review_status": "completed",
+  "status": "Pass"
+}

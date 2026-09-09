@@ -1,0 +1,10 @@
+--- a/reminders/repository.py
++++ b/reminders/repository.py
+@@ -59,7 +59,7 @@
+         due_at=_parse_required_timestamp(row["due_at"]),
+         status=ReminderStatus(row["status"]),
+         snoozed_until=_parse_optional_timestamp(
+-            row.get("snoozed_until")
++            row["snoozed_until"]
+         ),
+     )

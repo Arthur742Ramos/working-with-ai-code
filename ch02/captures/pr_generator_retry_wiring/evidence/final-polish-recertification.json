@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "date": "2026-09-07",
+  "scope": "Promoted Chapter 2 support package after final book polish",
+  "status": "Pass",
+  "historical_capture_status": "Preserved unchanged",
+  "test_command": "PYTHONDONTWRITEBYTECODE=1 python3 test_pr_generator.py",
+  "test_count": 18,
+  "runtime_dependencies": {
+    "required": [
+      "Python 3",
+      "patch",
+      "jsonschema"
+    ],
+    "network_required": false,
+    "note": "Historical capture checks use deterministic stand-ins; jsonschema is required by the promoted package suite."
+  },
+  "verified_cases": [
+    "JSON Schema minLength rejects an empty title",
+    "Nested item minLength rejects an empty checklist item",
+    "The rendered checklist includes the missing or non-object body case",
+    "The provider adapter accepts end_turn",
+    "The provider adapter classifies refusal before content use",
+    "The provider adapter classifies max_tokens before content use"
+  ],
+  "listing_patch_check": {
+    "command": "git apply --check fixture.patch",
+    "status": "Pass",
+    "note": "fixture.patch contains the exact FIXED_DIFF string from local_fixture.py"
+  },
+  "official_references": [
+    "https://platform.claude.com/docs/en/build-with-claude/handling-stop-reasons.md",
+    "https://platform.claude.com/docs/en/api/sdks/python.md"
+  ],
+  "support_checksums": {
+    "README.md": "1afb61eae9f0228340b70ea06c0690f9b927c2a685330285e3be3024e8f0aa2a",
+    "local_fixture.py": "8d137853f4deca00100cd8107e21233f4c2f0c3ab906f316b99d6d76508f9866",
+    "schema.py": "3df5ac79f2648078f991fb23bd2685105b2dea8cbc3c712e3110073253800325",
+    "pr_generator.py": "e22b2c23cfb21c5de636c7a3a7c7af4c83700e937a233c007dd65d6cc64eb5b8",
+    "anthropic_adapter.py": "e336cfddc59fb2f6339bf497feaea1f951261f55a711d9f4cc8d738b33b26d6b",
+    "test_pr_generator.py": "e0caa5f348822cd659cd54a4086c96ce8b30891169901a78a0cb1f78fc87b347",
+    "pytest.ini": "6f643b069a9c1eb4327b395febd3431bc2085acbcfd30074ffe97e0d2f77b146",
+    "requirements.txt": "3dc715950e89138c56bb82c161960754ced20d50bf328e75f557dfa88d26f40f"
+  },
+  "historical_checksums": {
+    "patches/pr_generator_retry_wiring.patch": "409e0c84e2b960866af90d90e45994345e3c47407bb366adfd3d25ecbc122636",
+    "evidence/focused-red.txt": "285c3e64b95a09d06531a8c32819f3810621774f21e2e5f22ba1ae3726f7e24d",
+    "evidence/focused-green.txt": "d7467faabeafb78909cdd6811ec5708f7d96615a03b31accdc94270f171e965c",
+    "evidence/broader-green.txt": "3248974a5be6198edf82c7dbd4ab99b415481b52dfb52bdd45221b3edb811b96",
+    "evidence/first-independent-review.md": "12ed08c46c638c74644ecaee0e5d4f8dead6e2110e1700f91bf1c03854d6c659",
+    "evidence/independent-review.md": "283977528018dfc7300beefbf9e07eb22f2d78d1f1f48ad4e484e6fb8aae1bc7",
+    "session.md": "0edc8c8b95f908f36bb3edc92b6eaeb6ec017e1ed0159c4934e2e0b20cf95ab9"
+  },
+  "boundary": "This receipt recertifies the promoted package only. It does not rewrite or extend the historical retry-session claim."
+}

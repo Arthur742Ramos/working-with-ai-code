@@ -1,0 +1,3 @@
+PASS: test_healthy_storage_emits_no_fallback_warning
+observed: 0 fallback warnings on application logger
+neighbor retained: user-1 first 10=200, 11th=429; user-2 first=200

@@ -57,7 +57,7 @@ def call(
         token = os.environ.get("API_TOKEN")
         if not token:
             raise RuntimeError("API_TOKEN is required for outbound HTTP")
-        request_headers["Authorization"] = "******"
+        request_headers["Authorization"] = f"Bearer {token}"
 
     body = dict(json or {})
     response = _transport(method, url, request_headers, body)

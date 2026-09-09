@@ -1,0 +1,10 @@
+--- a/validator.py
++++ b/validator.py
+@@ -14,6 +14,7 @@
+     "int": lambda value: type(value) is int,
+     "bool": lambda value: isinstance(value, bool),
+     "dict": lambda value: isinstance(value, dict),
++    "float": lambda value: type(value) is float,
+ }
+ 
+ 

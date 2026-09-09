@@ -1,68 +1,77 @@
-# Chapter 11 — Taking AI-assisted changes to production
+# Chapter 11 final support package
 
-A production deployment modeled as a reviewable proposal: deterministic
-policy checks, a provider-neutral pipeline that stops at the approval
-boundary, a source-linked incident timeline, and a post-change evidence
-packet. It never connects to a cloud account or makes a production change.
+This internal package keeps the green deployment-policy example, operational fixtures, listing-parity checks, and the verified `max_unavailable` capture together. It runs without the repository root, staged chapters, canonical support files, or another chapter package.
 
-- **`deployment_guard.py`** — Listing 11.1: Rollout-policy branch for unavailable capacity, plus plan and post-change verification
-- **`pipeline.py`** — Listing 11.2: Stopping the pipeline at the approval boundary
-- **`incident_triage.py`** — Listing 11.3: Selecting one deployment's events in time order (and printing Listing 11.4)
-- **`listing_11_5.txt`** — Listing 11.5: A post-change evidence packet
-- **`deployment.json`** — the maintained safe deployment proposal
-- **`observation.json`** — sanitized post-change observations
-- **`incident.jsonl`** — sanitized structured events for one rollout
-- **`test_deployment_guard.py`**, **`test_incident_triage.py`**, **`test_pipeline.py`** — policy, timeline, and pipeline checks
-- **`captures/`** — controlled red-state reproduction (README, red fixture, session transcript)
-- **`PROMPTS.md`** — Prompt blocks from the current manuscript draft
+## Files
 
-## Setup and checks
+- `deployment_guard.py` contains the complete policy, approval-surface, and post-change verification implementation. Its unavailable-capacity branch matches Listing 11.1 exactly after removing function indentation.
+- `deployment.json` is the green book state. Its six-replica rollout sets `max_unavailable` to `1`.
+- `pipeline.py` preserves launched child exit codes, reports a launch error with `tool_error` and exit `127`, and stops before the production write boundary. Its two printed functions map to Listing 11.2.
+- `incident_triage.py` builds the bounded selector in Listing 11.3 and renders `incident.jsonl` as the exact Listing 11.4 timeline.
+- `listing_11_5.txt` is the maintained byte-exact post-change evidence packet for Listing 11.5.
+- `observation.json` supplies generic post-change facts used by verification.
+- `test_deployment_guard.py`, `test_incident_triage.py`, and `test_pipeline.py` preserve the 24 operational checks used by the captured broader run.
+- `test_listing_parity.py` adds five checks, one for each staged listing.
+- `parity.md` records exact source, excerpting, formatting, command-output, and artifact mappings for Listings 11.1 through 11.5.
+- `pytest.ini` prevents top-level pytest discovery from collecting the intentionally red capture test.
+- `captures/deployment_policy_value/` preserves the immutable red before-state, focused test, exact one-line patch, raw evidence, and package-local replay runner.
 
-Use CPython 3.11 or newer, from this directory:
+## Verify the final implementation
+
+Run from this directory:
 
 ```bash
-python3 -m pytest -q
-python3 pipeline.py
-python3 deployment_guard.py plan deployment.json
-python3 deployment_guard.py verify deployment.json observation.json
-python3 incident_triage.py incident.jsonl deploy-104
+python3 -m pytest -q -p no:cacheprovider
 ```
 
-`python3 -m pytest -q` reports **24 passed**. The pipeline compiles the
-tools, runs the tests, and builds a read-only plan that stops at
-`READY_FOR_APPROVAL`; an actual write is intentionally outside this example.
+The expected result is 29 passing tests: 24 operational tests plus five listing-parity checks. Pytest does not collect capture internals during this run.
 
-The guard distinguishes invalid input (`tool_error` on stderr, exit `1`),
-blocked plan policy (`policy=BLOCK`, exit `2`), and a failed post-change
-verification (`verification=FAIL` with `recovery=REQUESTED`, exit `3`).
-Recovery is a request for the human-owned recovery path, not an automatic
-rollback. A stage that cannot launch reports `tool_error=<stage>` on stderr
-and stops the pipeline with exit `127`; other stage exit codes are preserved.
+Run the read-only operational examples with:
 
-## Listing map
+```bash
+python3 deployment_guard.py plan deployment.json
+python3 deployment_guard.py verify \
+  deployment.json observation.json
+python3 incident_triage.py incident.jsonl deploy-104
+python3 pipeline.py
+```
 
-- **Listing 11.1** is the rollout-policy branch in `deployment_guard.py` that
-  rejects a `max_unavailable` outside `(0, 1)`.
-- **Listing 11.2** is `run_stage` and `run_pipeline` in `pipeline.py`, which
-  stop at the first failing stage and otherwise print `READY_FOR_APPROVAL`.
-- **Listing 11.3** is `select_timeline` in `incident_triage.py`, which filters
-  one deployment's events and sorts them by time.
-- **Listing 11.4** is the source-linked timeline that
-  `python3 incident_triage.py incident.jsonl deploy-104` prints, keeping the
-  `incident.jsonl:<line>` source identifier beside each fact.
-- **Listing 11.5** is `listing_11_5.txt`, the post-change evidence packet.
+The pipeline stops at `READY_FOR_APPROVAL`. It performs no production write, provider-native plan, approval lookup, credential exchange, target query, verification, or recovery action. Its test stage runs the 24 operational checks; the five listing-parity checks remain a separate package and publication gate.
 
-## Real red-to-green capture
+## Replay the captured repair
 
-The capture began with `deployment.json` equal to the red fixture under
-`captures/`, where `max_unavailable` was `2`. The agent read the config and
-guard, changed the value to `1`, showed the exact diff, and reran the focused
-and full suites. See [`captures/README.md`](captures/README.md).
+Run from this directory:
 
-## Limits
+```bash
+python3 captures/deployment_policy_value/run_capture.py
+```
 
-The policy values are teaching decisions, not universal production defaults.
-A real service needs capacity measurements, provider-specific plans, protected
-credentials, deployment approval, live observability, and a tested rollback.
+Replay reconstructs the disposable red and repaired states from files inside this package, compares focused red, exact patch, focused green, and 24-test broader green with stored evidence, then runs all 29 top-level package tests. It verifies package-local checksums and removes temporary work on success or failure. Default replay does not rewrite evidence.
 
-See the [main README](../README.md) for setup instructions.
+The original 24-test canonical-support output remains in `evidence/canonical-support-green.txt` as historical origin provenance. Replay checksum-verifies that artifact but does not locate or execute the original repository-root files. The separately labeled `evidence/final-package-green.txt` records the current package-local suite.
+
+## Verify isolation
+
+A copied package supports the same commands:
+
+```bash
+cp -R . /tmp/ch11-final
+cd /tmp/ch11-final
+python3 -m pytest -q -p no:cacheprovider
+python3 captures/deployment_policy_value/run_capture.py
+```
+
+No command needs the source repository after the copy finishes.
+
+## Remaining limitations
+
+- The package makes no cloud call, issues no live credential, and changes no target system.
+- The small release driver does not generate a provider-native plan, read an approval record, or execute provider-side Apply, Verify, or Recovery jobs.
+- A launched child preserves its own exit code; a launch failure has no child exit and returns `127` with a `tool_error` record.
+- The verifier returns policy block `2` before observation, input/tool error `1` for unreadable or malformed input, and verification failure `3` for failed loaded postconditions.
+- A failed loaded postcondition emits `recovery=REQUESTED`; the marker is a request, not recovery authorization.
+- The rollout thresholds are teaching decisions, not universal production defaults.
+- The tests do not prove that five replicas can carry live traffic or preserve rollback headroom.
+- Repository policy checks do not detect target drift or replace a provider-native plan.
+- The observation and incident fixtures do not exercise live telemetry, approval systems, deployment controllers, or rollback execution.
+- The capture proves only the bounded configuration repair and its maintained regression surface.

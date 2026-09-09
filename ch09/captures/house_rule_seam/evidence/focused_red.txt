@@ -1,0 +1,36 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_________________ test_send_alert_routes_through_house_client __________________
+
+    def test_send_alert_routes_through_house_client():
+        try:
+            accepted, calls = observe_shared_call()
+>           assert_exact_shared_call(accepted, calls)
+
+tests/test_alerts.py:72: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+accepted = True, calls = []
+
+    def assert_exact_shared_call(accepted, calls):
+        assert accepted is True
+>       assert calls == [
+            (
+                "POST",
+                ALERTS_URL,
+                {"text": "disk 90% full"},
+            )
+        ], (
+            "send_alert must route method, URL, and JSON "
+            "through http_client.call"
+        )
+E       AssertionError: send_alert must route method, URL, and JSON through http_client.call
+E       assert [] == [('POST', 'ht...k 90% full'})]
+E         
+E         Right contains one more item: ('POST', 'https://alerts.example.com/api/v1/send', {'text': 'disk 90% full'})
+E         Use -v to get more diff
+
+tests/test_alerts.py:57: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_alerts.py::test_send_alert_routes_through_house_client - As...
+1 failed in 0.02s

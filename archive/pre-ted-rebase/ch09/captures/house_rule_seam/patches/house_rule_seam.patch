@@ -1,0 +1,10 @@
+--- a/alerts.py
++++ b/alerts.py
+@@ -3 +3 @@
+-import requests
++from http_client import call
+@@ -9,2 +9,2 @@
+-    response = requests.post(ALERTS_URL, json={"text": message})
+-    return response.status_code < 400
++    response = call("POST", ALERTS_URL, json={"text": message})
++    return response.status < 400

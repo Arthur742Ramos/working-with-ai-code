@@ -1,0 +1,16 @@
+Dry run rolled back.
+
+- 3 legacy rows read
+- 3 rows upserted
+- 0 rows skipped
+- 9 audit rows produced
+- committed: False
+
+Sample audit evidence:
+- email: Jane@Example.com to jane@example.com
+- created: 03/15/2024 to 2024-03-15T00:00:00
+- account type: 1 to individual
+
+Decisions for approval: the source date has no timezone, so
+the proposed value is naive midnight. Validation failures are
+skipped and reported; unexpected errors roll back the run.

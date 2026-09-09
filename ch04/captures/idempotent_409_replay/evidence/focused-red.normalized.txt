@@ -1,0 +1,37 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______________________ test_conflict_is_idempotent_replay ______________________
+
+    def test_conflict_is_idempotent_replay():
+        # The API returns 409 for a duplicate source_id and treats it as
+        # "already created." A 409 must count as a successful send, not a
+        # failure, or a retried batch inflates the failure count.
+        row = parse_customer({"source_id": "C-1", "email": "x@y.co", "name": "X"})
+>       result = send_with_retry(row, fake_sender(409), attempts=3)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_importer.py:82: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+row = CustomerRow(source_id='C-1', email='x@y.co', name='X', key='07e9a9696557f5c8f882be06e799bc09')
+sender = <function fake_sender.<locals>.sender at 0x<address>>, attempts = 3
+
+    def send_with_retry(
+        row: CustomerRow,
+        sender: Sender,
+        attempts: int = 3,
+    ) -> ApiResult:
+        request = build_request(row)
+    
+        for attempt in range(1, attempts + 1):
+            result = sender(request)
+            if result.status < 400:
+                return result
+            if result.status not in TRANSIENT:
+>               raise RuntimeError(result.body)
+E               RuntimeError
+
+.work/importer.py:83: RuntimeError
+=========================== short test summary info ============================
+FAILED tests/test_importer.py::test_conflict_is_idempotent_replay - RuntimeError
+1 failed in <time>s

@@ -2,12 +2,20 @@
 
 import importlib
 import importlib.util
+import sys
+from types import ModuleType, SimpleNamespace
 from unittest.mock import patch
 
 import pytest
 
-import http_client
+requests_stub = ModuleType("requests")
+requests_stub.post = lambda *args, **kwargs: SimpleNamespace(
+    status_code=200
+)
+sys.modules.setdefault("requests", requests_stub)
+
 import alerts
+import http_client
 from alerts import ALERTS_URL
 from http_client import Response
 
@@ -79,12 +87,18 @@ def test_module_qualified_shared_client_shape_is_accepted(tmp_path):
         "    return response.status < 400\n",
         encoding="utf-8",
     )
-    spec = importlib.util.spec_from_file_location(
-        "module_qualified_alerts", source,
-    )
-    assert spec is not None and spec.loader is not None
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
+
+    def load_module():
+        spec = importlib.util.spec_from_file_location(
+            "module_qualified_alerts",
+            source,
+        )
+        assert spec is not None and spec.loader is not None
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        return module
+
+    module = load_module()
     accepted, calls = observe_shared_call(module)
     assert_exact_shared_call(accepted, calls)
 
@@ -95,7 +109,7 @@ def test_house_client_adds_auth_for_feature():
 
     alerts.send_alert("nightly export failed")
 
-    assert calls[0][2]["Authorization"] == "******"
+    assert calls[0][2]["Authorization"] == "Bearer unit-test-token"
 
 
 def test_alert_reports_failure_status():

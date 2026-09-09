@@ -1,0 +1,18 @@
+{
+  "service": "sample-api",
+  "environment": "production",
+  "current_revision": "sample-api:1.7.2",
+  "proposed_revision": "sample-api:1.8.0",
+  "replicas": 6,
+  "rollout": {
+    "batch_size": 2,
+    "max_unavailable": 2
+  },
+  "health": {
+    "readiness_path": "/ready",
+    "error_rate_limit": 0.02
+  },
+  "rollback": {
+    "revision": "sample-api:1.7.2"
+  }
+}

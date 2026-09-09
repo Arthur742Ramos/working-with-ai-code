@@ -1,0 +1,233 @@
+{
+  "target_chapter": {
+    "number": 9,
+    "title": "Context engineering: data, tools, and trust"
+  },
+  "session_name": "house_rule_seam",
+  "stage": "completed",
+  "coding_agent": {
+    "tool": "Claude Code",
+    "version": "2.1.210.642",
+    "model": "gpt-5.6-sol[1m]"
+  },
+  "capture_date": "2026-07-14",
+  "completion_date": "2026-07-15",
+  "repository_commit_before_session": "38da4cbd91cc22da2687f5c76b8e5c5f93ab44d6",
+  "working_tree_clean_before_session": false,
+  "before_fixture_provenance": "The direct-requests alerts fixture, shared client, and maintained tests were staged from Chapter 9 support. After first review, the package-local focused alert test was changed to observe http_client.call before feature import, prove exact method, URL, and JSON routing, and accept direct or module-qualified shared-client use. The production fixtures and patch remained checksum-locked.",
+  "before_fixture_checksums": {
+    "before/alerts.py": "ad35f4f08f1b7d18b198d48a491dc0160a917233534bddabac05564cb0d5cd8e",
+    "before/http_client.py": "cba93e87a679816972d8bc091e3d8a0fae75b43afa835ada82036b45fa1f4541"
+  },
+  "after_fixture_checksums": {
+    "after/alerts.py": "39920989758296b10ccc4c13f57d4387cbfecc266e34a38f098f185385fa44c0",
+    "after/http_client.py": "cba93e87a679816972d8bc091e3d8a0fae75b43afa835ada82036b45fa1f4541"
+  },
+  "test_checksums": {
+    "tests/test_alerts.py": "ec1dd662429f7d9ff7a42b1c9285729d75d659b7ade0b6237f432805ab120195",
+    "tests/test_house_rules.py": "60f9e05fb81300121e2fa112d8155e52f020e559aabdc055549d7876d8cd74d8",
+    "tests/test_http_client.py": "7f5faaa061888fe91ecbcdd5ffbedbb227805680036ba7c99461ddd9763037d3",
+    "tests/fixtures/direct_requests/alerts.py": "ad35f4f08f1b7d18b198d48a491dc0160a917233534bddabac05564cb0d5cd8e"
+  },
+  "red": {
+    "command": "PYTHONPATH=before HOUSE_RULE_ROOT=before PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q -p no:cacheprovider tests/test_alerts.py::test_send_alert_routes_through_house_client",
+    "exit_status": 1,
+    "output_file": "evidence/focused_red.txt",
+    "output_checksum": "aaf07ce62f340b301ed9a44a60d8913c84e35b6ea21e60e896327b6a1bcd8cf4",
+    "exit_status_file": "evidence/focused_red.exit_status",
+    "exit_status_checksum": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+  },
+  "patch": {
+    "file": "patches/house_rule_seam.patch",
+    "checksum": "572173f91e3f2b0a21a6730e606d68e6d32c8188e0c6617c0ca790b009deb949",
+    "production_files_changed": 1,
+    "removed_lines": 3,
+    "added_lines": 3,
+    "minimality_standard": "smallest_reviewable_diff",
+    "minimality_basis": "The three substitutions are the narrowest behaviorally complete change in the surrounding style: import the approved seam, route the existing request through it, and adapt status_code to status while retaining the response variable. Collapsing send_alert into one return expression may reduce physical line count, but it changes the function's readable shape and hides the interface adaptation without narrowing behavior.",
+    "rejected_alternatives": [
+      {
+        "alternative": "Remove only the direct transport import.",
+        "reason": "The focused test would still fail because send_alert would not expose or invoke the approved call seam with the required request arguments."
+      },
+      {
+        "alternative": "Collapse the call and status comparison into one return expression.",
+        "reason": "This is code golf rather than a narrower review scope: it removes the surrounding response-variable idiom and hides the response-field adaptation."
+      },
+      {
+        "alternative": "Change the shared client or guard.",
+        "reason": "Either edit would widen the slice beyond the feature-module seam defect."
+      }
+    ]
+  },
+  "focused_green": {
+    "command": "PYTHONPATH=before HOUSE_RULE_ROOT=before PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q -p no:cacheprovider tests/test_alerts.py::test_send_alert_routes_through_house_client",
+    "exit_status": 0,
+    "output_file": "evidence/focused_green.txt",
+    "output_checksum": "4bcefcc9f6c645923b9993ccf73ad92e6b400ca25458ea14e095857fc2131342",
+    "exit_status_file": "evidence/focused_green.exit_status",
+    "exit_status_checksum": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  "broader_green": {
+    "command": "PYTHONPATH=before HOUSE_RULE_ROOT=before PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q -p no:cacheprovider tests",
+    "exit_status": 0,
+    "output_file": "evidence/broader_green.txt",
+    "output_checksum": "1253f6ca793d46eb9c48b6f1606064815d0bb62be75a701be4c49494044e47ce",
+    "exit_status_file": "evidence/broader_green.exit_status",
+    "exit_status_checksum": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  "package_green": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q -p no:cacheprovider",
+    "exit_status": 0,
+    "output_file": "evidence/package_green.txt",
+    "output_checksum": "b32958fa1aa71d75acfe6fb2a23981093b1bbe33e8195966bde22ade9b81fd57",
+    "exit_status_file": "evidence/package_green.exit_status",
+    "exit_status_checksum": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  "canonical_support_green": {
+    "command": "cd code/ch09 && PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q -p no:cacheprovider",
+    "exit_status": 0,
+    "output_file": "evidence/canonical_support_green.txt",
+    "output_checksum": "9acd31e10db46689f41e483bd47d34e3542fb4ceaa9230e52769742c670ddc3f",
+    "exit_status_file": "evidence/canonical_support_green.exit_status",
+    "exit_status_checksum": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "provenance_role": "historical_origin_only_not_replayed"
+  },
+  "actual_setup_correction": {
+    "description": "The first broader attempt omitted the guard self-test fixture from disposable space. The failure was preserved, the byte-identical fixture was staged, and the unchanged broader command was rerun.",
+    "exit_status": 1,
+    "output_file": "evidence/broader_green_setup_failure.txt",
+    "output_checksum": "d446fd6bf4ca015f3e9a29905107c989e63f75adca4b0e7ec5c6d80b793b10d1",
+    "exit_status_file": "evidence/broader_green_setup_failure.exit_status",
+    "exit_status_checksum": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+  },
+  "package_checksums": {
+    "AGENTS.md": "316541b5b3009b21106396fa7f246f3e550c4de51a693e82e70d98c42bd6f76c",
+    "README.md": "2087002afcd1ff3afa1d883dbbb4a30e1425235ca8c4714072395ff019e16794",
+    "alerts.py": "d7096a272019fc42db230bf06b79b5c022242109b642be82b9f9e6e741c6a70d",
+    "http_client.py": "279eba11208fb7438f8288e9ab38fa904dc063ba07241548c624f933a45f8f5e",
+    "mcp_policy.py": "9c2443bfa59835b55771595481171d39d22d498552d58f7c5d071053dea1ef90",
+    "parity.md": "deca13622372708fe86cf3917a1ba5e72244a89fee2936c27d4aded1347c4307",
+    "pytest.ini": "3f26eba9681170263569d0b92ddd42c8f0b8024a4bef383d3c125ef320b33261",
+    "requirements.txt": "8004a972c3d5c274d8c808e8d8afe03b9aca8af8eebf3df4298f114d8008b754",
+    "retrieval.py": "d032b8a4823c25cb3d3b0036c79408891906027367fdb045a5b86e4714f0e741",
+    "test_alerts.py": "4acd07bf1cd6a885caa7610600bffed364072bcaed179fe57772eae44bc13291",
+    "test_house_rules.py": "b99f48d626cacf83199fedc9cb0188ce2564fa6c365511a51cb762c8691ae75a",
+    "test_http_client.py": "7f5faaa061888fe91ecbcdd5ffbedbb227805680036ba7c99461ddd9763037d3",
+    "test_mcp_policy.py": "1e0f224362313e93405c6ed42bfb4f322b3776b1dac7548a7bc57f341e68488d",
+    "test_package_parity.py": "bc0eccb0d4f3d87fc88ee7626f46f5ceeee5e468c75e451c9e8817136d021f05",
+    "test_retrieval.py": "23d364217b800cd2117ded7738bcc5320e06df6ccf4ddd5a02929200a4b9681c"
+  },
+  "canonical_support_checksums": {
+    "before": {
+      "code/ch09/alerts.py": "d7096a272019fc42db230bf06b79b5c022242109b642be82b9f9e6e741c6a70d",
+      "code/ch09/http_client.py": "cba93e87a679816972d8bc091e3d8a0fae75b43afa835ada82036b45fa1f4541",
+      "code/ch09/test_alerts.py": "4acd07bf1cd6a885caa7610600bffed364072bcaed179fe57772eae44bc13291",
+      "code/ch09/test_house_rules.py": "60f9e05fb81300121e2fa112d8155e52f020e559aabdc055549d7876d8cd74d8",
+      "code/ch09/test_http_client.py": "7f5faaa061888fe91ecbcdd5ffbedbb227805680036ba7c99461ddd9763037d3",
+      "code/ch09/fixtures/direct_requests/alerts.py": "ad35f4f08f1b7d18b198d48a491dc0160a917233534bddabac05564cb0d5cd8e"
+    },
+    "after": {
+      "code/ch09/alerts.py": "d7096a272019fc42db230bf06b79b5c022242109b642be82b9f9e6e741c6a70d",
+      "code/ch09/http_client.py": "cba93e87a679816972d8bc091e3d8a0fae75b43afa835ada82036b45fa1f4541",
+      "code/ch09/test_alerts.py": "4acd07bf1cd6a885caa7610600bffed364072bcaed179fe57772eae44bc13291",
+      "code/ch09/test_house_rules.py": "60f9e05fb81300121e2fa112d8155e52f020e559aabdc055549d7876d8cd74d8",
+      "code/ch09/test_http_client.py": "7f5faaa061888fe91ecbcdd5ffbedbb227805680036ba7c99461ddd9763037d3",
+      "code/ch09/fixtures/direct_requests/alerts.py": "ad35f4f08f1b7d18b198d48a491dc0160a917233534bddabac05564cb0d5cd8e"
+    }
+  },
+  "canonical_chapter_checksums": {
+    "before": "e17a304eacb5ea0938330afe838953b56d55e9453503a1ce39bc26a1fccbe2cc",
+    "after": "e17a304eacb5ea0938330afe838953b56d55e9453503a1ce39bc26a1fccbe2cc"
+  },
+  "human_contract": {
+    "inspection_stage": "reconstructed and explicitly labeled",
+    "completion_stage": "original retained direction, condensed without changing policy"
+  },
+  "approval_basis": "The standing author direction delegated the exact implementation choice and set the policy that outbound HTTP must use the required shared client seam with no exception. The agent selected the three-line interface substitution as the smallest reviewable diff in the surrounding style; no named menu option is attributed to the author.",
+  "transcript": "Condensed from tool logs. Command output, exit statuses, exact diff, checksums, and observable agent actions are retained.",
+  "publication_source": {
+    "file": "chapter-session.md",
+    "status": "current",
+    "authorial_inspection": "present_as_single_closing_paragraph"
+  },
+  "superseded_transcript": {
+    "location": "canonical chapters/ch09.md",
+    "agent": "GitHub Copilot CLI",
+    "status": "superseded_for_staged_rewrite",
+    "reason": "Its command surface, fixture path, timing, compact diff, and provenance do not match this independently replayed package.",
+    "canonical_file_modified": false
+  },
+  "policy_decision": {
+    "owner": "service_maintainers",
+    "selected_policy": "Route alert delivery through http_client.call with no direct-transport exception.",
+    "scope": "This bounded Chapter 9 alert slice only",
+    "status": "approved_for_slice"
+  },
+  "agent_action_record": {
+    "file": "evidence/agent-actions.md",
+    "checksum": "bfeea0da47500e1ea6fd76393622e5cef671c827cffa1289eb45f99ccd16c88b"
+  },
+  "runner": {
+    "file": "run_capture.py",
+    "checksum": "9477bad6f16cb686cd574aab8baefe5d3be03c771fcd13371e11ea4fae8dac18",
+    "record_mode": "--record refreshes package-local command evidence and its metadata checksums only",
+    "replay_mode": "default rebuilds in disposable .work space, compares stored artifacts, runs the package-local green suite, and never resolves repository-root paths"
+  },
+  "record_checksums": {
+    "README.md": "abd69dd7d6035dbefbf78ae7c686422fd42bf72528a43124cdabd46d505aabe7",
+    "session.md": "210f57071aaac1b52bfa4924e8c0359d52b5779414e69b65b7bd5c644f4f2ef7",
+    "chapter-session.md": "34c426ae07e732c162f02b58b2d40f84e1b1c20a6727c819945027228be5601e",
+    "parity.md": "ee550dc602f73017b1564dc665885b5ec56ab118a7ae5b83f7c9320b574f88b5",
+    "patches/README.md": "2c5da7a1ef33c625d28dae0a991756e175baa741487d3d3c609eeee689b771ea"
+  },
+  "production_repair_applied": true,
+  "after_implementation_created": true,
+  "canonical_files_modified": false,
+  "review_state": {
+    "stage": "complete_independently_reviewed",
+    "previous_review": {
+      "status": "completed",
+      "verdict": "Fail",
+      "reviewer_role": "Independent canonical capture reviewer",
+      "reviewer_tool": "Claude Code 2.1.210",
+      "review_date": "2026-07-15",
+      "blocking_findings": [
+        "The then-active mapping targeted stale historical support.",
+        "The focused test rejected module-qualified shared-client use.",
+        "Printed transcript condensation was not mapped in parity.md."
+      ],
+      "repair_disposition": [
+        "The shared ledger now targets this package and remains Pending; it is not a package replay input.",
+        "The focused harness now observes http_client.call before module import and includes a module-qualified positive case.",
+        "parity.md now authorizes and maps the printed red excerpt and transcript formatting."
+      ]
+    },
+    "active_review": {
+      "status": "completed",
+      "verdict": "Pass",
+      "reviewer_role": "Independent canonical capture reviewer",
+      "reviewer_tool": "Claude Code 2.1.210",
+      "reviewer_model": "gpt-5.6-sol[1m]",
+      "review_date": "2026-07-15",
+      "mode": "Clean disposable copy with independent replay, red, patch, green, checksum, publication, and visual checks",
+      "artifact": "evidence/independent-review.md",
+      "artifact_checksum": "c6424ca499c8f7446fbe405e553810b9ae1728203c5e0f1d4429d227fd21c6b8",
+      "blocking_findings": [],
+      "non_blocking_note_resolution": "parity.md now says six titles while preserving all six exact title strings."
+    }
+  },
+  "evidence_normalization": "Stored combined stdout and stderr are raw. Pytest color, bytecode output, and cache files were disabled. Replay normalizes only elapsed time during comparison.",
+  "status": "complete_smallest_reviewable_diff",
+  "focused_behavior": {
+    "test": "test_send_alert_routes_through_house_client",
+    "file": "tests/test_alerts.py",
+    "proves": "send_alert calls the approved seam with the exact POST method, alert URL, and JSON payload",
+    "red_reason": "the before feature returns success through a direct transport while the shared call observer records no request",
+    "accepted_import_shapes": [
+      "from http_client import call",
+      "import http_client; http_client.call(...)"
+    ],
+    "positive_shape_test": "test_module_qualified_shared_client_shape_is_accepted"
+  }
+}

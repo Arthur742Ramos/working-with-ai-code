@@ -1,51 +1,74 @@
-# Chapter 2 — Code Listings
+# Chapter 2 final support package
 
-Contracts that produce checkable work: a PR description generator built to
-a compact contract, validated against a JSON Schema, exercised with a
-deterministic offline fixture, and finished with a bounded conversational
-retry after a validation failure.
+This internal package contains the finished offline PR-description generator and the verified retry-wiring capture. The top-level files are the green reader-facing implementation. They run without a network, credentials, a Git repository, or another chapter's files.
 
-- **`listing_2_1_contract_template.txt`** — Listing 2.1: A compact contract for checkable work
-- **`listing_2_2_local_fixture.py`** — Listing 2.2: A fixed diff and deterministic local response
-- **`listing_2_3_schema.py`** — Listing 2.3: JSON Schema for a PR description
-- **`listing_2_4_generate_and_validate.py`** — Listing 2.4: Generate, parse, and validate the result
-- **`listing_2_5_github_formatting.py`** — Listing 2.5: GitHub formatting and CLI entry point
-- **`listing_2_6_retry.py`** — Listing 2.6: Conversational retry after validation failure
-- **`listing_2_7_anthropic_adapter.py`** — Listing 2.7: Optional live-provider adapter
-- **`PROMPTS.md`** — Prompt blocks from the current manuscript draft
+## Files
 
-Listings 2.2–2.6 build one tool incrementally, so they mirror the printed
-listings rather than each standing alone: Listing 2.4 imports `FIXED_DIFF`
-and `chat` from Listing 2.2 and `SCHEMA` from Listing 2.3, and Listings 2.5
-and 2.6 continue that same `pr_generator.py` module, reusing `build_prompt`,
-`SYSTEM_PROMPT`, `generate_pr_description`, and `get_git_diff`.
+- `local_fixture.py` supplies the fixed diff and deterministic responses used by the default path.
+- `schema.py` defines the output contract.
+- `pr_generator.py` parses, validates with `jsonschema`, retries, renders, and saves the generated description.
+- `anthropic_adapter.py` is an optional live-provider boundary that uses Anthropic's official Python SDK and rejects incomplete stop reasons before text extraction.
+- `test_pr_generator.py` checks the offline fixture, standards-compliant schema failures, retry bounds, formatting, command-line behavior, and provider stop reasons.
+- `pytest.ini` limits ordinary pytest collection to the green top-level suite and excludes `captures/`.
+- `captures/pr_generator_retry_wiring/` preserves the historical red state, exact one-line repair, evidence, and replay runner.
 
-The command-line entry point in Listing 2.5 deliberately calls the
-single-attempt `generate_pr_description(diff)`, so the deterministic malformed
-first response produces a visible baseline failure (`Error: Invalid JSON`).
-The chapter's captured session repairs that with a one-line change to
-`generate_with_retry(diff)`, after which the second response validates and the
-command prints the description and writes `pr_description.json`.
+## Install dependencies
 
-The deterministic `chat` in Listing 2.2 lets the example run offline with no
-model provider; only `jsonschema` is required (see `requirements.txt`).
-
-Listing 2.7 is optional and is not part of the offline path. It replaces the
-deterministic `chat` from Listing 2.2 with Anthropic's official Python SDK and
-rejects any stop reason other than `end_turn` before reading text, so a refusal
-or a truncated reply cannot consume a JSON-validation retry. It needs a
-separate install and credentials from a supported SDK credential source:
+Install the package dependencies from the checked-in manifest:
 
 ```bash
-pip install anthropic
-export ANTHROPIC_MODEL="your-supported-model-id"
+python3 -m pip install -r requirements.txt
 ```
 
-Choose a model ID supported by your provider account; there is no hard-coded
-model default. An unset or empty `ANTHROPIC_MODEL` raises
-`RuntimeError: Set ANTHROPIC_MODEL to a supported model` before creating the
-client or sending a request. Configure authentication separately through a
-supported SDK credential source (for example, `ANTHROPIC_API_KEY` supplied
-through your environment or secret store); never commit credentials.
+The offline path requires `jsonschema`; `anthropic` supports the optional live-provider adapter.
 
-See the [main README](../README.md) for setup instructions.
+## Run the offline generator
+
+After installing `jsonschema`, run from any directory:
+
+```bash
+python3 /path/to/ch02/pr_generator.py
+```
+
+The command prints the formatted description and writes `pr_description.json` in the current working directory. Its first deterministic response is malformed. The bounded retry carries the parser feedback, and the second response succeeds.
+
+## Run the top-level tests
+
+From this directory, run the top-level suite:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 python3 test_pr_generator.py
+```
+
+If pytest is installed, this command runs the same intended top-level suite without collecting capture internals:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q
+```
+
+## Replay the captured repair
+
+```bash
+python3 captures/pr_generator_retry_wiring/run_capture.py
+```
+
+Replay verifies the historical before state, genuine red output, stored one-line patch, focused and broader green evidence, and package-local checksums. It also copies this package into disposable isolated space and runs the promoted top-level tests there. Default replay never rewrites historical evidence. The final-polish recertification is a separate current-package record; it does not revise the captured retry session.
+
+## Optional live provider
+
+The offline path is the default and has no provider prerequisite. To use the optional adapter, install the official SDK:
+
+```bash
+python3 -m pip install anthropic
+```
+
+Then change only the import boundary in `pr_generator.py`: import `FIXED_DIFF` from `local_fixture` and import `chat` from `anthropic_adapter`. Configure credentials through a credential source supported by the SDK, and set `ANTHROPIC_MODEL` to a currently supported model identifier. The parser, local schema validator, renderer, and retry policy stay unchanged.
+
+## Remaining limitations
+
+- Schema validation checks structure, not whether generated claims are true.
+- Automatic retry covers only JSON parsing and schema-validation failures, with three attempts total.
+- The offline fixture proves the package wiring, not live-model compliance or provider behavior.
+- The SDK may retry connection errors and HTTP `408`, `409`, `429`, and `5xx` responses before an error reaches the adapter.
+- The adapter accepts only `end_turn`; refusal, truncation, authentication, exhausted transport retries, and no-text failures stay outside the JSON-validation retry loop.
+- The retry classes and retry budget remain human-owned product and cost decisions.

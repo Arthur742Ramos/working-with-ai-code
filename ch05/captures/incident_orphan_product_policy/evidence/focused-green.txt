@@ -1,0 +1,3 @@
+DETERMINISTIC SEED: order=7 code=90233 qty=2
+PASS: test_seeded_orphan_uses_explicit_missing_product_policy
+observed: MissingProductError: order 7 references missing product 90233

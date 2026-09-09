@@ -1,0 +1,11 @@
+--- a/workflow_metrics.py
++++ b/workflow_metrics.py
+@@ -23,4 +23,7 @@
+         attempt.quality_score >= minimum_quality
+         for attempt in successful_attempts
+     )
+-    return passing_count / len(successful_attempts)
++    return passing_count / sum(
++        attempt.status in {"succeeded", "failed"}
++        for attempt in attempts
++    )
