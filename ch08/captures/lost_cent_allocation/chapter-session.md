@@ -46,7 +46,7 @@ The inspection contract is condensed from the retained author direction and the 
 >
 > Exit status: `1`.
 >
-> All three mathematical remainders are two-thirds. Binary division stores the third residue slightly larger, so the stable sort never sees an equal key and assigns the second leftover cent to index 2.
+> All three mathematical remainders are two-thirds. Binary division stores the third residue slightly larger, so the stable sort never sees an equal key and assigns the first leftover cent to index 2.
 >
 > Plan: convert each stated numeric weight to an exact rational with `Fraction(str(weight))`, preserve the existing named largest-remainder stages and stable sort, and keep the exact-tie case beside the earlier conservation and shortcut-discriminating cases.
 
