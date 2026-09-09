@@ -61,3 +61,7 @@ The prior discriminating cases remain beside the new one. The exact-tie case rej
 The focused result pins stable input order only after exact rational comparison. The tests enforce that selected capture policy for the covered values. They do not make decimal-string interpretation or stable input order universally correct. Domain owners retain those decisions.
 
 The final package is self-contained. Replay resolves only package-local source, tests, configuration, capture fixtures, patch, evidence, and records. Historical repository checksums remain metadata provenance and are never resolved as executable dependencies.
+
+## September 9 final explanation check
+
+The condensed publication narration now says that index 2 receives the first leftover cent. Recomputing the printed floating-point case gives remainder order `[2, 0, 1]`, so index 2 is visited before index 0. This corrects the allocation order in the explanation only; the resulting `[2, 1, 7]`, expected `[2, 2, 6]`, raw session outputs, fixtures, patch, and implementation are unchanged.
