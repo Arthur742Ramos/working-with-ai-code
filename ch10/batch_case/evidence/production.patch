@@ -145,10 +145,7 @@
 +        return self._repository.save_many(updated)
 --- a/reminders/repository.py
 +++ b/reminders/repository.py
-@@ -94,22 +94,43 @@
-             return None
-         return _row_to_reminder(row)
- 
+@@ -96,0 +97,18 @@
 +    def _update(self, reminder: Reminder) -> None:
 +        cursor = self._connection.execute(
 +            """
@@ -167,8 +164,7 @@
 +        if cursor.rowcount != 1:
 +            raise ReminderWriteError(reminder.id)
 +
-     def save(self, reminder: Reminder) -> Reminder:
-         with self._connection:
+@@ -99,13 +117,15 @@
 -            cursor = self._connection.execute(
 -                """
 -                UPDATE reminders
@@ -197,7 +193,7 @@
 +            raise ReminderWriteError(
 +                "batch requires an idle transaction-mode "
 +                "connection"
-             )
+@@ -113,3 +133,4 @@
 -            if cursor.rowcount != 1:
 -                raise ReminderWriteError(reminder.id)
 -        return reminder

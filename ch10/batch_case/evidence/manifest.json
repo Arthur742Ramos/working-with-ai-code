@@ -34,7 +34,7 @@
     "evidence/before/reminders/handler.py": "f4ec0a6a68fd6d8d7ad314aa181ee3517461039cd4b2c2d8cb7a66c3497f3e7b",
     "evidence/before/reminders/repository.py": "ff4aa7e8a6aac8c4d63ff1cf5f50b10e64552829a5f24ff49e1d82d57d254294",
     "evidence/before/reminders/service.py": "fb3a5151267c09e92399317e28f8a60aa43630ee46b7253a4543830597c222e5",
-    "evidence/production.patch": "2dfb5c4ce608b7630eca8fa3248f97e390de06fdd5ec1810d940ad21f3b6db51",
+    "evidence/production.patch": "0cee6eecf77b0550339ea9a17fe5421222665126f7fb04b985081e7d1c8b4f5c",
     "probe_atomicity.py": "aacab5993714c86bae3047861b1c41e9168b8da1ea5113f58882a45df44a7871",
     "pytest.ini": "137d79f55a8792b5fb4e3ebd6ab7c6467f3b26f41972caff799a8ef0d7542d29",
     "reminders/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -56,5 +56,5 @@
     "python": "3.14.7",
     "sqlite": "3.53.4"
   },
-  "note": "Final patch includes line wrapping for print after the first green run; replay verifies the final equivalent state."
+  "note": "Final patch includes line wrapping for print after the first green run; replay verifies the final equivalent state. The patch uses zero context lines so literal diff prefixes do not trigger trailing-space checks."
 }
