@@ -1,7 +1,0 @@
-{
-  "service": {
-    "host": "example.com",
-    "port": true,
-    "ratio": 1
-  }
-}

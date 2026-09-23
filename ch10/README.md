@@ -66,8 +66,23 @@ simultaneous state changes.
 - Listing 10.3:
   [`tests/test_sqlite_repository.py`](tests/test_sqlite_repository.py) crosses
   the real SQLite row boundary.
-- Listing 10.4: [`manual_check.py`](manual_check.py) produces the deterministic
-  response-and-storage output printed in the chapter.
+- Listing 10.4: [`teaching/row_probe.py`](teaching/row_probe.py) reproduces the
+  unsupported `sqlite3.Row.get` call on a real row.
+- Listing 10.5: [`batch_case/probe_atomicity.py`](batch_case/probe_atomicity.py)
+  installs a trigger that rejects the second update.
+- Listings 10.6 and 10.7:
+  [`batch_case/reminders/batch_service.py`](batch_case/reminders/batch_service.py)
+  validate the whole batch and prepare its updates before one save.
+- Listing 10.8:
+  [`batch_case/reminders/repository.py`](batch_case/reminders/repository.py)
+  owns the batch transaction and rollback.
+- Listing 10.9:
+  [`batch_case/reminders/batch_handler.py`](batch_case/reminders/batch_handler.py)
+  translates batch requests and outcomes.
+- Listing 10.10: [`manual_check.py`](manual_check.py) compares local responses
+  with stored values.
+
+Run `python3 teaching/row_probe.py` for the standalone Listing 10.4 probe.
 
 ## Supporting files
 
@@ -88,8 +103,6 @@ simultaneous state changes.
   service, and real adapter.
 - [`tests/test_capture_controls.py`](tests/test_capture_controls.py) checks
   capture locality, cleanup, evidence semantics, adapter parity, and test staging.
-- [`manual_check.py`](manual_check.py) prints deterministic response and stored
-  values.
 
 ## Local evidence ledger
 
@@ -153,12 +166,8 @@ The teaching example does not solve a simultaneous snooze-versus-complete race.
 A production design needs an explicit concurrency policy, such as a version
 check or conditional update. That policy is outside this chapter's contract.
 
-[Return to the companion repository index](../README.md).
-
-## Revised printed example
-
-Run `python3 teaching/row_probe.py` for the complete SQLite row probe shown in the revised manuscript. The application modules and behavior tests match the current book support code. This public package retains its existing captured-session verifier; the internal authoring package also checks a private manuscript snapshot, which is not distributed here.
-
 ## Batch extension
 
 The independent [batch snooze case](batch_case/README.md) extends the handler, service, and SQLite adapter. Its deliberate second-write failure rejected composing per-item commits; the revised batch operation rolls back all updates. Run its 85-test suite and hash-checked replay from `batch_case/`. The original single-reminder implementation and captured evidence remain unchanged.
+
+[Return to the companion repository index](../README.md).
