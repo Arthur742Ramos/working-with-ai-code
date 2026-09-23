@@ -49,16 +49,14 @@ python3 -m pytest -qq -p no:cacheprovider
 `captures/`. The expected result is eight passing tests: six behavior tests
 plus one executable-command test for each wrapper.
 
-The authoring regression suite additionally checks printed intermediate and
-final listing parity, guard retention, empty and non-empty behavior, offset
-normalization, deduplication, and handle contexts. Run it from the book root:
+The initial happy-path check is separate from the eight-test final suite. Run
+it explicitly from this directory:
 
 ```bash
-python3 -m unittest discover -s code/tools \
-    -p test_chapter_editorial_regressions.py -v
+python3 -m pytest -q -p no:cacheprovider test_baseline.py
 ```
 
-That authoring check does not alter the historical eight-test capture suite.
+It does not alter the historical capture suite.
 
 The branch files are intentionally outside pytest discovery. Compile them with:
 

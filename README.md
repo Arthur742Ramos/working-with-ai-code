@@ -1,9 +1,13 @@
-# Working with AI: current chapter packages
+# Working with AI: companion code
 
-This checkout provides the book's twelve runnable chapter packages and an
-optional Appendix A parser trial. Each chapter README names its maintained
-commands, captured-session replay, dependencies, and limits.
-[PRINTED_EXAMPLES.md](PRINTED_EXAMPLES.md) maps the revised teaching additions.
+This public companion contains twelve runnable chapter packages and an
+Appendix A parser trial. Each chapter guide covers its dependencies, checks,
+captured-session replay, and limits. [PRINTED_EXAMPLES.md](PRINTED_EXAMPLES.md)
+maps the current teaching additions to their source.
+
+This repository was maintained with help from AI tools: Claude Code, GitHub
+Copilot, and Codex. The human author reviewed the published work and remains
+responsible for its content and maintenance.
 
 | Chapter | Package guide |
 |---|---|
@@ -21,13 +25,27 @@ commands, captured-session replay, dependencies, and limits.
 | Chapter 12: Measuring and governing AI-assisted work | [README](ch12/README.md) |
 | Appendix A: Comparing agentic tools | [README](appA/README.md) |
 
-Run each chapter's checks from its own directory. The packages have different dependencies and independent test-module names; use their stated commands rather than collecting every chapter in one pytest invocation. Each captured session has a dedicated replay command that exercises its intentional red state before verifying the repair.
+## Run the checks
 
-Chapter 10 retains its established public capture verifier while its application code and new printed example match the book. The private manuscript snapshot and its authoring-only verifier are not part of this public distribution.
+Use Python 3.11 or newer and install the chapter's listed requirements in an
+isolated environment when needed. Run checks from the chapter directory; for
+example, from the repository root:
 
-The Appendix A starting fixture is intentionally red. Run
-`python3 appA/verify_trial.py` to check its expected failure and the reference
-repair in temporary directories; do not collect `appA/test_parser.py` in a
-green chapter suite.
+```sh
+(cd ch02 && python3 -m pytest -q test_pr_generator.py)
+(cd ch10 && python3 -m pytest -q tests)
+(cd ch10/batch_case && python3 -m pytest -q tests)
+(cd ch12 && python3 -m unittest -v test_workflow_metrics)
+python3 appA/verify_trial.py
+```
 
-The previous listing-oriented companion is preserved under [archive/pre-ted-rebase](archive/pre-ted-rebase/README.md). It is historical material; current verification uses the top-level ch01 through ch12 packages. No live model or production service is needed by the deterministic examples. Optional provider adapters require separate setup described in their chapter guides.
+Follow the chapter guides for the other green suites and the non-recording
+capture replays. Chapters 1 and 5 use explicit test scripts; do not recursively
+collect every chapter or a capture's intentionally red before-state with one
+pytest command. Appendix A's starting fixture is also intentionally red: its
+verifier checks the expected failure and a temporary reference repair without
+modifying the printed fixture.
+
+The deterministic examples need no live model or production service. Optional
+provider adapters have separate setup instructions in their chapter guides.
+The code is licensed under the [MIT License](LICENSE).

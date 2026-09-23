@@ -1,8 +1,0 @@
-{
-  "service": {
-    "name": "demo-app",
-    "port": 8080,
-    "enabled": true,
-    "ratio": 0.5
-  }
-}
