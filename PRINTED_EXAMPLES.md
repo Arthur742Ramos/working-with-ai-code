@@ -13,6 +13,7 @@ These additions accompany the September 2026 Ted-baseline revision. The captured
 | 9 | Complete Listings 9.4 and 9.5 | `ch09/teaching/retrieval_demo.py`; two sources give recall 1.0, one source fails the evidence requirement. `ch09/retrieval.py` and the sealed package parity record retain the earlier store/model interface as a tested extension, not the current print listing. |
 | 10 | New Listing 10.4 | `ch10/teaching/row_probe.py`; reproduces SQLite Row keyed access and the missing `.get` method. The captured broader output is now Listing 10.5. |
 | 11 | Listing 11.1 with its explicit setup | `ch11/teaching/policy_probe.py`; accepted 1 and rejected 2/Boolean checked. The sealed README describes the earlier complete capture package. |
+| Appendix A | Complete parser and test listings | `appA/parser.py` and `appA/test_parser.py` are the printed starting fixture. `appA/verify_trial.py` checks its expected one-test failure and four unchanged tests passing after a temporary reference repair. |
 
 Run each chapter's maintained commands from its README. For the additional standalone examples:
 
@@ -22,6 +23,7 @@ Run each chapter's maintained commands from its README. For the additional stand
 python3 ch09/teaching/retrieval_demo.py
 python3 ch10/teaching/row_probe.py
 python3 ch11/teaching/policy_probe.py
+python3 appA/verify_trial.py
 ```
 
 The Chapter 5 hollow-assertion example intentionally fails one test:
@@ -31,3 +33,8 @@ python3 -m pytest -q teaching/ch05/test_order_assertions.py
 ```
 
 Expected: one failed and one passed test. The failure demonstrates the behavior that the weak assertions accepted. The book's separate authoring checks assemble and execute its printed listings, including the initial and final Chapter 3 suites and the Chapter 6 integer-policy transition. No live model or external service is needed by these supplements.
+
+The Appendix A starting fixture also fails intentionally: direct
+`python3 -m unittest -v test_parser` from `appA/` reports one failure in four
+tests. Use its verifier above as the green check; it never modifies the printed
+fixture.
