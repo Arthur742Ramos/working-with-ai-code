@@ -220,9 +220,12 @@ def is_runtime_path(path):
 
 def maintained_package_files():
     return sorted(
-        path
-        for path in PACKAGE_ROOT.rglob("*")
-        if path.is_file() and not is_runtime_path(path)
+        (
+            path
+            for path in PACKAGE_ROOT.rglob("*")
+            if path.is_file() and not is_runtime_path(path)
+        ),
+        key=lambda path: path.relative_to(PACKAGE_ROOT).as_posix(),
     )
 
 
