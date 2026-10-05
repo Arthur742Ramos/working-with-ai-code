@@ -6,14 +6,26 @@ The importer was already repaired when the source used for the original capture 
 
 ## Record and replay
 
-Run from the Chapter 4 final package directory:
+First follow the isolated pytest setup in the [Chapter 4 guide](../../README.md#set-up-an-isolated-test-environment).
+Run routine replay from `ch04/` (the final package directory):
 
 ```bash
-python3 captures/idempotent_409_replay/run_capture.py --record
 python3 captures/idempotent_409_replay/run_capture.py
 ```
 
+From this capture directory, the equivalent command is `python3 run_capture.py`.
+Use `python3 run_capture.py --record` only when intentionally replacing
+evidence after reviewing the fixture, tests, patch, and environment. Recording
+overwrites raw and normalized historical output; it is not a remedy for
+unexpected replay drift.
+
 Routine replay is non-recording. It verifies the active completed-review stage, `Pass` verdict, attributable review artifact and checksum, runner, before fixture, focused test, patch, documentation, stored evidence, and package-support checksums. It copies the before fixture into `.work/`, reproduces the focused red result, applies the stored patch, regenerates and byte-compares the unified diff, runs focused and broader capture checks, runs the package-local importer suite, compares normalized output and exit statuses, and removes `.work/` on success or failure.
+
+Successful replay prints `RED EXIT STATUS: 1` and a `RuntimeError` from the
+before-state, followed by `PATCH VERIFIED`, three green exit statuses of 0,
+and `PARITY VERIFIED`; its own exit status is 0. The before-state failure is
+the discriminator that the patch repairs. A nonzero runner exit is a replay
+failure, even if the expected red traceback appears in its diagnostic.
 
 ## Dependencies and environment
 
@@ -21,6 +33,12 @@ Routine replay is non-recording. It verifies the active completed-review stage, 
 - The standard `patch` and `diff` command-line tools apply and regenerate the stored unified diff.
 - The importer otherwise uses only the Python standard library.
 - No network access or API credential is required.
+
+The runner normalizes only hexadecimal function addresses and pytest elapsed
+times. It does not normalize traceback layout or path separators. Different
+Python/pytest versions and platforms can therefore fail exact output matching
+despite the same importer behavior. Preserve the retained evidence and inspect
+output drift separately from the expected red-to-green behavior.
 
 ## Selected implementation
 

@@ -28,6 +28,19 @@ python3 seed.py
 python3 server.py 8080
 ```
 
+Leave the server running and open
+[http://localhost:8080/orders/1/summary](http://localhost:8080/orders/1/summary)
+for the seeded valid order (HTTP 200). Open
+[http://localhost:8080/orders/7/summary](http://localhost:8080/orders/7/summary)
+to exercise the seeded orphan: it returns HTTP 422 with
+`{"error": "order 7 references missing product 90233"}` under the accepted
+fail-closed policy.
+
+The service exposes `/orders/{id}/summary`. Visiting
+`http://localhost:8080/` returns HTTP 404 with `{"error": "not found"}`
+because no root route is defined. This is the expected response at that URL.
+Stop the server with Ctrl+C when finished.
+
 ## Replay the captured session
 
 ```bash

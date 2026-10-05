@@ -17,13 +17,40 @@ option, not part of the Python source; it rejects blocks over 40 lines.
 - `captures/idempotent_409_replay/` preserves the immutable red before-state, exact patch, raw evidence, and a replay runner that checks this package's own importer suite.
 - `pytest.ini` limits routine top-level collection to the maintained package suites and certification checks. Capture internals run only through `run_capture.py`, where the red state is expected and verified.
 
+## Set up an isolated test environment
+
+Start in `ch04/` (the directory containing this README). The tests and capture
+runner require pytest. The retained capture was produced with Python 3.14.6
+and pytest 9.1.1; use that pair when reproducing its exact transcript.
+
+```bash
+python3 -m venv ../.venv-ch04
+source ../.venv-ch04/bin/activate
+python3 -m pip install pytest==9.1.1
+```
+
+Keep the environment beside `ch04/` so certification's disposable package
+copies do not copy the environment too.
+
+In PowerShell, create the environment with `py -m venv ..\.venv-ch04`, install with
+`..\.venv-ch04\Scripts\python.exe -m pip install pytest==9.1.1`, and use that
+interpreter in place of `python3` below. Activation is optional. Capture
+replay also requires the `patch` and `diff` command-line tools on `PATH`.
+For the bash command groups below, PowerShell users can set
+`$env:PYTHONDONTWRITEBYTECODE = '1'` once, then run each Python command without
+the bash environment prefix and `\` continuation.
+
+When finished, return to `ch04/`, deactivate the environment if activated,
+and remove it with `rm -rf ../.venv-ch04` (bash) or
+`Remove-Item -LiteralPath ..\.venv-ch04 -Recurse -Force` (PowerShell).
+
 ## Verify
 
 Run from this directory:
 
 ```bash
 PYTHONDONTWRITEBYTECODE=1 \
-python3 -m pytest -q -p no:cacheprovider .
+python3 -m pytest -q -p no:cacheprovider
 
 PYTHONDONTWRITEBYTECODE=1 \
 python3 -m migration_case.seed
@@ -34,7 +61,29 @@ python3 -m migration_case.migrate --dry-run
 python3 captures/idempotent_409_replay/run_capture.py
 ```
 
-The top-level suite should report sixteen passing tests: seven importer checks, five migration checks, three cleanup-state checks, and one review-state check. The seed command creates a database with three legacy rows and empty target tables. The migration dry run executes all transformations, reports three upserts and nine audit rows in plain text, then rolls back. Its test rejects Markdown backticks and checks both byte parity and the retained evidence checksum. Replay reproduces the focused red state, applies the one-line patch in disposable space, and verifies focused, broader, and package-support green evidence.
+The default top-level suite collects sixteen tests: seven importer checks,
+five migration checks, three cleanup-state checks, and one review-state check.
+All sixteen are expected to pass, including the successful-replay cleanup
+check. An explicit `.` overrides `pytest.ini`'s `testpaths` and also collects
+the separate `test_skeleton.py`, for seventeen tests. Run that listing's
+single test explicitly when needed.
+
+The seed command creates a database with three legacy rows and empty target tables. The migration dry run executes all transformations, reports three upserts and nine audit rows in plain text, then rolls back. Its test rejects Markdown backticks and checks both byte parity and the retained evidence checksum.
+
+Capture replay separately reproduces the deliberately failing before-state.
+Successful replay prints `RED EXIT STATUS: 1` and the `RuntimeError` traceback,
+then verifies the one-line patch, `FOCUSED GREEN EXIT STATUS: 0`,
+`BROADER GREEN EXIT STATUS: 0`, `PACKAGE SUPPORT GREEN EXIT STATUS: 0`, and
+`PARITY VERIFIED`; the runner itself exits 0. That red check does not mean
+the top-level suite should have an expected failure.
+
+Replay compares retained pytest output exactly after masking only function
+addresses and elapsed times. A different Python/pytest version or platform
+can change traceback formatting and cause output drift, which can also fail
+the successful-replay cleanup test. Treat a nonzero runner exit or a failed
+top-level test as a verification failure and inspect the diagnostic. See the
+[capture guide](captures/idempotent_409_replay/README.md) for the recorded
+environment; do not use `--record` to make a failing replay pass.
 
 ## Provenance and limits
 

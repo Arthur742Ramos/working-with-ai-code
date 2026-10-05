@@ -59,7 +59,7 @@
   },
   "normalization": "Normalized evidence masks only Python hexadecimal function addresses and pytest elapsed times. Raw combined output is retained unchanged.",
   "document_checksums": {
-    "README.md": "977a22207b6737cbab1ad872c71e9d274fb6abcf71c743b7d4eac01b3bc01d9d",
+    "README.md": "20fd8c94a693f4d75065de6812d3ffb18e56387b0236a262093b44ae9c887afe",
     "session.md": "9db904538cb22eb01e6ad635d656e455ad58e4db8b50b9719b9032f80158d505",
     "parity.md": "e6610b7d0898c4b9f4212fc19fe1856a55ec64395ee1e398c13888bf977dcbba"
   },

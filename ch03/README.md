@@ -24,6 +24,29 @@ reconstructed review: a missing top-level `events` key becomes a stable
 - `pytest.ini` keeps top-level pytest discovery out of `captures/`.
 - `captures/event_processor_missing_events/` preserves the immutable red before-state, exact patch, raw evidence, and replay runner.
 
+## Set up an isolated test environment
+
+Start in `ch03/` (the directory containing this README). The standalone
+wrappers use the standard library, but pytest is required by the final suite
+and by the capture runner's final-package checks. Install it into a disposable
+environment before running either suite or replay:
+
+```bash
+python3 -m venv ../.venv-ch03
+source ../.venv-ch03/bin/activate
+python3 -m pip install pytest
+```
+
+In PowerShell, create the environment with `py -m venv ..\.venv-ch03`, install with
+`..\.venv-ch03\Scripts\python.exe -m pip install pytest`, and use that interpreter
+in place of `python3` in the commands below. Activation is optional.
+For bash commands continued with `\`, put all arguments on one line in PowerShell.
+
+When finished, return to `ch03/`, deactivate the environment if activated,
+and remove it with `rm -rf ../.venv-ch03` (bash) or
+`Remove-Item -LiteralPath ..\.venv-ch03 -Recurse -Force` (PowerShell). Removing the
+environment also removes its optional branch dependencies.
+
 ## Run the printed command shapes
 
 Run from this directory:
@@ -75,7 +98,7 @@ Run from this directory:
 python3 captures/event_processor_missing_events/run_capture.py
 ```
 
-Replay rebuilds the disposable red and repaired states, compares them with the stored evidence, verifies the exact patch, runs the package-local top-level suite, and removes its working directory. Default replay does not rewrite evidence.
+Replay rebuilds the disposable red and repaired states, compares them with the stored evidence, verifies the exact patch, runs the package-local top-level suite, and removes its working directory in a `finally` block, including after a failed run. Default replay does not rewrite evidence.
 
 ## Dependencies
 
@@ -111,6 +134,13 @@ concurrent load.
 python3 -m pip install -r requirements-branches.txt
 python3 -m pytest -q -p no:cacheprovider branch_tests
 ```
+
+Run these optional checks from `ch03/` in the isolated environment above.
+To remove only the packages listed in the branch requirements while keeping
+the environment, run `python3 -m pip uninstall -r requirements-branches.txt`.
+This also uninstalls pytest; reinstall it before another final suite or replay.
+Transitive dependencies remain until removed separately or the environment is
+deleted.
 
 The tests remain separate from the retained event-processor capture and its
 historical test counts. The distinction between endpoint exceptions and direct

@@ -14,13 +14,16 @@ An explicit `{"events": []}` is an empty batch, not a missing collection. The ca
 
 ## Record and replay
 
-From the final package root, replay without rewriting evidence:
+First follow the isolated pytest setup in the [Chapter 3 guide](../../README.md#set-up-an-isolated-test-environment).
+The runner uses the same interpreter for its final-package pytest checks.
+
+From `ch03/` (the final package root), replay without rewriting evidence:
 
 ```bash
 python3 captures/event_processor_missing_events/run_capture.py
 ```
 
-From this capture directory, the equivalent command is:
+From `ch03/captures/event_processor_missing_events/`, the equivalent command is:
 
 ```bash
 python3 run_capture.py
@@ -38,7 +41,12 @@ Default replay is read-only. Use `--record` only after intentionally reviewing a
 
 ## Direct historical evidence commands
 
-The commands below are capture-internal. The repaired target exists only while `run_capture.py` is running:
+The commands below run from this capture directory and show the historical
+command shapes. The `before/` fixture remains available. The repaired `.work/`
+target exists only while `run_capture.py` is running: its `finally` block
+deletes `.work/` after success or failure, including a missing-pytest failure.
+Running the `.work/` commands after the runner exits therefore raises
+`FileNotFoundError`. Use replay to exercise the repaired historical state.
 
 ```bash
 python3 tests/focused_test.py before/event_processor.py
