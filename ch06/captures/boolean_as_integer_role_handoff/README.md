@@ -6,13 +6,23 @@ The session originated from the earlier maintained role-relay validator at the c
 
 ## Replay
 
-Run from the final Chapter 6 package:
+Follow the isolated pytest setup and cleanup in the
+[Chapter 6 guide](../../README.md#set-up-an-isolated-test-environment).
+Run from the final Chapter 6 package (`ch06/`):
 
 ```bash
 python3 captures/boolean_as_integer_role_handoff/run_capture.py
 ```
 
-Default replay removes stale `.work/` state before preflight, checksum-verifies the before fixture, capture test, stored patch, evidence, every top-level executable support file, and the active independent-review receipt. It requires the resolved evidence root to remain under the resolved capture directory. It rebuilds disposable red and repaired states, runs the focused and broader checks with pytest caching disabled, compares the results with stored artifacts, and removes `.work/` on success or failure. It does not rewrite evidence or leave `.pytest_cache/` at the package root.
+Default replay removes stale `.work/` state before preflight. It checksum-verifies
+the before fixture, capture test, stored patch, evidence, every top-level
+executable support file, and the active independent-review receipt. The resolved
+evidence root must remain under the resolved capture directory.
+
+The runner rebuilds disposable red and repaired states, runs the focused and
+broader checks with pytest caching disabled, and compares the results with stored
+artifacts. It removes `.work/` on success or failure, leaves the evidence unchanged,
+and leaves no `.pytest_cache/` at the package root.
 
 The `--record` flag intentionally refreshes reviewed patch and evidence files. Do not use it as a routine test option.
 

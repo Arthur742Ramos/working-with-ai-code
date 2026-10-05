@@ -1,6 +1,9 @@
 # Chapter 6 role-relay validator support
 
-This internal package keeps the complete green validator, the independent tester artifact, the broader suite, the thin command-line runner, and the verified Boolean-as-integer capture together. It is self-contained: copy this directory anywhere with Python and pytest available, then run the commands below from the copied directory.
+This internal package contains the complete green validator, independent tester
+artifact, broader suite, thin command-line runner, and verified Boolean-as-integer
+capture. Copy this directory anywhere with Python and pytest available, then run
+the commands below from the copied directory.
 
 ## Files
 
@@ -21,6 +24,31 @@ This internal package keeps the complete green validator, the independent tester
 | Implementer | `patches/strict-int.patch`, focused green, broader green, and the action record in `session.md` | The same Claude Code session changes one predicate under the selected policy and records the focused plus neighboring checks |
 | Verifier | `metadata.json` under `integration_review_receipt.verdict` and the review gate in `parity.md` | A later maintained integration-review receipt accepts the evidence, scope, minimality, and policy boundary; it is not a separate verifier transcript |
 
+## Set up an isolated test environment
+
+Start in `ch06/`, the directory containing this README. The standalone CLI and
+focused check use the standard library. The suite and broader capture check
+require pytest. The retained capture used Python 3.14.6 and pytest 9.1.1;
+use that pair for replay.
+
+```bash
+python3 -m venv ../.venv-ch06
+source ../.venv-ch06/bin/activate
+python3 -m pip install pytest==9.1.1
+```
+
+Keep the environment beside `ch06/` so it stays outside the copied package.
+In PowerShell, create it with `py -m venv ..\.venv-ch06` and install with
+`..\.venv-ch06\Scripts\python.exe -m pip install pytest==9.1.1`. Use that
+interpreter in place of `python3` below; activation is optional.
+
+When finished with the suite and replay, you can remove only pytest with
+`python3 -m pip uninstall pytest` while keeping the environment. To remove the
+whole environment, return to `ch06/`, deactivate it if activated, and run
+`rm -rf ../.venv-ch06` (bash) or
+`Remove-Item -LiteralPath ..\.venv-ch06 -Recurse -Force` (PowerShell).
+Reinstall pytest before running the suite or replay again.
+
 ## Verify the green package
 
 Run from this directory:
@@ -40,7 +68,12 @@ The valid command should print `ok` and exit `0`. The invalid command should pri
 python3 captures/boolean_as_integer_role_handoff/run_capture.py
 ```
 
-Replay removes stale work before preflight, creates disposable red and repaired states inside the capture, compares them with the stored evidence, verifies every top-level executable artifact and the independent-review receipt by checksum, and removes its working directory on success or failure. It does not import repository-root code, inspect another chapter, rewrite evidence, or replace the top-level green implementation.
+Replay removes stale work before preflight and creates disposable red and repaired
+states inside the capture. It compares those states with the stored evidence and
+verifies every top-level executable artifact and the independent-review receipt
+by checksum. The working directory is removed after success or failure. Replay
+does not import repository-root code, inspect another chapter, rewrite evidence,
+or replace the top-level green implementation.
 
 ## Chapter listing map
 
