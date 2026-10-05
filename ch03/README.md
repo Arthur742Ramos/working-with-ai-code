@@ -1,14 +1,14 @@
 # Chapter 3 support package
 
-This internal package keeps the full event-processor review example, the two
-rate-limiter branch artifacts, executable versions of the printed focused and
-broader commands, and one verified missing-events capture together.
+This internal package contains the full event-processor review example and two
+rate-limiter branch artifacts. It also includes executable versions of the
+printed focused and broader commands, with one verified missing-events capture.
 
 The event-processor review is a reconstruction from the pre-reduction
 manuscript and preserved source artifacts. The two rate-limiter branches are
-illustrative synthesis. The nested capture proves one repair inside the
-reconstructed review: a missing top-level `events` key becomes a stable
-`ValueError` without conflating it with an explicit empty list.
+illustrative synthesis. The nested capture verifies one repair in that review:
+a missing top-level `events` key produces a stable `ValueError`, while an
+explicit empty list remains an empty batch.
 
 ## Files
 
@@ -26,10 +26,10 @@ reconstructed review: a missing top-level `events` key becomes a stable
 
 ## Set up an isolated test environment
 
-Start in `ch03/` (the directory containing this README). The standalone
-wrappers use the standard library, but pytest is required by the final suite
-and by the capture runner's final-package checks. Install it into a disposable
-environment before running either suite or replay:
+Start in `ch03/`, the directory containing this README. The standalone wrappers
+use the standard library. The final suite and the capture runner's final-package
+checks require pytest, so install it in a disposable environment before running
+the suite or replay:
 
 ```bash
 python3 -m venv ../.venv-ch03
@@ -37,9 +37,9 @@ source ../.venv-ch03/bin/activate
 python3 -m pip install pytest
 ```
 
-In PowerShell, create the environment with `py -m venv ..\.venv-ch03`, install with
-`..\.venv-ch03\Scripts\python.exe -m pip install pytest`, and use that interpreter
-in place of `python3` in the commands below. Activation is optional.
+In PowerShell, create the environment with `py -m venv ..\.venv-ch03` and install
+pytest with `..\.venv-ch03\Scripts\python.exe -m pip install pytest`. Use that
+interpreter in place of `python3` below; activation is optional.
 For bash commands continued with `\`, put all arguments on one line in PowerShell.
 
 When finished, return to `ch03/`, deactivate the environment if activated,
@@ -56,9 +56,15 @@ python3 focused_test.py event_processor.py
 python3 full_capture_check.py event_processor.py
 ```
 
-Both commands target the final green implementation in this package. The focused command checks the exact missing-key error and the final zero-average behavior for an explicit empty batch. The broader command adds one representative non-empty input and verifies its written summary.
+Both commands check this package's final green implementation. The focused
+command checks the exact missing-key error and the zero average for an explicit
+empty batch. The broader command also checks a representative non-empty input
+and its written summary.
 
-The captured transcript predates later final-state repairs. Its explicit-empty case intentionally reaches the then-unrepaired arithmetic defect. Use capture replay, not the final-state wrappers, to reproduce that historical red and narrow green evidence.
+The captured transcript predates the later final-state repairs. Its
+explicit-empty case still reaches the arithmetic defect that was present then.
+Capture replay reproduces that historical red and narrow green evidence;
+the final-state wrappers check the later repairs.
 
 ## Verify the final implementation
 
@@ -79,7 +85,7 @@ it explicitly from this directory:
 python3 -m pytest -q -p no:cacheprovider test_baseline.py
 ```
 
-It does not alter the historical capture suite.
+The historical capture suite is unchanged by this separate check.
 
 The branch files are intentionally outside pytest discovery. Compile them with:
 
@@ -98,7 +104,10 @@ Run from this directory:
 python3 captures/event_processor_missing_events/run_capture.py
 ```
 
-Replay rebuilds the disposable red and repaired states, compares them with the stored evidence, verifies the exact patch, runs the package-local top-level suite, and removes its working directory in a `finally` block, including after a failed run. Default replay does not rewrite evidence.
+Replay rebuilds disposable red and repaired states and compares them with the
+stored evidence. It verifies the exact patch and runs the package-local
+top-level suite. A `finally` block removes the working directory after success
+or failure. Default replay leaves the stored evidence unchanged.
 
 ## Dependencies
 
@@ -122,13 +131,13 @@ No command requires the repository root, canonical chapter code, another chapter
 
 ## Middleware response regression checks
 
-The Redis branch returns a response directly when it denies a request. Raising
-`HTTPException` from user middleware bypasses the endpoint exception handler
-and produced HTTP 500 in the original example. These checks exercise a real
+The Redis branch returns a response directly when it denies a request. In the
+original example, raising `HTTPException` from user middleware bypassed the
+endpoint exception handler and produced HTTP 500. These checks use a real
 FastAPI middleware stack with a fake shared-counter result. They verify 429
-without entering the endpoint, and 200 with the authenticated identity on the
-allowed path. They do not execute Redis, resolve its downtime policy, or test
-concurrent load.
+without entering the endpoint and 200 with the authenticated identity on an
+allowed request. Redis execution, its downtime policy, and concurrent load
+remain outside these checks.
 
 ```bash
 python3 -m pip install -r requirements-branches.txt

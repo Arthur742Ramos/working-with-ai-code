@@ -1,6 +1,10 @@
 # Order-summary incident support
 
-This internal package preserves the runnable order-summary incident in its accepted green state. The top-level implementation raises `MissingProductError` for an orphaned product and maps that failure to a fail-closed `422` response. The capture under `captures/` retains the immutable red before-state, exact patch, and recorded red-to-green evidence.
+This internal package contains the runnable order-summary incident in its accepted
+green state. The top-level implementation raises `MissingProductError` for an
+orphaned product and returns a fail-closed `422` response. The capture under
+`captures/` retains the immutable red before-state, exact patch, and recorded
+red-to-green evidence.
 
 ## Files
 
@@ -19,7 +23,9 @@ python3 tests/test_orphan_policy.py
 python3 tests/test_orphan_policy_broader.py
 ```
 
-These two scripts are the intended top-level suite. Run them explicitly rather than recursively collecting `captures/`, whose tests drive the retained red before-state as part of replay evidence.
+These two scripts are the intended top-level suite. Run them explicitly.
+Recursively collecting `captures/` also collects tests that drive the retained red
+before-state for replay evidence.
 
 To rebuild the database and run the service:
 
@@ -38,7 +44,7 @@ fail-closed policy.
 
 The service exposes `/orders/{id}/summary`. Visiting
 `http://localhost:8080/` returns HTTP 404 with `{"error": "not found"}`
-because no root route is defined. This is the expected response at that URL.
+because no root route is defined. That response is expected.
 Stop the server with Ctrl+C when finished.
 
 ## Replay the captured session
@@ -47,7 +53,10 @@ Stop the server with Ctrl+C when finished.
 python3 captures/incident_orphan_product_policy/run_capture.py
 ```
 
-Replay uses a disposable work directory, verifies the package-local final implementation and publication transcript, and does not replace the top-level green files. The complete package can be copied elsewhere and run without the repository root or another chapter.
+Replay uses a disposable work directory to verify the package-local final
+implementation and publication transcript. It leaves the top-level green files
+unchanged. The complete package can be copied elsewhere and run without the
+repository root or another chapter.
 
 ## Remaining limitations
 
