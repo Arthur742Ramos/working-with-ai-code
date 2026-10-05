@@ -1,0 +1,109 @@
+name: Chapter 3-6 validation
+
+on:
+  pull_request:
+    paths:
+      - 'ch03/**'
+      - 'ch04/**'
+      - 'ch05/**'
+      - 'ch06/**'
+      - '.github/workflows/chapter-validation.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'ch03/**'
+      - 'ch04/**'
+      - 'ch05/**'
+      - 'ch06/**'
+      - '.github/workflows/chapter-validation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: chapter-validation-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  offline-checks:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    defaults:
+      run:
+        shell: bash
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PY_COLORS: '0'
+      NO_COLOR: '1'
+      PYTEST_DISABLE_PLUGIN_AUTOLOAD: '1'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          set-safe-directory: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          # Chapters 4 and 6 share this recorded runtime; Chapter 3 has no exact pair.
+          python-version: '3.14.6'
+          architecture: x64
+      - name: Install declared test dependencies in an isolated environment
+        run: |
+          python -m venv "$RUNNER_TEMP/chapter-validation"
+          "$RUNNER_TEMP/chapter-validation/bin/python" -m pip install --disable-pip-version-check 'pytest==9.1.1' -r ch03/requirements-branches.txt
+          echo "$RUNNER_TEMP/chapter-validation/bin" >> "$GITHUB_PATH"
+          command -v patch
+          command -v diff
+      - name: Verify the selected runtime
+        id: runtime
+        run: |
+          python -c "import sys, pytest; assert sys.version_info[:3] == (3, 14, 6); assert pytest.__version__ == '9.1.1'; print(sys.version); print('pytest', pytest.__version__)"
+      - name: Chapter 3 green checks and non-recording replay
+        if: ${{ !cancelled() && steps.runtime.outcome == 'success' }}
+        working-directory: ch03
+        run: |
+          python focused_test.py event_processor.py
+          python full_capture_check.py event_processor.py
+          python -m pytest -qq -p no:cacheprovider
+          python -m pytest -q -p no:cacheprovider test_baseline.py
+          python -m py_compile event_processor_initial.py rate_limit_decorator.py rate_limit_redis.py
+          python -m pytest -q -p no:cacheprovider branch_tests
+          python captures/event_processor_missing_events/run_capture.py
+      - name: Chapter 4 green checks and non-recording replay
+        if: ${{ !cancelled() && steps.runtime.outcome == 'success' }}
+        working-directory: ch04
+        run: |
+          python -m pytest -q -p no:cacheprovider
+          python -m pytest -q -p no:cacheprovider test_skeleton.py
+          python -m migration_case.seed
+          python -m migration_case.migrate --dry-run
+          python captures/idempotent_409_replay/run_capture.py
+      - name: Chapter 5 green checks, inventory regression and non-recording replay
+        if: ${{ !cancelled() && steps.runtime.outcome == 'success' }}
+        working-directory: ch05
+        run: |
+          python tests/test_orphan_policy.py
+          python tests/test_orphan_policy_broader.py
+          python tests/test_capture_inventory.py -v
+          python captures/incident_orphan_product_policy/run_capture.py
+      - name: Chapter 6 green checks and non-recording replay
+        if: ${{ !cancelled() && steps.runtime.outcome == 'success' }}
+        working-directory: ch06
+        run: |
+          python cli.py --schema schema.json --config config.json
+          if invalid_output=$(python cli.py --schema schema.json --config invalid_config.json); then
+            echo 'Invalid config unexpectedly passed' >&2
+            exit 1
+          else
+            invalid_status=$?
+            test "$invalid_status" -eq 1
+            test "$invalid_output" = 'service.port: expected int'
+          fi
+          python -m pytest -q -p no:cacheprovider
+          python test_bool_is_not_accepted_as_int.py validator.py
+          python captures/boolean_as_integer_role_handoff/run_capture.py
+      - name: Check tracked-file preservation and capture cleanup
+        if: always()
+        run: |
+          git diff --exit-code -- ch03 ch04 ch05 ch06
+          python -c "from pathlib import Path; work = list(Path('.').glob('ch0[3456]/captures/*/.work')); assert not work, work"
