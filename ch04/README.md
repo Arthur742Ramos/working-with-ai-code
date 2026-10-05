@@ -1,12 +1,12 @@
 # Chapter 4 final support package
 
-This internal package keeps the staged customer importer, the reconstructed migration case, and the verified idempotent-replay capture together without depending on the repository root or another chapter.
+This internal package contains the staged customer importer, reconstructed migration case, and verified idempotent-replay capture. It runs without the repository root or another chapter.
 
 ## Contents
 
 The print fences for Listings 4.4 and 4.5 use `python keep-together` to keep
 each compact block on one page. This is a converter layout
-option, not part of the Python source; it rejects blocks over 40 lines.
+option. It is not Python source and rejects blocks over 40 lines.
 
 - `walking_skeleton.py` is the pre-replay implementation printed across Listings 4.2 through 4.5. It deliberately treats every status at or above `400` as a failure; Section 4.5 adds the endpoint-specific `409` rule.
 - `test_skeleton.py` is Listing 4.6, the dry-run discriminator. Run it explicitly with `python3 -m pytest -q test_skeleton.py`; the archival package suite remains unchanged.
@@ -17,13 +17,40 @@ option, not part of the Python source; it rejects blocks over 40 lines.
 - `captures/idempotent_409_replay/` preserves the immutable red before-state, exact patch, raw evidence, and a replay runner that checks this package's own importer suite.
 - `pytest.ini` limits routine top-level collection to the maintained package suites and certification checks. Capture internals run only through `run_capture.py`, where the red state is expected and verified.
 
+## Set up an isolated test environment
+
+Start in `ch04/`, the directory containing this README. The tests and capture
+runner require pytest. Use Python 3.14.6 and pytest 9.1.1 to reproduce the
+retained capture's exact transcript; that pair produced the capture.
+
+```bash
+python3 -m venv ../.venv-ch04
+source ../.venv-ch04/bin/activate
+python3 -m pip install pytest==9.1.1
+```
+
+Keep the environment beside `ch04/` to keep it out of certification's
+disposable package copies.
+
+In PowerShell, create the environment with `py -m venv ..\.venv-ch04` and install with
+`..\.venv-ch04\Scripts\python.exe -m pip install pytest==9.1.1`. Use that
+interpreter in place of `python3` below. Activation is optional. Capture
+replay also requires the `patch` and `diff` command-line tools on `PATH`.
+For the bash command groups below, PowerShell users can set
+`$env:PYTHONDONTWRITEBYTECODE = '1'` once, then run each Python command without
+the bash environment prefix and `\` continuation.
+
+When finished, return to `ch04/`, deactivate the environment if activated,
+and remove it with `rm -rf ../.venv-ch04` (bash) or
+`Remove-Item -LiteralPath ..\.venv-ch04 -Recurse -Force` (PowerShell).
+
 ## Verify
 
 Run from this directory:
 
 ```bash
 PYTHONDONTWRITEBYTECODE=1 \
-python3 -m pytest -q -p no:cacheprovider .
+python3 -m pytest -q -p no:cacheprovider
 
 PYTHONDONTWRITEBYTECODE=1 \
 python3 -m migration_case.seed
@@ -34,10 +61,40 @@ python3 -m migration_case.migrate --dry-run
 python3 captures/idempotent_409_replay/run_capture.py
 ```
 
-The top-level suite should report sixteen passing tests: seven importer checks, five migration checks, three cleanup-state checks, and one review-state check. The seed command creates a database with three legacy rows and empty target tables. The migration dry run executes all transformations, reports three upserts and nine audit rows in plain text, then rolls back. Its test rejects Markdown backticks and checks both byte parity and the retained evidence checksum. Replay reproduces the focused red state, applies the one-line patch in disposable space, and verifies focused, broader, and package-support green evidence.
+The default top-level suite collects sixteen tests: seven importer checks,
+five migration checks, three cleanup-state checks, and one review-state check.
+All sixteen are expected to pass, including the successful-replay cleanup
+check. An explicit `.` overrides `pytest.ini`'s `testpaths` and also collects
+the separate `test_skeleton.py`, for seventeen tests. Run that listing's
+single test explicitly when needed.
+
+The seed command creates a database with three legacy rows and empty target tables.
+The migration dry run executes all transformations, reports three upserts and nine
+audit rows in plain text, then rolls back. Its test rejects Markdown backticks and
+checks byte parity and the retained evidence checksum.
+
+Capture replay separately reproduces the deliberately failing before-state.
+Successful replay prints `RED EXIT STATUS: 1` and the `RuntimeError` traceback,
+then verifies the one-line patch, `FOCUSED GREEN EXIT STATUS: 0`,
+`BROADER GREEN EXIT STATUS: 0`, `PACKAGE SUPPORT GREEN EXIT STATUS: 0`, and
+`PARITY VERIFIED`; the runner itself exits 0. The top-level suite is expected
+to pass, including its successful-replay cleanup check.
+
+Replay compares retained pytest output exactly after masking only function
+addresses and elapsed times. A different Python/pytest version or platform
+can change traceback formatting and cause output drift, which can also fail
+the successful-replay cleanup test. Treat a nonzero runner exit or a failed
+top-level test as a verification failure and inspect the diagnostic. See the
+[capture guide](captures/idempotent_409_replay/README.md) for the recorded
+environment; do not use `--record` to make a failing replay pass.
 
 ## Provenance and limits
 
-The importer capture originated from a previously maintained Chapter 6 implementation and test, but this final package carries checksum-verified local copies and does not read or execute that chapter. The migration schemas and fixture originated in earlier Chapter 5 support. No historical migration script was retained, so `migration_case/migrate.py` is explicitly a reconstruction from Chapter 4's accepted contract and printed evidence rather than a claimed original artifact.
+The importer capture originated from a previously maintained Chapter 6 implementation
+and test. This final package carries checksum-verified local copies and does not read
+or execute that chapter. The migration schemas and fixture originated in earlier
+Chapter 5 support. No historical migration script was retained.
+`migration_case/migrate.py` reconstructs Chapter 4's accepted contract and printed
+evidence; it is not an original historical artifact.
 
 The importer has no file reader, production network client, command-line interface, logging policy, injected retry clock, or large-file performance check. Its `409` behavior is valid only for the documented endpoint and identity contract. The migration checks prove behavior against three supplied rows; they do not establish production date coverage, stable source identity, concurrency safety, or the human-owned timezone and skip-versus-abort policies.
