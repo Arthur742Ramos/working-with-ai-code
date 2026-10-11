@@ -22,7 +22,7 @@
     }
   ],
   "sha256": {
-    "README.md": "0b9233641af6f822f979e987f84cd9afad72bf9b86203a58bc4a8e42258e00f5",
+    "README.md": "040d1645fa4aaa9992679f871fe26c694c3e9e8d9ac02385f89b394d101b361b",
     "evidence/01-contract.md": "3cdf921eb6c4ec47944fbfafcbd8cc1231d1aa12be1f4564578750818617e459",
     "evidence/02-baseline.txt": "bf74dfdeab257430e1831e858c2991cb550680c6a4fb0c57c7d61cac22f54be9",
     "evidence/03-legacy-red.txt": "ff592b79c94eb4dca1c3a2f095b5663fe78f4f9b4d7d4103dbe258e20cdc7a95",

@@ -110,11 +110,22 @@ def test_ch10_walkthrough_patch_from_chapter_directory(tmp_path, patch, target, 
     assert run(repo_root, "git", "status", "--short") == ""
 
 
+def test_ch10_documented_batch_replay_keeps_manifest_consistent(tmp_path):
+    package = tmp_path / "batch_case"
+    shutil.copytree(ROOT / "ch10/batch_case", package, ignore=IGNORED)
+    output = run(package, sys.executable, "replay_capture.py")
+    assert "PASS: hashes, exact patch, 49 baseline, expected red, batch green, 85 final" in output
+
+
 @pytest.mark.skipif(os.name == "nt", reason="POSIX shell examples run on the Linux CI runner")
 @pytest.mark.parametrize("chapter", ["ch08", "ch11"])
 def test_documented_isolation_block_cleans_up_and_returns(tmp_path, chapter):
     readme = (ROOT / chapter / "README.md").read_text(encoding="utf-8")
     blocks = re.findall(r"```bash\n(.*?)```", readme, re.DOTALL)
     block = next(block for block in blocks if "package_copy=$(mktemp" in block)
-    run(ROOT / chapter, "bash", "-c", block + '\nexit_code=$?\ntest "$exit_code" -eq 0 && test "$PWD" = "$starting_dir"', env={"TMPDIR": str(tmp_path), "starting_dir": str(ROOT / chapter)})
-    assert list(tmp_path.iterdir()) == []
+    package_copies = tmp_path / "packages"
+    package_copies.mkdir()
+    pytest_temp = tmp_path / "pytest"
+    pytest_temp.mkdir()
+    run(ROOT / chapter, "bash", "-c", block + '\nexit_code=$?\ntest "$exit_code" -eq 0 && test "$PWD" = "$starting_dir"', env={"TMPDIR": str(package_copies), "PYTEST_DEBUG_TEMPROOT": str(pytest_temp), "starting_dir": str(ROOT / chapter)})
+    assert list(package_copies.iterdir()) == []
