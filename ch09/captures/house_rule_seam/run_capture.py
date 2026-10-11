@@ -376,19 +376,23 @@ def verify_records(metadata: dict) -> None:
         )
 
 
-def verify_publication_evidence(metadata: dict) -> None:
+def verify_publication_evidence(metadata: dict, results: dict | None = None) -> None:
     chapter = (CAPTURE_DIR / "chapter-session.md").read_text(
         encoding="utf-8"
     )
     for key in ("red", "focused_green", "broader_green"):
-        evidence = (
-            CAPTURE_DIR / metadata[key]["output_file"]
-        ).read_text(encoding="utf-8").rstrip("\n")
+        if results is None:
+            evidence = (
+                CAPTURE_DIR / metadata[key]["output_file"]
+            ).read_text(encoding="utf-8")
+        else:
+            evidence = results[key].stdout
+        evidence = stable_output(evidence).rstrip("\n")
         quoted = "\n".join(
             ">" if not line else f"> {line}"
             for line in evidence.splitlines()
         )
-        if quoted not in chapter:
+        if quoted not in stable_output(chapter):
             raise RuntimeError(
                 f"chapter-session.md does not reproduce {key} evidence"
             )
@@ -416,17 +420,25 @@ def run_pytest(
     if target:
         command.append(target)
     env = os.environ.copy()
+    # Reproduce the recorded local diagnostics even when replay runs in CI.
+    for flag in ("CI", "BUILD_NUMBER"):
+        env.pop(flag, None)
     env.update({
+        "COLUMNS": "80",
         "FORCE_COLOR": "0",
         "NO_COLOR": "1",
         "PY_COLORS": "0",
         "PYTHONDONTWRITEBYTECODE": "1",
         "PYTEST_ADDOPTS": "",
+        "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
         "TERM": "dumb",
     })
     if source_root is not None:
         env["HOUSE_RULE_ROOT"] = source_root
         env["PYTHONPATH"] = source_root
+    else:
+        env.pop("HOUSE_RULE_ROOT", None)
+        env.pop("PYTHONPATH", None)
     return subprocess.run(
         command,
         cwd=cwd,
@@ -574,6 +586,8 @@ def main() -> int:
         "package_green": package_green,
     }
     require_semantics(results)
+    # Validate refreshed evidence before record mode can write any artifacts.
+    verify_publication_evidence(metadata, results)
     if args.record:
         metadata = record_results(results, metadata)
     compare_results(results, metadata)

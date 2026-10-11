@@ -170,12 +170,12 @@
   },
   "runner": {
     "file": "run_capture.py",
-    "checksum": "9477bad6f16cb686cd574aab8baefe5d3be03c771fcd13371e11ea4fae8dac18",
+    "checksum": "2bc0b0d0aab3a1903c9a53bf296d0b52227d90bdfc6a5625f657f04df10708b8",
     "record_mode": "--record refreshes package-local command evidence and its metadata checksums only",
     "replay_mode": "default rebuilds in disposable .work space, compares stored artifacts, runs the package-local green suite, and never resolves repository-root paths"
   },
   "record_checksums": {
-    "README.md": "abd69dd7d6035dbefbf78ae7c686422fd42bf72528a43124cdabd46d505aabe7",
+    "README.md": "0461dff24c46f031c314ddee94ab3344dc80f13813fc198c8bc38e3bcfb689cc",
     "session.md": "210f57071aaac1b52bfa4924e8c0359d52b5779414e69b65b7bd5c644f4f2ef7",
     "chapter-session.md": "34c426ae07e732c162f02b58b2d40f84e1b1c20a6727c819945027228be5601e",
     "parity.md": "ee550dc602f73017b1564dc665885b5ec56ab118a7ae5b83f7c9320b574f88b5",

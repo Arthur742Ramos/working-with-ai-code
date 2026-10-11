@@ -15,11 +15,16 @@ def terms(text):
 
 
 def retrieve(question, chunks, k):
-    query = terms(question)
-    return sorted(
-        chunks,
-        key=lambda chunk: -len(query & terms(chunk.text)),
-    )[:k]
+    query_terms = terms(question)
+
+    def calculate_score(chunk):
+        chunk_terms = terms(chunk.text)
+        shared_terms = query_terms & chunk_terms
+        return len(shared_terms)
+
+    sorted_chunks = sorted(chunks, key=calculate_score, reverse=True)
+    top_k_chunks = sorted_chunks[:k]
+    return top_k_chunks
 
 
 def format_evidence(chunk):
