@@ -27,3 +27,9 @@ python3 captures/lost_cent_allocation/run_capture.py
 
 The teaching draft deliberately violates conservation and is not part of the
 green suite. The replay verifies the separate exact-tie red-to-green repair.
+
+The teaching draft and maintained allocator use an explicit append loop for
+each proportional share. The captured before/after fixtures and historical
+patch retain their original comprehensions; both forms perform the same
+calculation. Independent rounding in the draft still loses a cent, and the
+maintained allocator still ranks exact rational remainders.

@@ -10,6 +10,10 @@ with:
 python3 captures/sqlite_row_conversion_seam/run_capture.py
 ```
 
+The replay itself exits 0 after verifying an intentional `focused_red`
+failure (`sqlite3.Row` has no `.get`), then focused, broader, and package
+green checks. A red traceback within this successful sequence is expected.
+
 The older service and SQLite patch walkthroughs below remain useful as
 standalone exercises. The package-local fixture is the current Chapter 10
 session surface.
@@ -23,14 +27,18 @@ from the published companion source.
 
 The patch is generated from the final maintained files. It changes only
 `reminders/service.py` and `tests/test_service.py`. The pre-state retains the
-later `SnoozeService` protocol, so restoring the final service remains the
-captured 28-insertion, 3-deletion repair. The service returns
+later `SnoozeService` protocol, and is adapted to the current maintained line wrapping. Restoring the final
+service reproduces the same behavior; its line count can differ from the
+historical 28-insertion, 3-deletion repair. The service returns
 `NotImplementedError`, and the focused suite contains the 14 cases present at
 capture time.
 
-Use a clean clone or disposable branch. From the companion repository root:
+Use a clean clone or disposable branch. Each walkthrough starts from the
+companion repository root. If you are following this README from `ch10/`,
+the first command below moves back to that root before applying the patch:
 
 ```bash
+cd "$(git rev-parse --show-toplevel)"
 git switch -c ch10-controlled-service
 
 git apply --unidiff-zero ch10/captures/service-slice-before.patch
@@ -66,12 +74,14 @@ clean:
 ```bash
 git restore tests/test_service.py
 git status --short
+cd ..
 ```
 
 On native Windows PowerShell, use the Windows launcher and virtual-environment
 path:
 
 ```powershell
+Set-Location (git rev-parse --show-toplevel)
 git switch -c ch10-controlled-service
 git apply --unidiff-zero ch10/captures/service-slice-before.patch
 cd ch10
@@ -82,6 +92,7 @@ git restore reminders/service.py
 .venv\Scripts\python -m pytest -q tests/test_service.py
 git restore tests/test_service.py
 git status --short
+Set-Location ..
 ```
 
 ## SQLite row repair
@@ -94,6 +105,7 @@ Use another clean clone or disposable branch. From the companion repository
 root on macOS, Linux, or Windows Subsystem for Linux:
 
 ```bash
+cd "$(git rev-parse --show-toplevel)"
 git switch -c ch10-controlled-sqlite-row
 git apply --unidiff-zero ch10/captures/sqlite-row-before.patch
 cd ch10
@@ -105,6 +117,7 @@ target="tests/test_sqlite_repository.py::"\
 git restore reminders/repository.py
 .venv/bin/python -m pytest -q -p no:cacheprovider "$target"
 git status --short
+cd ..
 ```
 
 The red run should report `1 failed` with `AttributeError`. The run after the
@@ -113,6 +126,7 @@ one-line restore should report `1 passed`.
 On native Windows PowerShell:
 
 ```powershell
+Set-Location (git rev-parse --show-toplevel)
 git switch -c ch10-controlled-sqlite-row
 git apply --unidiff-zero ch10/captures/sqlite-row-before.patch
 cd ch10
@@ -126,4 +140,5 @@ $target = (
 git restore reminders/repository.py
 .venv\Scripts\python -m pytest -q -p no:cacheprovider $target
 git status --short
+Set-Location ..
 ```

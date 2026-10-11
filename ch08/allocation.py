@@ -28,10 +28,9 @@ def allocate(
     if total_weight == 0:
         raise ValueError("weights sum to zero, cannot split by them")
 
-    ideal = [
-        total * weight / total_weight
-        for weight in exact_weights
-    ]
+    ideal = []
+    for weight in exact_weights:
+        ideal.append(total * weight / total_weight)
     shares = [int(value) for value in ideal]
     leftover = total - sum(shares)
     order = sorted(

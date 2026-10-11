@@ -62,11 +62,10 @@ File, permission, and malformed-JSON errors remain caller-visible exceptions rat
 
 ## Replay the captured repair
 
-Run from the capture directory:
+Run from `ch07/`. The subshell returns you to `ch07/` after replay:
 
 ```bash
-cd captures/strict_float_validator
-python3 run_capture.py
+(cd captures/strict_float_validator && python3 run_capture.py)
 ```
 
 Replay rebuilds disposable red and repaired states, compares them with the stored evidence, verifies the exact patch and package-local checksums, and removes its working directory. Default replay does not rewrite evidence. The original canonical support checksums and green output remain archival provenance; replay does not resolve or execute repository-root paths.

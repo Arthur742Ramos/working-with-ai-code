@@ -1,5 +1,4 @@
 diff --git a/ch10/reminders/service.py b/ch10/reminders/service.py
-index eedfa8d..3fb92e8 100644
 --- a/ch10/reminders/service.py
 +++ b/ch10/reminders/service.py
 @@ -1,2 +1 @@
@@ -13,7 +12,7 @@ index eedfa8d..3fb92e8 100644
 -    normalize_utc,
 -)
 +from reminders.domain import Reminder
-@@ -70,21 +65 @@ class SnoozeReminderService:
+@@ -70,23 +65 @@ class SnoozeReminderService:
 -        if (
 -            type(minutes) is not int
 -            or minutes not in ALLOWED_MINUTES
@@ -32,7 +31,9 @@ index eedfa8d..3fb92e8 100644
 -        now = normalize_utc(self._clock.now())
 -        updated = replace(
 -            reminder,
--            snoozed_until=now + timedelta(minutes=minutes),
+-            snoozed_until=(
+-                now + timedelta(minutes=minutes)
+-            ),
 -        )
 -        return self._repository.save(updated)
 +        raise NotImplementedError("service slice not implemented")

@@ -6,10 +6,10 @@ validated publication implementation in allocation.py.
 
 def allocate(total, weights):
     total_weight = sum(weights)
-    return [
-        round(total * weight / total_weight)
-        for weight in weights
-    ]
+    shares = []
+    for weight in weights:
+        shares.append(round(total * weight / total_weight))
+    return shares
 
 
 def conserves(shares, total):

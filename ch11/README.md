@@ -52,13 +52,19 @@ The original 24-test canonical-support output remains in `evidence/canonical-sup
 
 ## Verify isolation
 
-A copied package supports the same commands:
+From `ch11/`, a POSIX shell can verify a unique temporary copy. The
+subshell returns to your starting directory, and the exit trap removes the
+copy on success or failure:
 
 ```bash
-cp -R . /tmp/ch11-final
-cd /tmp/ch11-final
-python3 -m pytest -q -p no:cacheprovider
-python3 captures/deployment_policy_value/run_capture.py
+(
+  package_copy=$(mktemp -d "${TMPDIR:-/tmp}/ch11-final.XXXXXX") || exit 1
+  trap 'rm -rf -- "$package_copy"' EXIT
+  cp -R . "$package_copy/" || exit 1
+  cd "$package_copy" || exit 1
+  python3 -m pytest -q -p no:cacheprovider || exit 1
+  python3 captures/deployment_policy_value/run_capture.py
+)
 ```
 
 No command needs the source repository after the copy finishes.

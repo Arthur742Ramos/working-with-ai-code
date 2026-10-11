@@ -31,7 +31,7 @@
     }
   },
   "capture_input_checksums_sha256": {
-    "README.md": "b1d5f5338a00064d46a34f1c4a3758d57f82899743cc6ac09d572f5d34c52111",
+    "README.md": "ca7b65e9f5264cf58624f82bcc02cbb0f5bcf2fced3719d78769046ef074cdcc",
     "parity.md": "1929e9490b9c05386a98c7c3532e42f4c87f8f734a9091f5b385fc8341f6352b",
     "run_capture.py": "f066e522be4a4e2ebb3637dcf19843df328e7eb04287592ba48d4e29918c3a5d",
     "session.md": "5a287074bb81e22cc7a7b3f257265714bbd9ab274a4a5f2883b9e703f3870120",
@@ -104,7 +104,7 @@
   },
   "final_package_support": {
     "checksums_sha256": {
-      "README.md": "e12d8bfc7bfd756be33db71d2cc31e061da82f204f17e7dc4f55e183bc6cc236",
+      "README.md": "ad5d5eded76c161d3402b9d599b7c8313ee05a35aa5363ae90ec14e0f09cf7fd",
       "deployment_guard.py": "ca883098446c860ea1a600c59a037bfa25786035183d3c371ed6c4c5fd01b83f",
       "deployment.json": "53aa995496d8602e6a2ee95b1c7ebf49de4a252c79ba3c4469eb9b8a5346a5d2",
       "incident_triage.py": "efd90d28b662017f8f4356df6b8bb07213cc02b19e11b762f50447b36a097c80",

@@ -2,16 +2,18 @@
 
 This independent extension preserves the single-reminder API while adding
 an all-or-nothing batch across handler, service, and SQLite adapter.
-It requires Python 3.10+ and pytest. Run from this directory:
+It requires Python 3.10+ and pytest. Run from `ch10/batch_case/` using
+`python3` on macOS/Linux/WSL, or `py -3` on native Windows. If using an
+existing virtual environment, use its Python executable for every command:
 
 ```sh
-python -m pytest -q
-python probe_atomicity.py batch
-python replay_capture.py
+python3 -m pytest -q
+python3 probe_atomicity.py batch
+python3 replay_capture.py
 ```
 
 The captured baseline had 49 tests; the final suite has 85. The legacy probe
-is intentionally red: `python probe_atomicity.py legacy` must exit 1.
+is intentionally red: `python3 probe_atomicity.py legacy` must exit 1.
 Do not interpret that expected failure as a broken supported batch API.
 
 ## What actually happened

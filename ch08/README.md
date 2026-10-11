@@ -36,13 +36,19 @@ The original nine-test maintained-baseline output remains under `evidence/canoni
 
 ## Verify isolation
 
-A copied package supports the same commands:
+From `ch08/`, a POSIX shell can verify a unique temporary copy. The
+subshell returns to your starting directory, and the exit trap removes the
+copy on success or failure:
 
 ```bash
-cp -R . /tmp/ch08-final
-cd /tmp/ch08-final
-python3 -m pytest -q -p no:cacheprovider
-python3 captures/lost_cent_allocation/run_capture.py
+(
+  package_copy=$(mktemp -d "${TMPDIR:-/tmp}/ch08-final.XXXXXX") || exit 1
+  trap 'rm -rf -- "$package_copy"' EXIT
+  cp -R . "$package_copy/" || exit 1
+  cd "$package_copy" || exit 1
+  python3 -m pytest -q -p no:cacheprovider || exit 1
+  python3 captures/lost_cent_allocation/run_capture.py
+)
 ```
 
 No command needs the source repository after the copy finishes.
@@ -54,3 +60,8 @@ No command needs the source repository after the copy finishes.
 - Stable input order is the selected tie rule; domain owners must decide whether it is fair for their product.
 - The tests do not cover every weight distribution, extreme magnitude, or performance boundary.
 - The capture proves the bounded exact-tie repair. It does not establish the remaining policy choices.
+
+The maintained allocator now spells out the proportional-share loop for
+readability. This is equivalent to the captured comprehension. The historical
+fixtures, patch, raw evidence, and review receipt remain unchanged; current
+maintenance is reviewed separately in the companion repository PR.

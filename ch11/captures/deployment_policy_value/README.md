@@ -39,17 +39,41 @@ Default replay never writes the patch or evidence. `--record` is reserved for an
 
 ## Direct commands
 
-The focused red and green command is the same; only the disposable configuration differs:
+The focused target belongs to the capture's `tests/` directory and expects
+`deployment.json` beside the test. It is not a top-level `ch11/` test.
+The runner copies the focused test, guard, and configuration into a
+disposable directory before invoking the historical command below.
+
+For a manual red-to-green check, run this complete block from `ch11/`
+in a POSIX shell. The subshell returns to `ch11/`, and its exit trap removes
+only the unique temporary directory created here:
 
 ```bash
-python3 -m pytest -q -p no:cacheprovider \
-  test_deployment_policy.py::\
-test_schema_valid_deployment_satisfies_policy
+(
+  work_dir=$(mktemp -d "${TMPDIR:-/tmp}/ch11-policy.XXXXXX") || exit 1
+  trap 'rm -rf -- "$work_dir"' EXIT
+  capture=captures/deployment_policy_value
+  cp "$capture/before/deployment_guard.py" \
+    "$capture/before/deployment.json" \
+    "$capture/tests/test_deployment_policy.py" "$work_dir/"
+  target=test_deployment_policy.py::test_schema_valid_deployment_satisfies_policy
+  # Expected red: one policy failure, exit 1.
+  (cd "$work_dir" && python3 -m pytest -q -p no:cacheprovider "$target")
+  # Use the maintained safe configuration for the same test.
+  cp deployment.json "$work_dir/deployment.json"
+  # Expected green: one pass, exit 0.
+  (cd "$work_dir" && python3 -m pytest -q -p no:cacheprovider "$target")
+)
 ```
 
-The captured broader command runs the 24 operational checks beside the
-disposable after-state. Replay uses the historical top-level deployment test
-snapshot so later CLI contract changes cannot rewrite this historical session:
+For the automated version on any supported platform, run
+`python3 captures/deployment_policy_value/run_capture.py` from `ch11/`.
+It requires and reports red exit 1 and green exit 0, then exits 0 overall.
+
+The following runnable command starts from `ch11/` and checks the 24
+maintained operational cases. Replay separately runs its historical
+deployment test snapshot beside the disposable after-state, so later CLI
+contract changes cannot rewrite that historical session:
 
 ```bash
 python3 -m pytest -q -p no:cacheprovider \
