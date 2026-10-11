@@ -40,25 +40,34 @@ Default replay never writes the patch or evidence. `--record` is reserved for an
 
 ## Direct commands
 
-The discriminating red command is:
+Run these commands from `ch07/captures/strict_float_validator/`.
+The discriminating red command intentionally exits 1 with five failures:
 
 ```bash
 python3 tests/focused_test.py before/validator.py
 ```
 
-The focused green command targets the disposable after-state:
+In stored transcripts, `<WORK>` replaces the runner's temporary after-state
+directory. It is a display placeholder, not a shell argument or the `before/`
+directory. Replay creates and removes that directory automatically.
+
+To check the maintained green validator directly, use this real path from
+the capture directory (five passing cases, exit 0):
 
 ```bash
-python3 tests/focused_test.py <WORK>/validator.py
+python3 tests/focused_test.py ../../validator.py
 ```
 
-The broader command runs the strengthened nine-test snapshot beside the disposable after-state:
+To run the maintained nine-test validator suite, change to `ch07/` within
+a subshell; your current directory stays the capture directory afterward:
 
 ```bash
-python3 -m pytest -q -p no:cacheprovider test_validator.py
+(cd ../.. && python3 -m pytest -q -p no:cacheprovider test_validator.py)
 ```
 
-`run_capture.py` prepares `.work/test_validator.py` before that command. Run the replay rather than invoking the broader command directly in a clean capture directory.
+The replay separately copies `tests/test_validator.py` beside its disposable
+after-state and runs the captured broader command there. Use `python3
+run_capture.py` to reproduce that complete historical sequence.
 
 ## Dependencies and environment
 

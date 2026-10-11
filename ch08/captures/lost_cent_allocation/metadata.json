@@ -74,7 +74,7 @@
   },
   "final_package_support": {
     "checksums_sha256": {
-      "allocation.py": "ef91e6ff73c506cc1b429e5559b160eee807461ff6b8ab16d34c32cfa39bb3d5",
+      "allocation.py": "17eb227006b267a882126c8b99a7aff79dcb2593125ffa5f13c3403f5b04c44b",
       "test_allocation.py": "a971ac36680096a059de2739ba61509b41463de7df38b456a800f7981b2089a3",
       "test_golden.py": "00185f0dff41b46d79410ebd5fe648f74962648fc4c06763e5ac21468bc54323",
       "pytest.ini": "e1b4e3128564596f36beb28c931208b8626875aeb097b5130558d2be995ae544"
