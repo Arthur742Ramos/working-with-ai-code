@@ -420,7 +420,11 @@ def run_pytest(
     if target:
         command.append(target)
     env = os.environ.copy()
+    # Reproduce the recorded local diagnostics even when replay runs in CI.
+    for flag in ("CI", "BUILD_NUMBER"):
+        env.pop(flag, None)
     env.update({
+        "COLUMNS": "80",
         "FORCE_COLOR": "0",
         "NO_COLOR": "1",
         "PY_COLORS": "0",
