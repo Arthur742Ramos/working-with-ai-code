@@ -28,39 +28,66 @@ python3 captures/house_rule_seam/run_capture.py
 
 Default replay performs the same disposable red, patch, focused green, broader green, and package-green sequence. It compares output, exit status, patch content, capture checksums, package checksums, and stored origin evidence with the recorded values. It does not rewrite evidence or metadata. A context-managed work directory is removed on success and failure, and replay refuses to start or finish with a stale `.work-*` directory.
 
-## Exact commands represented by the runner
+## Direct checks and commands represented by the runner
 
-Focused red and focused green use the same command against the disposable before and repaired states:
+The runner uses the same focused command against disposable before and
+repaired states. For a direct check of the immutable before fixture, start
+from `ch09/` and enter the capture in a subshell:
 
 ```bash
-PYTHONPATH=before HOUSE_RULE_ROOT=before \
+(cd captures/house_rule_seam && \
+  PYTHONPATH=before HOUSE_RULE_ROOT=before \
   PYTHONDONTWRITEBYTECODE=1 \
   python3 -m pytest -q -p no:cacheprovider \
-  tests/test_alerts.py::test_send_alert_routes_through_house_client
+  tests/test_alerts.py::test_send_alert_routes_through_house_client)
 ```
 
-The broader capture check runs all copied capture tests:
+This intentionally exits 1 with one routing failure. A direct broader check
+against the unchanged before fixture intentionally exits 1 with four failures
+and six passes:
 
 ```bash
-PYTHONPATH=before HOUSE_RULE_ROOT=before \
+(cd captures/house_rule_seam && \
+  PYTHONPATH=before HOUSE_RULE_ROOT=before \
   PYTHONDONTWRITEBYTECODE=1 \
-  python3 -m pytest -q -p no:cacheprovider tests
+  python3 -m pytest -q -p no:cacheprovider tests)
 ```
 
-The final package check runs from the copied package root:
+To check the immutable repaired fixture, use `after` for both import and
+guard roots. From `ch09/`, this command exits 0 with ten passes:
+
+```bash
+(cd captures/house_rule_seam && \
+  PYTHONPATH=after HOUSE_RULE_ROOT=after \
+  PYTHONDONTWRITEBYTECODE=1 \
+  python3 -m pytest -q -p no:cacheprovider tests)
+```
+
+The explicit `PYTHONPATH` selects the feature modules; `HOUSE_RULE_ROOT`
+selects the source checked by the import guard. A bare pytest command inside
+the capture has neither source root and cannot import `alerts` or
+`http_client`. Use the commands above or the replay instead. Each subshell
+returns to `ch09/` without retaining these environment variables.
+
+The final package check runs from `ch09/` (or an isolated copy of that root):
 
 ```bash
 PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q \
   -p no:cacheprovider
 ```
 
-`pytest.ini` excludes `captures/`, so the final green suite does not accidentally collect the retained red fixture or duplicate capture test modules.
+The top-level `pytest.ini` excludes `captures/`, so the final green suite does not accidentally collect the retained red fixture or duplicate capture test modules.
 
 ## Dependencies and environment
 
 The completed session used Claude Code `2.1.210.642`, model `gpt-5.6-sol[1m]`, Python 3.14.6, pytest 9.1.1, and the system `patch` and `diff` commands. The checks use only Python's standard library plus pytest. They disable pytest color, inherited pytest options, bytecode output, and pytest's cache provider. The focused test installs an in-memory `requests.post` stub only so the before fixture can complete without that third-party dependency or a live network call. It patches `http_client.call` before loading the feature, so direct and module-qualified shared-client imports are both valid while a transport bypass records no seam call.
 
 Stored files retain raw combined command output. Replay normalizes only pytest's elapsed-time value for comparison. No stored output is normalized.
+
+Publication-transcript comparisons use the same elapsed-time normalization.
+Record mode verifies the refreshed output against the transcript before
+writing evidence; a changed diagnostic or test count still fails validation.
+The original transcript and review receipt remain historical records.
 
 ## Origin provenance
 

@@ -1,4 +1,4 @@
-name: Chapter 3-6 validation
+name: Chapter 3-11 validation
 
 on:
   pull_request:
@@ -7,6 +7,12 @@ on:
       - 'ch04/**'
       - 'ch05/**'
       - 'ch06/**'
+      - 'ch07/**'
+      - 'ch08/**'
+      - 'ch09/**'
+      - 'ch10/**'
+      - 'ch11/**'
+      - 'tests/**'
       - '.github/workflows/chapter-validation.yml'
   push:
     branches: [main]
@@ -15,6 +21,12 @@ on:
       - 'ch04/**'
       - 'ch05/**'
       - 'ch06/**'
+      - 'ch07/**'
+      - 'ch08/**'
+      - 'ch09/**'
+      - 'ch10/**'
+      - 'ch11/**'
+      - 'tests/**'
       - '.github/workflows/chapter-validation.yml'
   workflow_dispatch:
 
@@ -44,7 +56,7 @@ jobs:
           set-safe-directory: false
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
-          # Chapters 4 and 6 share this recorded runtime; Chapter 3 has no exact pair.
+          # Preserve the recorded capture runtime for Chapters 4 and 6-11.
           python-version: '3.14.6'
           architecture: x64
       - name: Install declared test dependencies in an isolated environment
@@ -107,3 +119,57 @@ jobs:
         run: |
           git diff --exit-code -- ch03 ch04 ch05 ch06
           python -c "from pathlib import Path; work = list(Path('.').glob('ch0[3456]/captures/*/.work')); assert not work, work"
+      - name: Chapter 7 green checks and non-recording replay
+        if: ${{ !cancelled() && steps.runtime.outcome == 'success' }}
+        working-directory: ch07
+        run: |
+          python -m pytest -q -p no:cacheprovider
+          python cli.py --schema fixtures/schema.json --config fixtures/config-valid.json
+          if invalid_output=$(python cli.py --schema fixtures/schema.json --config fixtures/config-invalid.json); then
+            echo 'Invalid config unexpectedly passed' >&2
+            exit 1
+          else
+            test "$?" -eq 1
+            test "$invalid_output" = $'service.port: expected int\nservice.ratio: expected float'
+          fi
+          (cd captures/strict_float_validator && python run_capture.py)
+      - name: Chapter 8 green checks and non-recording replay
+        if: ${{ !cancelled() && steps.runtime.outcome == 'success' }}
+        working-directory: ch08
+        run: |
+          python -m pytest -q -p no:cacheprovider
+          python captures/lost_cent_allocation/run_capture.py
+      - name: Chapter 9 green checks and non-recording replay
+        if: ${{ !cancelled() && steps.runtime.outcome == 'success' }}
+        working-directory: ch09
+        run: |
+          python -m pytest -q -p no:cacheprovider
+          python teaching/retrieval_demo.py
+          python captures/house_rule_seam/run_capture.py
+      - name: Chapter 10 adapter, package, batch and capture checks
+        if: ${{ !cancelled() && steps.runtime.outcome == 'success' }}
+        working-directory: ch10
+        run: |
+          python -m pytest -q -p no:cacheprovider tests/test_sqlite_repository.py::test_get_for_user_maps_unsnoozed_reminder
+          python -m pytest -q -p no:cacheprovider
+          python manual_check.py
+          python captures/sqlite_row_conversion_seam/run_capture.py
+          (cd batch_case && python -m pytest -q -p no:cacheprovider && python probe_atomicity.py batch && python replay_capture.py)
+      - name: Chapter 11 operational, listing and capture checks
+        if: ${{ !cancelled() && steps.runtime.outcome == 'success' }}
+        working-directory: ch11
+        run: |
+          python -m pytest -q -p no:cacheprovider
+          python deployment_guard.py plan deployment.json
+          python deployment_guard.py verify deployment.json observation.json
+          python incident_triage.py incident.jsonl deploy-104
+          python pipeline.py
+          python captures/deployment_policy_value/run_capture.py
+      - name: Reader-workflow and capture regressions
+        if: ${{ !cancelled() && steps.runtime.outcome == 'success' }}
+        run: python -m pytest -q -p no:cacheprovider tests
+      - name: Check Chapter 7-11 preservation and cleanup
+        if: always()
+        run: |
+          git diff --exit-code -- ch07 ch08 ch09 ch10 ch11
+          python -c "from pathlib import Path; work = [p for ch in range(7,12) for p in Path(f'ch{ch:02}').rglob('.work*') if p.is_dir()]; assert not work, work"
