@@ -15,7 +15,9 @@ python3 captures/lost_cent_allocation/run_capture.py --record
 python3 captures/lost_cent_allocation/run_capture.py
 ```
 
-Use `--record` only after intentional review. It recreates red and green evidence from the byte-checked before fixture and records the final-package verification. Default replay does not write evidence. It compares commands, output, exit statuses, the machine-generated patch, fixture checksums, package checksums, metadata, parity entries, and session records.
+Use `--record` only after intentional review. It recreates red and green evidence from the byte-checked before fixture and records the final-package verification. Default replay does not write evidence. It compares commands, output, exit statuses, the stored patch checksum and patched after-state, fixture checksums, package checksums, metadata, parity entries, and session records.
+
+Replay requires the POSIX patch tool. The stored patch retains its original checksum; applying it must produce the byte-exact recorded after-state. Replay does not regenerate its text with the installed diff, whose blank-line alignment can vary between implementations. The runner clears inherited pytest options and CI flags and fixes the diagnostic width to the recorded 80 columns.
 
 Both modes use disposable working space inside this capture directory and remove it on success or failure. The runner performs these steps in order:
 

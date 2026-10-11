@@ -170,7 +170,7 @@
   },
   "runner": {
     "file": "run_capture.py",
-    "checksum": "90acba41e9163232e95cd368eb2dcebc42d3d1be75af96c058493e9ac8d292b1",
+    "checksum": "2bc0b0d0aab3a1903c9a53bf296d0b52227d90bdfc6a5625f657f04df10708b8",
     "record_mode": "--record refreshes package-local command evidence and its metadata checksums only",
     "replay_mode": "default rebuilds in disposable .work space, compares stored artifacts, runs the package-local green suite, and never resolves repository-root paths"
   },

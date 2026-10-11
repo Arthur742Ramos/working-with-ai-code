@@ -86,7 +86,12 @@ def run_command(
     cwd: Path,
 ) -> subprocess.CompletedProcess[str]:
     environment = os.environ.copy()
+    # Reproduce the recorded local diagnostics even when replay runs in CI.
+    for flag in ("CI", "BUILD_NUMBER"):
+        environment.pop(flag, None)
     environment.update({
+        "COLUMNS": "80",
+        "PYTEST_ADDOPTS": "",
         "PY_COLORS": "0",
         "PYTHONDONTWRITEBYTECODE": "1",
         "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
