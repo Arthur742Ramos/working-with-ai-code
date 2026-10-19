@@ -113,12 +113,12 @@
   "normalization": "Stored red evidence replaces the machine-specific disposable traceback path with <WORK>. Replay comparison also normalizes that path and elapsed-time values emitted by unittest.",
   "runner": {
     "path": "run_capture.py",
-    "checksum_sha256": "5400e25a28faea082f74c2820256f8103e884a724b8d078e710d968d19364d4e",
+    "checksum_sha256": "fccea0c62f6903e35b6c75b1ab2d2a513412e75423ac2b7f5c56cdde068104cd",
     "default_mode_rewrites_evidence": false
   },
   "document_checksums_sha256": {
-    "README.md": "5a048d2fcaec3f9dabd6486b8fbe728256460a6df6fcb5a7c39cdd5904b16857",
-    "parity.md": "56fa97dc7473affd6326e6d983387d2e550014865a62104b1d0bea94eb685c95",
+    "README.md": "506fc965551644478f66d78d4f19e93c3ef590cbe6e7f24857b13ffa75a54a8b",
+    "parity.md": "84072508803c3552aa5918f4f1fd377c31b90389d8b61793434c882a0ef0e408",
     "session.md": "a68fa6f8793f1b9a7217fa5368f8decc88156c664b9383f785b23c7c65148eca"
   },
   "final_package": {
@@ -126,12 +126,13 @@
     "test_path": "test_workflow_metrics.py",
     "pytest_config_path": "pytest.ini",
     "checksums_sha256": {
-      "workflow_metrics.py": "e76cb6640d3e2081fc75604779b1c548416edc6d1247e5eed08666a1af84ef0c",
+      "workflow_metrics.py": "7aaf476889d334b7a9ff094421d4e47805490328862601801e4aafd8f2e35d3e",
       "test_workflow_metrics.py": "330a35b8120cb44b5859db467ba578cb557e8d163d9df361dc36dcbf7d582736",
       "pytest.ini": "b3425014fccceb11334322a4c9fbcf5b26a4faa5933caeaeb259c408a2648861"
     },
-    "source_state": "reviewed_green_after_state",
-    "capture_collection_excluded": true
+    "source_state": "readability_refactor_of_reviewed_green_after_state",
+    "capture_collection_excluded": true,
+    "readability_refactor_issue": "https://github.com/Arthur742Ramos/working-with-ai-code/issues/41"
   },
   "replay_dependency_scope": "All replay inputs and checksum targets are inside the final Chapter 12 package. Repository paths and original hashes are retained as provenance only and are not resolved or verified at replay time.",
   "independent_review": {

@@ -2,7 +2,7 @@
 
 | Printed or recorded item | Final package source | Parity status |
 |---|---|---|
-| Green `quality_success_rate` implementation | `workflow_metrics.py` | Matches the checksum-verified patched after-state |
+| Green `quality_success_rate` implementation | `workflow_metrics.py` | Checksum-verified readability refactor of the captured after-state (issue #41); passes the same four tests |
 | Maintained four-test suite | `test_workflow_metrics.py` | Contains the complete behavior suite; the staged chapter prints the focused test and invokes the `test_workflow_metrics` module without claiming the `.py` filename |
 | Top-level test discovery | `pytest.ini` | Collects only the maintained top-level test module and excludes `captures/` |
 | Defective before-state | `before/workflow_metrics.py` | Preserves the verified red implementation |
@@ -16,7 +16,7 @@
 | Pending-attempt exclusion | `test_pending_attempts_are_excluded` | Protected by broader green |
 | Empty-terminal behavior | `test_no_terminal_attempts_returns_zero` | Protected by broader green |
 | Replay integrity | `run_capture.py` | Reproduces red and green states using package-local inputs without mutating the green source or stored evidence |
-| Independent certification | `evidence/independent-review.md` | Separate final-package review completed with verdict Pass after clean replay, minimality, provenance, isolation, printed-parity, and policy-boundary checks |
+| Independent certification | `evidence/independent-review.md` | Retained review of the captured denominator repair, before the issue #41 readability refactor, completed with verdict Pass after clean replay, minimality, provenance, isolation, printed-parity, and policy-boundary checks |
 | Review gate | `run_capture.py`, `metadata.json`, and `evidence/independent-review.md` | `complete_independently_reviewed` is rejected unless active review status is `completed`, verdict is `Pass`, and the package-local review artifact exists with its recorded checksum |
 | Record integrity | `run_capture.py` and `metadata.json` | The completed package checksum-locks the runner, README, parity ledger, session record, and independent-review receipt |
 | Origin provenance | `metadata.json`, `origin_provenance` | Retains the original repository paths and hashes as historical facts; replay neither resolves nor verifies those paths |

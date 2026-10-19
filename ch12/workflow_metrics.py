@@ -11,11 +11,10 @@ def quality_success_rate(
     attempts: list[WorkflowAttempt],
     minimum_quality: float,
 ) -> float:
-    successful_attempts = [
-        attempt
-        for attempt in attempts
-        if attempt.status == "succeeded"
-    ]
+    successful_attempts = []
+    for attempt in attempts:
+        if attempt.status == "succeeded":
+            successful_attempts.append(attempt)
     if not successful_attempts:
         return 0.0
 
