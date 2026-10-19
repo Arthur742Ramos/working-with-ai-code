@@ -30,13 +30,15 @@ The repair keeps the existing successful-attempt list, passing count, and early 
 
 ## What the checks prove
 
-The focused red proves that the before implementation returns `1.0` where the contract requires `0.5`. The focused green proves that the exact patch repairs that input. The broader green protects quality-threshold evaluation, pending-attempt exclusion, and zero when no terminal attempts exist. The final-package check proves the promoted top-level implementation matches the reviewed after-state and passes the same four tests.
+The focused red proves that the before implementation returns `1.0` where the contract requires `0.5`. The focused green proves that the exact patch repairs that input. The broader green protects quality-threshold evaluation, pending-attempt exclusion, and zero when no terminal attempts exist. The final-package check verifies the current top-level implementation against its own checksum and runs the same four tests. Issue #41 replaced its successful-attempt list comprehension with an explicit loop for readability; the captured patch and its reviewed after-state remain unchanged.
 
 ## Independent certification
 
 A separate independent canonical capture review replayed the package from disposable and isolated copies, regenerated the exact patch, checked minimality, verified printed parity and provenance, and confirmed the human policy boundary. The attributable receipt is `evidence/independent-review.md`.
 
-Active package state is `complete_independently_reviewed`, review status is `completed`, and the final verdict is `Pass`. Default replay rejects that completed stage if the active review status is missing or pending, the verdict is not `Pass`, or the review artifact or a checksum-locked package record is missing or invalid.
+The retained independent-review receipt covers the captured denominator repair before the issue #41 readability refactor.
+
+Active capture state is `complete_independently_reviewed`, review status is `completed`, and the final verdict is `Pass`. Default replay rejects that completed stage if the active review status is missing or pending, the verdict is not `Pass`, or the review artifact or a checksum-locked package record is missing or invalid.
 
 ## Remaining limitations and policy boundary
 

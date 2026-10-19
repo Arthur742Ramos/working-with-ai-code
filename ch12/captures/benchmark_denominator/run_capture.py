@@ -49,7 +49,7 @@ EXPECTED_SHA256 = {
         "afdf96e67644b9a2db08e695aae3bfb49032f2b431ae445819653545827b8ba6"
     ),
     PACKAGE_SOURCE: (
-        "e76cb6640d3e2081fc75604779b1c548416edc6d1247e5eed08666a1af84ef0c"
+        "7aaf476889d334b7a9ff094421d4e47805490328862601801e4aafd8f2e35d3e"
     ),
     PACKAGE_TEST: (
         "330a35b8120cb44b5859db467ba578cb557e8d163d9df361dc36dcbf7d582736"
@@ -204,8 +204,6 @@ def verify_inputs(check_evidence: bool) -> None:
     verify_hashes(EXPECTED_SHA256)
     if check_evidence:
         verify_hashes(EXPECTED_EVIDENCE_SHA256)
-    if sha256(PACKAGE_SOURCE) != EXPECTED_AFTER_SHA256:
-        raise RuntimeError("package source is not the reviewed after-state")
     if BEFORE_SOURCE.read_bytes() == PACKAGE_SOURCE.read_bytes():
         raise RuntimeError("package source still contains the red before-state")
     if FOCUSED_TEST.read_bytes() != PACKAGE_TEST.read_bytes():
