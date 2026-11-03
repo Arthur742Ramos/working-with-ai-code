@@ -49,10 +49,14 @@ PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q
 ## Replay the captured repair
 
 ```bash
-python3 captures/pr_generator_retry_wiring/run_capture.py
+python3 run_checks.py
 ```
 
-Replay verifies the historical before state, genuine red output, stored one-line patch, focused and broader green evidence, and package-local checksums. It also copies this package into disposable isolated space and runs the promoted top-level tests there. Default replay never rewrites historical evidence. The final-polish recertification is a separate current-package record; it does not revise the captured retry session.
+The wrapper restores the three original support files in a temporary copy and runs the unchanged capture verifier there. This verifies the historical red output, one-line repair, focused and broader green evidence, and original 18-test package. It then demonstrates that the new repeated-diff regression fails against that original fixture, and runs all 21 tests against the corrected current package. No historical evidence is rewritten.
+
+The follow-on correction in `corrections/retry_feedback/` strengthens the fixture: a repeated prompt containing the word “invalid” no longer counts as parser feedback. The fixture now checks the three-message history, preserved malformed reply, and the parser-error prefix for that known reply. This checks the deterministic example, not arbitrary provider behavior or every possible schema-validation error.
+
+The original direct capture runner and its final-polish recertification describe the historical package. Use the wrapper above for the current package; the historical receipt does not certify this later correction.
 
 ## Optional live provider
 
