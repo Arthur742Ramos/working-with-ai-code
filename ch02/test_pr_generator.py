@@ -37,6 +37,50 @@ class LocalFixtureTests(unittest.TestCase):
                 AssertionError, "omitted validation feedback"):
             chat(messages)
 
+    def test_repeated_diff_is_not_validation_feedback(self):
+        prompt = pr_generator.build_prompt(FIXED_DIFF)
+        messages = [
+            {"role": "user", "content": prompt},
+            {"role": "assistant", "content": "not-json"},
+            {"role": "user", "content": prompt},
+        ]
+        with self.assertRaisesRegex(
+                AssertionError, "omitted validation feedback"):
+            chat(messages)
+
+    def test_generic_invalid_word_is_not_parser_feedback(self):
+        messages = [
+            {"role": "user", "content": "contract"},
+            {"role": "assistant", "content": "not-json"},
+            {"role": "user", "content": "The JSON is invalid. Try again."},
+        ]
+        with self.assertRaisesRegex(
+                AssertionError, "omitted validation feedback"):
+            chat(messages)
+
+    def test_retry_preserves_roles_and_failed_response(self):
+        correction = ("That JSON was invalid: Expecting value: "
+                      "line 1 column 1 (char 0). Fix it to match the schema.")
+        for history in (
+                [{"role": "user", "content": "contract"}],
+                [{"role": "user", "content": "contract"},
+                 {"role": "user", "content": "not-json"}],
+                [{"role": "user", "content": "contract"},
+                 {"role": "assistant", "content": "different failure"}],
+        ):
+            with self.subTest(history=history):
+                with self.assertRaisesRegex(
+                        AssertionError, "lost conversation history"):
+                    chat(history + [{"role": "user", "content": correction}])
+        messages = [
+            {"role": "user", "content": "contract"},
+            {"role": "assistant", "content": "not-json"},
+            {"role": "assistant", "content": correction},
+        ]
+        with self.assertRaisesRegex(
+                AssertionError, "lost conversation history"):
+            chat(messages)
+
 
 class SchemaTests(unittest.TestCase):
     def test_valid_response_passes(self):

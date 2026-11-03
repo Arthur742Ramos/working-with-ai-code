@@ -194,6 +194,11 @@ class Handler(BaseHTTPRequestHandler):
         try:
             summary, hit = get_summary(order_id)
         except MissingProductError as exc:
+            elapsed = (time.time() - start) * 1000
+            log(
+                "ERROR order=%d 422 %.1fms %s"
+                % (order_id, elapsed, exc)
+            )
             self._send(422, {"error": str(exc)})
             return
         except Exception as exc:

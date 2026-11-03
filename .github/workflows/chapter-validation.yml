@@ -1,8 +1,9 @@
-name: Chapter 3-11 validation
+name: Chapter 2-11 validation
 
 on:
   pull_request:
     paths:
+      - 'ch02/**'
       - 'ch03/**'
       - 'ch04/**'
       - 'ch05/**'
@@ -17,6 +18,7 @@ on:
   push:
     branches: [main]
     paths:
+      - 'ch02/**'
       - 'ch03/**'
       - 'ch04/**'
       - 'ch05/**'
@@ -62,7 +64,7 @@ jobs:
       - name: Install declared test dependencies in an isolated environment
         run: |
           python -m venv "$RUNNER_TEMP/chapter-validation"
-          "$RUNNER_TEMP/chapter-validation/bin/python" -m pip install --disable-pip-version-check 'pytest==9.1.1' -r ch03/requirements-branches.txt
+          "$RUNNER_TEMP/chapter-validation/bin/python" -m pip install --disable-pip-version-check 'pytest==9.1.1' 'jsonschema>=4,<5' -r ch03/requirements-branches.txt
           echo "$RUNNER_TEMP/chapter-validation/bin" >> "$GITHUB_PATH"
           command -v patch
           command -v diff
@@ -70,6 +72,10 @@ jobs:
         id: runtime
         run: |
           python -c "import sys, pytest; assert sys.version_info[:3] == (3, 14, 6); assert pytest.__version__ == '9.1.1'; print(sys.version); print('pytest', pytest.__version__)"
+      - name: Chapter 2 historical replay and follow-on regression
+        if: ${{ !cancelled() && steps.runtime.outcome == 'success' }}
+        working-directory: ch02
+        run: python run_checks.py
       - name: Chapter 3 green checks and non-recording replay
         if: ${{ !cancelled() && steps.runtime.outcome == 'success' }}
         working-directory: ch03
@@ -97,7 +103,7 @@ jobs:
           python tests/test_orphan_policy.py
           python tests/test_orphan_policy_broader.py
           python tests/test_capture_inventory.py -v
-          python captures/incident_orphan_product_policy/run_capture.py
+          python run_checks.py
       - name: Chapter 6 green checks and non-recording replay
         if: ${{ !cancelled() && steps.runtime.outcome == 'success' }}
         working-directory: ch06
@@ -117,8 +123,8 @@ jobs:
       - name: Check tracked-file preservation and capture cleanup
         if: always()
         run: |
-          git diff --exit-code -- ch03 ch04 ch05 ch06
-          python -c "from pathlib import Path; work = list(Path('.').glob('ch0[3456]/captures/*/.work')); assert not work, work"
+          git diff --exit-code -- ch02 ch03 ch04 ch05 ch06
+          python -c "from pathlib import Path; work = list(Path('.').glob('ch0[23456]/captures/*/.work')); assert not work, work"
       - name: Chapter 7 green checks and non-recording replay
         if: ${{ !cancelled() && steps.runtime.outcome == 'success' }}
         working-directory: ch07

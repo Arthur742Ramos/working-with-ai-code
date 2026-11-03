@@ -1,6 +1,5 @@
 """Platform-independent ordering checks for the capture's current inventory."""
 import importlib.util
-import json
 from pathlib import Path, PurePosixPath, PureWindowsPath
 import unittest
 from unittest.mock import patch
@@ -84,8 +83,14 @@ class CaptureInventoryTests(unittest.TestCase):
         self.check_order(PurePosixPath, "/fixture/ch05")
 
     def test_live_package_matches_recorded_inventory(self):
-        metadata = json.loads((CAPTURE_ROOT / "metadata.json").read_text(encoding="utf-8"))
-        RUNNER.verify_package_inventory(metadata)
+        # The frozen capture's inventory describes its historical package.
+        # The follow-on manifest binds the current, expanded publication instead.
+        spec = importlib.util.spec_from_file_location(
+            "publication_checks", PACKAGE_ROOT / "run_checks.py"
+        )
+        publication = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(publication)
+        publication.verify_publication()
 
 
 if __name__ == "__main__":

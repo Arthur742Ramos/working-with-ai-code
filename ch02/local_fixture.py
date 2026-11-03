@@ -40,8 +40,14 @@ def chat(messages,
          max_tokens=1024) -> str:
     if len(messages) == 1:
         return "not-json"
+    if (len(messages) != 3
+            or [m["role"] for m in messages]
+            != ["user", "assistant", "user"]
+            or messages[1]["content"] != "not-json"):
+        raise AssertionError("retry lost conversation history")
     correction = messages[-1]["content"]
-    if "invalid" not in correction.lower():
+    if not correction.startswith(
+            "That JSON was invalid: Expecting value:"):
         raise AssertionError(
             "retry omitted validation feedback")
     return json.dumps(VALID_RESPONSE)
