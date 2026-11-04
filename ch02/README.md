@@ -14,27 +14,27 @@ This internal package contains the finished offline PR-description generator and
 
 ## Install dependencies
 
+The commands that set `PYTHONDONTWRITEBYTECODE` use POSIX shell syntax. In PowerShell, set `$env:PYTHONDONTWRITEBYTECODE = '1'` first, then omit the leading assignment from each command. On Windows, if `python3` is unavailable, replace it with an available Python 3 launcher such as `python` or `py -3`.
+
 For the offline generator and the unittest suite, install `jsonschema`:
 
 ```bash
-python3 -m pip install jsonschema
+python3 -m pip install 'jsonschema>=4.0'
 ```
 
 To run the optional pytest command, install pytest as well:
 
 ```bash
-python3 -m pip install pytest
+python3 -m pip install 'pytest>=8,<10'
 ```
 
-The checked-in manifest installs both of these dependencies and Anthropic's optional SDK:
+To install both dependencies and Anthropic's optional SDK from the checked-in manifest, run this command from the `ch02` directory:
 
 ```bash
 python3 -m pip install -r requirements.txt
 ```
 
 ## Run the offline generator
-
-The commands that set `PYTHONDONTWRITEBYTECODE` use POSIX shell syntax. In PowerShell, set `$env:PYTHONDONTWRITEBYTECODE = '1'` first, then omit the leading assignment from each command.
 
 After installing `jsonschema`, run from any directory:
 
@@ -66,6 +66,8 @@ Bytecode suppression and the pytest cache flag prevent two kinds of new cache re
 
 ## Replay the captured repair
 
+From this directory, run the wrapper. The historical verifier requires the `patch` executable on `PATH`:
+
 ```bash
 PYTHONDONTWRITEBYTECODE=1 python3 run_checks.py
 ```
@@ -87,7 +89,7 @@ The original direct capture runner and its final-polish recertification describe
 The offline path is the default and has no provider prerequisite. To use the optional adapter, install the official SDK:
 
 ```bash
-python3 -m pip install anthropic
+python3 -m pip install 'anthropic>=0.75'
 ```
 
 Then change only the import boundary in `pr_generator.py`: import `FIXED_DIFF` from `local_fixture` and import `chat` from `anthropic_adapter`. Configure credentials through a credential source supported by the SDK, and set `ANTHROPIC_MODEL` to a currently supported model identifier. The parser, local schema validator, renderer, and retry policy stay unchanged.
