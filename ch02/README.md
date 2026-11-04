@@ -22,6 +22,8 @@ For the offline generator and the unittest suite, install `jsonschema`:
 python3 -m pip install 'jsonschema>=4.0'
 ```
 
+Replay uses isolated Python, which ignores user-site packages. Install `jsonschema` in the virtual environment used to run the wrapper, or in another site-packages directory visible to that isolated interpreter.
+
 To run the optional pytest command, install pytest as well:
 
 ```bash

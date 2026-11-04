@@ -75,7 +75,9 @@ jobs:
       - name: Chapter 2 historical replay and follow-on regression
         if: ${{ !cancelled() && steps.runtime.outcome == 'success' }}
         working-directory: ch02
-        run: python run_checks.py
+        run: |
+          python run_checks.py
+          python -m pytest -q -p no:cacheprovider
       - name: Chapter 3 green checks and non-recording replay
         if: ${{ !cancelled() && steps.runtime.outcome == 'success' }}
         working-directory: ch03
