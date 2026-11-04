@@ -15,8 +15,8 @@ python3 captures/boolean_as_integer_role_handoff/run_capture.py
 ```
 
 Default replay removes stale `.work/` state before preflight. It checksum-verifies
-the before fixture, capture test, stored patch, evidence, every top-level
-executable support file, and the active independent-review receipt. The resolved
+the before fixture, capture test, stored patch, evidence, the capture-era
+support files, and the active independent-review receipt. The resolved
 evidence root must remain under the resolved capture directory.
 
 The runner rebuilds disposable red and repaired states, runs the focused and
