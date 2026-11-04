@@ -42,6 +42,23 @@ def test_final_package_is_self_contained(tmp_path, chapter, count):
     assert f"{count} passed" in pytest_at(package)
 
 
+def test_ch06_readable_listing_keeps_the_captured_before_behavior():
+    package = ROOT / "ch06"
+    listing = runpy.run_path(str(package / "listing_6_1.py"))
+    captured = runpy.run_path(str(package / "captures/boolean_as_integer_role_handoff/before/validator.py"))
+    schema = {
+        "port": {"type": "int", "required": True},
+        "service": {"type": "dict", "fields": {"name": {"type": "str", "required": True}}},
+        "unknown": {"type": "unrecognized"},
+    }
+    for config in ({}, {"port": True}, {"port": "bad", "service": {}}, {"port": 42, "service": {"name": "api"}}):
+        observed = [(error.path, error.message) for error in listing["validate"](config, schema)]
+        expected = [(error.path, error.message) for error in captured["validate"](config, schema)]
+        assert observed == expected
+    red = run(package, sys.executable, "test_bool_is_not_accepted_as_int.py", "listing_6_1.py", status=1)
+    assert "observed: no validation errors; True was accepted" in red
+
+
 def test_ch07_documented_real_paths_preserve_red_and_green():
     capture = ROOT / "ch07/captures/strict_float_validator"
     red = run(capture, sys.executable, "tests/focused_test.py", "before/validator.py", status=1)

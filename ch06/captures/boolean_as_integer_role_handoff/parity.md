@@ -14,7 +14,7 @@ Status: one Claude Code session captured the tester and implementer artifacts; a
 
 | Chapter item | Maintained package source | Intentional difference |
 |---|---|---|
-| Listing 6.1, coder implementation before independent testing | `before/validator.py` for before-state behavior; top-level `validator.py` for presentation formatting | The listing is a presentation composite: it uses the top-level annotated formatting with the captured permissive `int` predicate. The copied before fixture retains its capture-era module documentation and compact recursion formatting. The top-level implementation remains green with `type(value) is int`. |
+| Listing 6.1, coder implementation before independent testing | Top-level `listing_6_1.py`; `before/validator.py` for captured before-state behavior | The listing uses `ValidationError` directly instead of the captured `E` alias and retains the permissive `int` predicate. The before fixture is unchanged; top-level `validator.py` remains green with `type(value) is int`. |
 | Listing 6.2, contract-derived maintained-suite excerpt | Four functions in top-level `test_validator.py` | The chapter prints the complete functions without modification. |
 | Listings 6.3 and 6.4, independent focused test | Top-level `test_bool_is_not_accepted_as_int.py` | The capture copy under `tests/` is behaviorally identical and emits the same output, but it retains the original capture docstring and formats the usage message on one line. |
 | Listing 6.5, thin command-line runner | Top-level `cli.py` | No intentional code difference. |
@@ -33,7 +33,7 @@ Status: one Claude Code session captured the tester and implementer artifacts; a
 | Top-level focused green check | Top-level `test_bool_is_not_accepted_as_int.py` | Runs separately from pytest and matches Listings 6.3 and 6.4 together |
 | Top-level test discovery boundary | Top-level `pytest.ini` | `python3 -m pytest -q` collects only `test_validator.py`; capture internals remain replay-only |
 | Thin runner | Top-level `cli.py` | Matches Listing 6.5 |
-| Non-recording replay | `run_capture.py` | Cleans stale work before preflight, verifies that the resolved evidence root remains under the capture package, recreates and compares red, patch, focused green, broader green, evidence checksums, all top-level executable checksums, and the independent-review receipt without rewriting evidence; disables pytest caching so replay leaves no package-root `.pytest_cache/` |
+| Non-recording replay | `run_capture.py` | Cleans stale work before preflight, verifies that the resolved evidence root remains under the capture package, recreates and compares red, patch, focused green, broader green, evidence checksums, capture-era support checksums, and the independent-review receipt without rewriting evidence; disables pytest caching so replay leaves no package-root `.pytest_cache/` |
 
 ## Origin and isolation
 

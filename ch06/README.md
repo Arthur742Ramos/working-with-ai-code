@@ -7,6 +7,7 @@ the commands below from the copied directory.
 
 ## Files
 
+- `listing_6_1.py` is the readable, permissive before-state printed in Listing 6.1.
 - `validator.py` is the final green implementation.
 - `test_validator.py` contains the eight maintained broader checks.
 - `test_bool_is_not_accepted_as_int.py` is the reader-facing focused tester listing and standalone green check.
@@ -70,14 +71,14 @@ python3 captures/boolean_as_integer_role_handoff/run_capture.py
 
 Replay removes stale work before preflight and creates disposable red and repaired
 states inside the capture. It compares those states with the stored evidence and
-verifies every top-level executable artifact and the independent-review receipt
+verifies the capture-era support artifacts and the independent-review receipt
 by checksum. The working directory is removed after success or failure. Replay
 does not import repository-root code, inspect another chapter, rewrite evidence,
 or replace the top-level green implementation.
 
 ## Chapter listing map
 
-- Listing 6.1 is a presentation composite. Its formatting follows top-level `validator.py`, while its permissive `int` predicate comes from the captured before state. The top-level file keeps the accepted strict predicate.
+- Listing 6.1 matches `listing_6_1.py`. It uses `ValidationError` directly for readability and retains the captured before-state's permissive `int` predicate. The captured fixture and top-level green `validator.py` retain the original `E` alias; the green implementation uses the accepted strict predicate. The listing file is a later presentation artifact and is outside the historical replay checksums.
 - Listing 6.2 excerpts four contract-derived cases from top-level `test_validator.py`.
 - Listings 6.3 and 6.4 together match top-level `test_bool_is_not_accepted_as_int.py`. The capture copy is behaviorally identical but retains the original capture docstring and usage-line wrapping.
 - Listing 6.5 matches top-level `cli.py` with no intentional code difference.

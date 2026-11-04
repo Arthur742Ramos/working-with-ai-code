@@ -90,8 +90,8 @@
   "listing_map": {
     "6.1": {
       "artifact": "coder implementation before independent testing",
-      "source": "before/validator.py plus the presentation formatting in top-level validator.py",
-      "difference": "The listing keeps the top-level file's compact annotated formatting but substitutes the captured permissive int predicate. The top-level file remains the accepted green state."
+      "source": "top-level listing_6_1.py; before/validator.py for captured before-state behavior",
+      "difference": "The listing uses ValidationError directly instead of the captured E alias and retains the permissive int predicate. The captured fixture is unchanged; top-level validator.py remains the accepted strict green state."
     },
     "6.2": {
       "artifact": "contract-derived maintained-suite excerpt",
