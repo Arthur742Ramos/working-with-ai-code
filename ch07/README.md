@@ -7,6 +7,7 @@ This self-contained package keeps the bounded tool-use loop, the final JSON vali
 - `agent_loop.py` is the complete implementation printed as Listing 7.1, "A minimal bounded tool-use loop."
 - `captures/strict_float_validator/patches/strict_float_validator.diff` is the exact one-line production diff printed as Listing 7.3, "The strict smallest float registration."
 - `demo_agent.py` and `contract.txt` make Listing 7.2 runnable with `python3 demo_agent.py`. Its adapter is scripted: no model or network is invoked.
+- `issue_injection.py` is Listing 7.4. Run `python3 issue_injection.py` to see the host deny a scripted request to call a disabled messaging tool. Both the model and tool are simulated; no message is sent.
 - `validator.py` is the maintained green after-state exercised by the package tests. It is support code, not a separate numbered listing.
 - `cli.py` is the runnable command-line wrapper for the validator. It is support code, not a numbered listing.
 - Tables 7.1 through 7.5 describe stop conditions, workflow choice, worker contracts, failure routing, and autonomy postures. They are conceptual decision aids and have no executable table artifact in this package.
@@ -14,6 +15,7 @@ This self-contained package keeps the bounded tool-use loop, the final JSON vali
 ## Files
 
 - `test_agent_loop.py` checks final text, allowed tool execution, forbidden tools, and step-budget exhaustion.
+- `test_issue_injection.py` checks the denied request, a benign issue, and a control in which the harmless simulated tool is allowed.
 - `test_validator.py` contains nine final-state checks, including the explicit policy that a `float` subclass is rejected.
 - `fixtures/` contains one schema plus valid and invalid configuration files for the CLI.
 - `pytest.ini` limits top-level discovery to `test_*.py` outside `captures/`, so historical capture internals run only through their replay command.
@@ -27,7 +29,7 @@ Run from this directory:
 python3 -m pytest -q -p no:cacheprovider
 ```
 
-The expected result is thirteen passing tests: four bounded-loop tests and nine validator tests. Pytest does not recurse into `captures/`.
+The expected result is sixteen passing tests: four bounded-loop tests, three injection-example tests, and nine validator tests. Pytest does not recurse into `captures/`.
 
 ## Run the validator CLI
 
