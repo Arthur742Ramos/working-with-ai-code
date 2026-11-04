@@ -15,6 +15,7 @@ This internal package keeps the green shared-client alert seam, the complete ret
 - `parity.md` maps every staged code and session surface to its package-local maintained source and records intentional differences.
 - `test_package_parity.py` checks the staged rule, alert repair, parity map, replay locality, and pytest discovery boundary.
 - `pytest.ini` limits top-level discovery to maintained green tests and excludes capture internals.
+- `run_checks.py` replays the historical capture and checks the current package.
 - `captures/house_rule_seam/` preserves the immutable direct-transport red state, exact three-line repair, raw evidence, and package-local replay runner.
 
 ## Verify the final package
@@ -33,10 +34,10 @@ The expected result is twenty-eight passing tests. `pytest.ini` prevents recursi
 Run from this directory:
 
 ```bash
-python3 captures/house_rule_seam/run_capture.py
+PYTHONDONTWRITEBYTECODE=1 python3 run_checks.py
 ```
 
-Replay reconstructs the red and repaired alert states in disposable package-local space, verifies the stored patch and original evidence, runs focused and broader capture checks, runs the final top-level suite, checks package-local parity records, and removes temporary work. Default replay does not rewrite evidence.
+The wrapper restores the original README and guard file in a temporary copy before running the unchanged capture verifier. It then runs the current top-level suite. The captured red and green results, patch, checksums, and review receipt remain historical records; the receipt does not certify the later wording change. The original direct replay command expects the historical package, so use the wrapper for this version.
 
 The capture metadata retains the repository commit, canonical checksums, and canonical-support green output from the original session as historical provenance. Replay verifies those records as stored evidence only. It does not locate or execute canonical chapter files, repository support code, other chapters, graphics, or Box.
 
@@ -50,6 +51,7 @@ No command requires a model SDK, network access, repository-root configuration, 
 
 ## Remaining limitations
 
+- The import guard checks listed direct transport imports in top-level feature files. It cannot prove every outbound request passes through the shared client.
 - The alert tests use an injected transport. They do not prove live endpoint availability, credential validity, production backoff timing, or observability.
 - The local retriever ranks lexical token overlap rather than production embeddings, metadata filters, hybrid search, or reranking.
 - `recall_at_k` assumes evaluators already labeled the required source identifiers. It does not score whether a model used the evidence correctly.

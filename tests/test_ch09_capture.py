@@ -94,6 +94,10 @@ def test_readable_retriever_keeps_ranking_and_stable_ties(capsys):
 def test_record_then_replay_in_disposable_package(tmp_path):
     package = tmp_path / "ch09"
     shutil.copytree(CAPTURE.parents[1], package, ignore=shutil.ignore_patterns("__pycache__", ".work*"))
+    # The original capture certifies the historical package, not later wording.
+    historical = package / "corrections/guard_description/historical"
+    for name in ("README.md", "test_house_rules.py"):
+        shutil.copy2(historical / name, package / name)
     capture = package / "captures/house_rule_seam"
     environment = os.environ.copy()
     environment.update(PYTHONDONTWRITEBYTECODE="1", PYTEST_DISABLE_PLUGIN_AUTOLOAD="1")
