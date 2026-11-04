@@ -1,4 +1,4 @@
-"""Executable guard: feature modules use only the house HTTP client."""
+"""Reject listed direct transport imports in scanned feature modules."""
 
 import ast
 from dataclasses import dataclass

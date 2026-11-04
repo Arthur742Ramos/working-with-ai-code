@@ -1,6 +1,6 @@
 # Chapter 2 final support package
 
-This internal package contains the finished offline PR-description generator and the verified retry-wiring capture. The top-level files are the green reader-facing implementation. They run without a network, credentials, a Git repository, or another chapter's files.
+This package contains the finished offline PR-description generator and the verified retry-wiring capture. The top-level files are the green reader-facing implementation. They run without a network, credentials, a Git repository, or another chapter's files.
 
 ## Files
 
@@ -14,7 +14,14 @@ This internal package contains the finished offline PR-description generator and
 
 ## Install dependencies
 
-The commands that set `PYTHONDONTWRITEBYTECODE` use POSIX shell syntax. In PowerShell, set `$env:PYTHONDONTWRITEBYTECODE = '1'` first, then omit the leading assignment from each command. On Windows, if `python3` is unavailable, replace it with an available Python 3 launcher such as `python` or `py -3`.
+From this directory, create an environment beside the package and activate it:
+
+```bash
+python3 -m venv ../.venv/ch02
+source ../.venv/ch02/bin/activate
+```
+
+In Windows PowerShell, run `py -3 -m venv ..\.venv\ch02` followed by `..\.venv\ch02\Scripts\Activate.ps1`, then use `python` in place of `python3` below. The environment stays outside the package, so the replay does not copy it. The commands that set `PYTHONDONTWRITEBYTECODE` use POSIX shell syntax. In PowerShell, set `$env:PYTHONDONTWRITEBYTECODE = '1'` first, then omit the leading assignment from each command.
 
 For the offline generator and the unittest suite, install `jsonschema`:
 
@@ -95,6 +102,8 @@ python3 -m pip install 'anthropic>=0.75'
 ```
 
 Then change only the import boundary in `pr_generator.py`: import `FIXED_DIFF` from `local_fixture` and import `chat` from `anthropic_adapter`. Configure credentials through a credential source supported by the SDK, and set `ANTHROPIC_MODEL` to a currently supported model identifier. The parser, local schema validator, renderer, and retry policy stay unchanged.
+
+This adapter requests ordinary text; it does not enable provider-constrained output. For that option, see the [Claude structured-output guide](https://platform.claude.com/docs/en/build-with-claude/structured-outputs) or the [OpenAI structured-output guide](https://developers.openai.com/api/docs/guides/structured-outputs). Check the supported schema keywords for the selected mode. For example, if a mode does not accept `minLength` or `minItems: 2`, use a supported provider-side subset and keep the full local schema to reject short strings and arrays. Continue handling refusals and incomplete responses.
 
 To remove that SDK from the selected environment, run `python3 -m pip uninstall anthropic`. This disables the optional adapter in that environment.
 

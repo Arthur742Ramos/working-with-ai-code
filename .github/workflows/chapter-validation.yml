@@ -154,7 +154,7 @@ jobs:
           python -m pytest -q -p no:cacheprovider
           python teaching/retrieval_demo.py
           python -m pytest -q -p no:cacheprovider teaching/test_retrieval_demo.py
-          python captures/house_rule_seam/run_capture.py
+          python run_checks.py
       - name: Chapter 10 adapter, package, batch and capture checks
         if: ${{ !cancelled() && steps.runtime.outcome == 'success' }}
         working-directory: ch10
