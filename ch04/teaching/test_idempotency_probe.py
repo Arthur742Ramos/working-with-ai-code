@@ -9,9 +9,9 @@ def test_service_with_distinct_conflict_status_rejects_changed_payload():
     }
 
 
-def test_service_that_reuses_409_exposes_the_importers_assumption():
+def test_service_that_reuses_409_rejects_changed_payload():
     assert run_probe(409) == {
         "statuses": [201, 409, 409],
-        "conflicting_payload_accepted": True,
+        "conflicting_payload_accepted": False,
         "stored_customers": 1,
     }

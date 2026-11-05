@@ -1,4 +1,4 @@
-"""Compare two endpoint contracts against the chapter's importer.
+"""Compare two endpoint contracts against the maintained importer.
 
 Both servers are local fixtures. Their behavior is chosen for the exercise and
 does not establish the contract of any real customer service.
@@ -6,13 +6,16 @@ does not establish the contract of any real customer service.
 
 from http.client import HTTPConnection
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+import hashlib
 import json
 from pathlib import Path
 import sys
 import threading
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from importer import ApiResult, parse_customer, send_with_retry
+from importer_current import (
+    ApiResult, parse_customer, send_with_retry,
+)
 
 
 def run_probe(conflict_status):
@@ -32,7 +35,22 @@ def run_probe(conflict_status):
                     records[key] = payload
                     status, message = 201, "created"
                 elif records[key] == payload:
-                    status, message = 409, "already created"
+                    identity = {
+                        "method": "POST", "path": self.path,
+                        "json": records[key],
+                    }
+                    encoded = json.dumps(
+                        identity, sort_keys=True,
+                        separators=(",", ":"),
+                        ensure_ascii=True, allow_nan=False,
+                    ).encode("utf-8")
+                    status = 409
+                    message = json.dumps({
+                        "code": "idempotent_replay", "key": key,
+                        "request_sha256": hashlib.sha256(
+                            encoded
+                        ).hexdigest(),
+                    })
                 else:
                     status, message = conflict_status, "different payload"
             body = message.encode("utf-8")
