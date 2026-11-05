@@ -26,7 +26,6 @@ Constraints:
 - Use only the provided diff
 - Propose test scenarios; do not claim they ran
 - Do not invent behavior absent from the diff
-- Keep each list item under 12 words
 - summary, tests, risks must each have 2+ items
 
 Output format:

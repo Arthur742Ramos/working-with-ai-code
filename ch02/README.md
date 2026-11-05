@@ -81,7 +81,7 @@ From this directory, run the wrapper. The historical verifier requires the `patc
 PYTHONDONTWRITEBYTECODE=1 python3 run_checks.py
 ```
 
-The wrapper restores the original `README.md`, `local_fixture.py`, and `test_pr_generator.py` from `corrections/retry_feedback/historical/` into a temporary copy and runs the unchanged capture verifier there. This verifies the historical red output, one-line repair, focused and broader green evidence, and original 18-test package. It then demonstrates that the new repeated-diff regression fails against that original fixture, and runs all 21 tests against the corrected current package. No historical evidence is rewritten.
+The wrapper restores the original `README.md`, `local_fixture.py`, `pr_generator.py`, and `test_pr_generator.py` from `corrections/retry_feedback/historical/` into a temporary copy and runs the unchanged capture verifier there. This verifies the historical red output, one-line repair, focused and broader green evidence, and original 18-test package. It then demonstrates that the new repeated-diff regression fails against that original fixture, and runs all 22 tests against the corrected current package. No historical evidence is rewritten.
 
 The historical red subprocess is expected to exit 1, and the repaired checks should pass. The follow-on regression also fails against the original fixture. Successful verification exits 0 overall. A checksum, generated-residue, or unexpected test failure is a replay failure, not the expected red result.
 
@@ -90,6 +90,8 @@ Historical checksums cover exact file bytes, including line endings. If a checko
 The unchanged historical focused test can fail on Windows with `WinError 32` when it tries to remove its current working directory. This makes the wrapper fail overall, even if the current top-level tests pass when run separately.
 
 The follow-on correction in `corrections/retry_feedback/` strengthens the fixture: a repeated prompt containing the word “invalid” no longer counts as parser feedback. The fixture now checks the three-message history, preserved malformed reply, and the parser-error prefix for that known reply. This checks the deterministic example, not arbitrary provider behavior or every possible schema-validation error.
+
+The current prompt also removes the arbitrary 12-word limit for list items. The schema still enforces structure and item counts; a regression test accepts a longer descriptive item. The historical generator retains its original prompt for replay.
 
 The original direct capture runner and its final-polish recertification describe the historical package. Use the wrapper above for the current package; the historical receipt does not certify the updated README or the later fixture correction.
 

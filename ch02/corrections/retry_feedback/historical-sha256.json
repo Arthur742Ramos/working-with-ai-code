@@ -26,5 +26,6 @@
   "captures/pr_generator_retry_wiring/tests/focused_test.py": "fc9151d05b76410410db39514abf8611fa606874e7ddc94eb26d62e0085e4697",
   "corrections/retry_feedback/historical/README.md": "1afb61eae9f0228340b70ea06c0690f9b927c2a685330285e3be3024e8f0aa2a",
   "corrections/retry_feedback/historical/local_fixture.py": "8d137853f4deca00100cd8107e21233f4c2f0c3ab906f316b99d6d76508f9866",
+  "corrections/retry_feedback/historical/pr_generator.py": "8f3941de35500d3fdc66256eb279fdf0886ef4b4eacf271c285a2b45f1fabda4",
   "corrections/retry_feedback/historical/test_pr_generator.py": "e0caa5f348822cd659cd54a4086c96ce8b30891169901a78a0cb1f78fc87b347"
 }
