@@ -9,7 +9,7 @@ import sys
 from pathlib import Path
 
 CAPTURE_DIR = Path(__file__).resolve().parent
-PACKAGE_ROOT = CAPTURE_DIR.parents[1]
+PACKAGE_ROOT = CAPTURE_DIR / "package_snapshot"
 METADATA_PATH = CAPTURE_DIR / "metadata.json"
 BEFORE_PATH = CAPTURE_DIR / "before" / "event_processor.py"
 FOCUSED_TEST = CAPTURE_DIR / "tests" / "focused_test.py"
@@ -496,7 +496,7 @@ def run_capture():
     canonical_green = run_canonical_support()
     if canonical_green[0] != 0:
         raise CaptureError(
-            "final package tests failed:\n"
+            "historical package tests failed:\n"
             f"{canonical_green[1]}"
         )
     return patch, {
@@ -541,9 +541,9 @@ def main():
         print("PATCH: MATCH (readable missing-key guard)")
         print("FOCUSED GREEN: MATCH (exit 0)")
         print("BROADER GREEN: MATCH (exit 0)")
-        print("FINAL PACKAGE: MATCH (exit 0)")
+        print("HISTORICAL PACKAGE: MATCH (exit 0)")
         print("CHAPTER SESSION: MATCH")
-        print("INDEPENDENT REVIEW: PASS")
+        print("HISTORICAL INDEPENDENT REVIEW: PASS")
         print("PARITY: PASS")
     except (CaptureError, KeyError, OSError) as exc:
         print(f"CAPTURE ERROR: {exc}", file=sys.stderr)

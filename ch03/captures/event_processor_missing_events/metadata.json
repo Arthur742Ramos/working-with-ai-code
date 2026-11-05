@@ -86,8 +86,8 @@
     "test_event_processor.py": "sha256:090b9f149a8c64ac568a574460fb650cdccfcdecf72c456f01ecd61796f54dbe"
   },
   "record_checksums": {
-    "run_capture.py": "sha256:3639f27dea51c47baaab5e16ab7daa7ebd87fb15969beca1f56d07db82423845",
-    "README.md": "sha256:deb99b266f0188070f707adce6ed52c4a0ea795f0b329a5da5ce3321d4fedb7d",
+    "run_capture.py": "sha256:f91bd822f0f031773517299771f1334a09d65fcdd002be28d1377a17450925f7",
+    "README.md": "sha256:f69a018e59e4d4695e16b63508d3f3dd4ce30deb80bcaa3752959617035183ff",
     "session.md": "sha256:3256de3d5b5a1b8cb4a1bff17d5f5a7d0d2b83653637cbe792f03056d868fdb4",
     "chapter-session.md": "sha256:7630c8eb0b367250e29312530b01beffe78748772dfe32080dea3bb4a150703a",
     "parity.md": "sha256:d67dd655f21f6af5f3e7d8a2a1803eb652b3ac3854698214b6c1eda9de8e5120"
@@ -133,5 +133,9 @@
   },
   "canonical_files_modified": false,
   "disposable_after_state_applied": true,
-  "replay_writes_evidence_by_default": false
+  "replay_writes_evidence_by_default": false,
+  "historical_support_snapshot": {
+    "path": "package_snapshot",
+    "purpose": "Preserve the independently reviewed support files and recorded test output; later teaching changes are verified separately."
+  }
 }

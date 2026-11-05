@@ -75,10 +75,10 @@ python3 -m pytest -qq -p no:cacheprovider
 ```
 
 `pytest.ini` limits discovery to `test_event_processor.py` and excludes
-`captures/`. The expected result is eight passing tests: six behavior tests
+`captures/`. The expected result is nine passing tests: seven behavior tests
 plus one executable-command test for each wrapper.
 
-The initial happy-path check is separate from the eight-test final suite. Run
+The initial happy-path check is separate from the nine-test final suite. Run
 it explicitly from this directory:
 
 ```bash
@@ -105,8 +105,9 @@ python3 captures/event_processor_missing_events/run_capture.py
 ```
 
 Replay rebuilds disposable red and repaired states and compares them with the
-stored evidence. It verifies the exact patch and runs the package-local
-top-level suite. A `finally` block removes the working directory after success
+stored evidence. It verifies the exact patch and runs the archived support
+suite. The current implementation has separate tests for non-string fields.
+A `finally` block removes the working directory after success
 or failure. Default replay leaves the stored evidence unchanged.
 
 ## Dependencies
@@ -121,7 +122,7 @@ No command requires the repository root, canonical chapter code, another chapter
 
 - File reads and writes do not select UTF-8 explicitly.
 - Output replacement is not atomic.
-- Unhashable or mutually unorderable event `type` values can fail during aggregation or sorting.
+- Empty strings are accepted as identifiers and event types; a real input contract must decide whether to reject them.
 - The maintained suite does not cover every malformed per-event field, the naive-as-UTC policy, every skipped-event detail, summary logging, or every output failure.
 - The capture proves only the bounded missing-versus-empty repair. It does not
   prove the later robustness changes by itself.
