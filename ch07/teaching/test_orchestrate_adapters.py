@@ -4,6 +4,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 import pytest
 
+import orchestrate_adapters
 from orchestrate_adapters import (
     ASSIGNMENTS,
     Assignment,
@@ -33,6 +34,14 @@ def test_integration_rejects_seconds_and_redispatches_only_push():
     assert [channel for channel, _ in calls].count("sms") == 1
     assert [channel for channel, _ in calls].count("push") == 2
     assert not report["unresolved"]
+    assert report["initial_local_checks"] == {
+        "email": "passed", "sms": "passed", "push": "passed"
+    }
+    assert report["final_integration_checks"] == {
+        "email": "passed", "sms": "passed", "push": "passed"
+    }
+    assert report["checked_files"] == ["email.py", "push.py", "sms.py"]
+    assert report["accepted_files_unchanged"]
 
 
 @pytest.mark.parametrize("response", [
@@ -75,6 +84,87 @@ def test_assignment_scopes_must_be_nonempty_and_distinct():
         coordinate(scripted_worker, (Assignment("push", True),))
     with pytest.raises(ValueError):
         coordinate(scripted_worker, (Assignment([], 2),))
+    with pytest.raises(ValueError):
+        coordinate(scripted_worker, (Assignment("../outside", 2),))
+    with pytest.raises(ValueError):
+        coordinate(scripted_worker, ASSIGNMENTS + (Assignment("fax", 1),))
+
+
+def test_integration_checks_the_files_instead_of_the_worker_claim(monkeypatch):
+    original_write = orchestrate_adapters.write_adapter
+
+    def corrupt_push(workspace, candidate):
+        path = original_write(workspace, candidate)
+        if candidate["channel"] == "push":
+            path.write_text(path.read_text().replace("2000", "2"))
+        return path
+
+    monkeypatch.setattr(orchestrate_adapters, "write_adapter", corrupt_push)
+
+    def correct_worker(assignment, feedback):
+        return json.dumps({
+            "channel": assignment.channel,
+            "retry_after_ms": assignment.retry_after_seconds * 1000,
+        })
+
+    report = coordinate(correct_worker)
+    assert not report["complete"]
+    assert set(report["accepted"]) == {"email", "sms"}
+    assert report["unresolved"]["push"] == (
+        "retry_after_ms must be the integer 2000."
+    )
+    assert report["accepted_files_unchanged"]
+
+
+def test_untrusted_worker_code_is_never_executed(tmp_path):
+    marker = tmp_path / "unexpected-write"
+    payload = f"__import__('pathlib').Path({str(marker)!r}).touch()"
+
+    def worker(assignment, feedback):
+        if assignment.channel == "push":
+            return json.dumps({"channel": "push", "retry_after_ms": payload})
+        return scripted_worker(assignment, feedback)
+
+    report = coordinate(worker)
+    assert not report["complete"]
+    assert report["initial_local_checks"]["push"] == "not run"
+    assert "push" in report["unresolved"]
+    assert not marker.exists()
+
+
+def test_adapter_writer_rejects_a_path_outside_its_workspace(tmp_path):
+    with pytest.raises(ValueError):
+        orchestrate_adapters.write_adapter(
+            tmp_path, {"channel": "../escape", "retry_after_ms": 1}
+        )
+    assert not (tmp_path.parent / "escape.py").exists()
+
+
+def test_integration_detects_an_accepted_file_changed_during_retry(
+    monkeypatch, tmp_path
+):
+    original_write = orchestrate_adapters.write_adapter
+    marker = tmp_path / "altered-file-ran"
+
+    def modify_accepted_file(workspace, candidate):
+        path = original_write(workspace, candidate)
+        if candidate["channel"] == "push" and candidate["retry_after_ms"] == 2000:
+            email = workspace / "email.py"
+            email.write_text(
+                "from pathlib import Path\n"
+                f"Path({str(marker)!r}).touch()\n"
+                "def retry_settings():\n"
+                "    return {'channel': 'email', 'retry_after_ms': 1000}\n"
+            )
+        return path
+
+    monkeypatch.setattr(orchestrate_adapters, "write_adapter", modify_accepted_file)
+    report = coordinate(scripted_worker)
+    assert not report["complete"]
+    assert not report["accepted_files_unchanged"]
+    assert "email" in report["unresolved"]
+    assert "email" not in report["accepted"]
+    assert not marker.exists()
 
 
 def test_http_workers_send_separate_assignments_to_a_local_stub():
