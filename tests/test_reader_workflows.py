@@ -35,7 +35,7 @@ def pytest_at(cwd, *targets, status=0, env=None):
     return run(cwd, sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", *targets, status=status, env=env)
 
 
-@pytest.mark.parametrize("chapter,count", [("ch07", 16), ("ch08", 10), ("ch09", 28), ("ch10", 57), ("ch11", 29)])
+@pytest.mark.parametrize("chapter,count", [("ch07", 27), ("ch08", 10), ("ch09", 28), ("ch10", 57), ("ch11", 29)])
 def test_final_package_is_self_contained(tmp_path, chapter, count):
     package = tmp_path / chapter
     shutil.copytree(ROOT / chapter, package, ignore=IGNORED)

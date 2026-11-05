@@ -10,12 +10,28 @@ option. It is not Python source and rejects blocks over 40 lines.
 
 - `walking_skeleton.py` is the pre-replay implementation printed across Listings 4.2 through 4.5. It deliberately treats every status at or above `400` as a failure; Section 4.5 adds the endpoint-specific `409` rule.
 - `test_skeleton.py` is Listing 4.6, the dry-run discriminator. Run it explicitly with `python3 -m pytest -q test_skeleton.py`; the archival package suite remains unchanged.
+- `teaching/idempotency_probe.py` sends a create, a replay, and a conflicting payload to two local HTTP fixtures. One distinguishes the conflict with `422`; the other returns `409` for both meanings and exposes why the importer accepts an unsafe conflict. These fixtures do not establish a real service contract.
 - `importer.py` is the green book-state implementation. Its `409` condition matches the exact captured patch printed in the staged chapter.
 - `test_importer_package.py` covers parsing, normalization, stable identity, retry behavior, dry run, and the endpoint-specific replay policy. Its distinct module name prevents collision with the capture's retained `tests/test_importer.py`.
 - `test_capture_certification.py` runs disposable package copies to enforce `.work/` cleanup after success, preflight failure, and runtime failure. It also enforces the completed independent-review stage, active verdict, attributable artifact, and preserved historical session language.
 - `migration_case/` contains the schemas, deterministic fixture, reconstructed migration implementation, tests, parity ledger, and plain-text dry-run evidence checked by exact bytes and SHA-256.
 - `captures/idempotent_409_replay/` preserves the immutable red before-state, exact patch, raw evidence, and a replay runner that checks this package's own importer suite.
 - `pytest.ini` limits routine top-level collection to the maintained package suites and certification checks. Capture internals run only through `run_capture.py`, where the red state is expected and verified.
+
+## Try the local idempotency probe
+
+From `ch04/`, run:
+
+```bash
+python3 teaching/idempotency_probe.py
+python3 -m pytest -q -p no:cacheprovider teaching/test_idempotency_probe.py
+```
+
+The first local server returns `409` only for an identical replay and
+`422` for a changed payload. The second returns `409` for both cases:
+the current importer accepts the conflicting payload as if it were a replay.
+These loopback servers demonstrate why the real endpoint's contract and a
+service-level integration test still matter.
 
 ## Set up an isolated test environment
 

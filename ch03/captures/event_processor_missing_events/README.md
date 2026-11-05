@@ -6,6 +6,11 @@ and timezone discussions are outside the captured work. The historical
 independent-review receipt predates this terminology correction: its word
 *illustrative* reflects the classification used at the time.
 
+`package_snapshot/` preserves the five support files checked by that review.
+The current teaching implementation was strengthened later; replay verifies
+the historical snapshot, while the chapter package tests check the current code.
+The historical receipt does not certify the later changes.
+
 ## Selected behavior
 
 A JSON object without an `events` key must fail with:
@@ -21,7 +26,7 @@ arithmetic defect remains in the captured workflow and was repaired later.
 ## Record and replay
 
 Follow the isolated pytest setup in the [Chapter 3 guide](../../README.md#set-up-an-isolated-test-environment).
-The runner uses the same interpreter for its final-package pytest checks.
+The runner uses the same interpreter for its archived-package pytest checks.
 
 From `ch03/` (the final package root), replay without rewriting evidence:
 
@@ -41,11 +46,11 @@ To recreate evidence after reviewing it, run this from the capture directory:
 python3 run_capture.py --record
 ```
 
-The runner verifies the capture inputs, final-package checksums, and active
+The runner verifies the capture inputs, historical-package checksums, and
 independent-review receipt before rebuilding disposable red and repaired
 states. It exercises the rejected falsy-lookup candidate, then compares the
-exact patch and stored outputs. It also runs the final package's maintained
-top-level suite and verifies `chapter-session.md`. The runner removes `.work/`
+exact patch and stored outputs. It also runs the archived package's tests
+and verifies `chapter-session.md`. The runner removes `.work/`
 after success or failure.
 
 Default replay leaves the stored evidence unchanged. Use `--record` only after
@@ -82,7 +87,7 @@ arithmetic defect that was still present at the time.
 
 - Python 3 is available as `python3`.
 - `diff` is available for the machine-generated patch.
-- `pytest` is available for the final-package test run.
+- `pytest` is available for the archived-package test run.
 - The filesystem permits a disposable `.work/` directory and temporary files.
 
 All executable paths resolve within the final Chapter 3 package. Replay has no repository-root, canonical-code, other-chapter, or Box dependency.
@@ -98,12 +103,11 @@ The rejected-candidate control shows that `if not data.get("events")` incorrectl
 classifies an explicit empty list as missing. Focused green checks the exact
 error contract and the missing-versus-empty distinction. Broader green checks
 one representative non-empty input and its written summary. The separate
-top-level run checks the final green package and executes both final-state
-command wrappers.
+archived-package run checks the then-current implementation and its wrappers.
 
 ## What the checks do not prove
 
-The captured slice does not prove handling for non-object JSON, non-list `events`, malformed individual events, or the later empty-result repair. The final suite also leaves explicit UTF-8, atomic output, unsafe `type` values, some skipped-event details, summary logging, and output-failure behavior outside its evidence boundary.
+The captured slice does not prove handling for non-object JSON, non-list `events`, malformed individual events, or the later empty-result repair. The archived suite also left explicit UTF-8, atomic output, unsafe `type` values, some skipped-event details, summary logging, and output-failure behavior outside its evidence boundary.
 
 Stored historical command output required no post-processing. Color was disabled before the retained final-package test run.
 

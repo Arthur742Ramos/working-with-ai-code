@@ -67,8 +67,8 @@ def process_events(input_path, output_path,
     skipped_events = 0
     for event in results:
         if (not isinstance(event, dict)
-                or "user_id" not in event
-                or "type" not in event):
+                or not isinstance(event.get("user_id"), str)
+                or not isinstance(event.get("type"), str)):
             skipped_events += 1
             continue
         user = event["user_id"]

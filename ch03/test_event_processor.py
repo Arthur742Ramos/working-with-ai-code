@@ -64,6 +64,21 @@ def test_duplicate_types_collapse(tmp_path):
     assert u1["types"] == ["click", "view"]
 
 
+def test_invalid_user_and_type_values_are_counted(tmp_path):
+    timestamp = "2024-01-15T10:00:00Z"
+    events = [
+        {"user_id": "u1", "type": "click", "timestamp": timestamp},
+        {"user_id": [], "type": "click", "timestamp": timestamp},
+        {"user_id": "u1", "type": [], "timestamp": timestamp},
+        {"user_id": "u1", "type": 1, "timestamp": timestamp},
+        {"user_id": "u1", "timestamp": timestamp},
+    ]
+    summary = _run(tmp_path, events)
+    assert summary["total_events"] == 1
+    assert summary["skipped_events"] == 4
+    assert summary["per_user"]["u1"]["types"] == ["click"]
+
+
 def test_missing_events_key_raises(tmp_path):
     inp = tmp_path / "in.json"
     inp.write_text(

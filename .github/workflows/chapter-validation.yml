@@ -95,6 +95,7 @@ jobs:
         run: |
           python -m pytest -q -p no:cacheprovider
           python -m pytest -q -p no:cacheprovider test_skeleton.py
+          python -m pytest -q -p no:cacheprovider teaching/test_idempotency_probe.py
           python -m migration_case.seed
           python -m migration_case.migrate --dry-run
           python captures/idempotent_409_replay/run_capture.py

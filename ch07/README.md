@@ -8,6 +8,7 @@ This self-contained package keeps the bounded tool-use loop, the final JSON vali
 - `captures/strict_float_validator/patches/strict_float_validator.diff` is the exact one-line production diff printed as Listing 7.3, "The strict smallest float registration."
 - `demo_agent.py` and `contract.txt` make Listing 7.2 runnable with `python3 demo_agent.py`. Its adapter is scripted: no model or network is invoked.
 - `issue_injection.py` is Listing 7.4. Run `python3 issue_injection.py` to see the host deny a scripted request to call a disabled messaging tool. Both the model and tool are simulated; no message is sent.
+- `teaching/orchestrate_adapters.py` coordinates three independent worker requests and validates their retry settings. Its offline mode uses scripted responses; live mode sends separate requests to a configured chat-completions-compatible endpoint.
 - `validator.py` is the maintained green after-state exercised by the package tests. It is support code, not a separate numbered listing.
 - `cli.py` is the runnable command-line wrapper for the validator. It is support code, not a numbered listing.
 - Tables 7.1 through 7.5 describe stop conditions, workflow choice, worker contracts, failure routing, and autonomy postures. They are conceptual decision aids and have no executable table artifact in this package.
@@ -29,7 +30,35 @@ Run from this directory:
 python3 -m pytest -q -p no:cacheprovider
 ```
 
-The expected result is sixteen passing tests: four bounded-loop tests, three injection-example tests, and nine validator tests. Pytest does not recurse into `captures/`.
+The expected result is 27 passing tests: four bounded-loop tests, three injection-example tests, nine validator tests, and eleven orchestration checks. Pytest does not recurse into `captures/`.
+
+## Run the orchestration example
+
+From `ch07/`, the deterministic offline demonstration requires no model:
+
+```bash
+python3 teaching/orchestrate_adapters.py --demo
+```
+
+It runs three worker requests, catches a seconds-versus-milliseconds mismatch,
+keeps the two accepted settings, and retries only the rejected assignment.
+The worker responses in this mode are scripted. The tests also exercise the
+HTTP adapter against a local stub, not a live model.
+
+For a live run, configure `AI_API_URL` with a chat-completions-compatible
+endpoint and `AI_MODEL` with its model name. Supply `AI_API_KEY` if that
+endpoint requires it, then run:
+
+```bash
+python3 teaching/orchestrate_adapters.py --live
+```
+
+The live mode makes three independent model calls and permits one retry per
+rejected worker, for at most six calls. The endpoint may charge for those
+calls. The host validates the complete JSON shape, assigned channel, integer
+type, and millisecond value; it never executes model output. It has a
+per-request timeout and requests a per-response token limit, but provides no
+run-level spend or wall-clock cap, production sandbox, or privileged tools.
 
 ## Run the validator CLI
 
@@ -78,4 +107,4 @@ Replay rebuilds disposable red and repaired states, compares them with the store
 - A model response without a tool call ends `run_agent`; the caller must still verify any completion claim.
 - The validator deliberately rejects `float` subclasses, integers used as floats, decimal objects, strings, and coercion. The final suite now tests the subclass boundary explicitly.
 - The capture's original focused test names the four cases retained in the printed transcript. The later top-level subclass test strengthens the final package without rewriting that red evidence.
-- The package has no networked model adapter or production sandbox. Callers supply `ask_model` and `run_tool` and own their security boundaries.
+- The minimal loop has no networked model adapter or production sandbox. Its callers supply `ask_model` and `run_tool` and own their security boundaries; the separate orchestration example has an optional chat endpoint, not a sandbox.
