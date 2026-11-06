@@ -108,6 +108,17 @@ class SchemaTests(unittest.TestCase):
                 "is not of type 'string'"):
             validate(invalid, SCHEMA)
 
+    def test_descriptive_item_has_no_arbitrary_word_limit(self):
+        descriptive = dict(VALID_RESPONSE)
+        descriptive["summary"] = [
+            "Reject malformed email addresses before storing a new account "
+            "so invalid contact details cannot enter the database",
+            "Preserve accepted registration fields",
+        ]
+        self.assertGreater(len(descriptive["summary"][0].split()), 12)
+        validate(descriptive, SCHEMA)
+        self.assertNotIn("under 12 words", pr_generator.build_prompt(FIXED_DIFF))
+
     def test_long_title_fails(self):
         invalid = dict(VALID_RESPONSE)
         invalid["title"] = "x" * 73

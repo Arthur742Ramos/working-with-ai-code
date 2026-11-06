@@ -1,4 +1,4 @@
-"""Compare two endpoint contracts against the chapter's importer.
+"""Compare two endpoint contracts against the maintained importer.
 
 Both servers are local fixtures. Their behavior is chosen for the exercise and
 does not establish the contract of any real customer service.
@@ -6,17 +6,20 @@ does not establish the contract of any real customer service.
 
 from http.client import HTTPConnection
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+import hashlib
 import json
 from pathlib import Path
 import sys
 import threading
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from importer import ApiResult, parse_customer, send_with_retry
+from importer_current import (
+    ApiResult, parse_customer, send_with_retry,
+)
 
 
-def run_probe(conflict_status):
-    """Send a create, a replay, and a conflicting request over local HTTP."""
+def make_server(conflict_status):
+    """Create a fixture that retains the identity of each request."""
     if conflict_status not in (409, 422):
         raise ValueError("conflict status must be 409 or 422")
     records = {}
@@ -27,14 +30,29 @@ def run_probe(conflict_status):
             size = int(self.headers.get("Content-Length", "0"))
             payload = json.loads(self.rfile.read(size))
             key = self.headers["Idempotency-Key"]
+            identity = {
+                "method": self.command, "path": self.path,
+                "json": payload,
+            }
             with lock:
                 if key not in records:
-                    records[key] = payload
+                    records[key] = identity
                     status, message = 201, "created"
-                elif records[key] == payload:
-                    status, message = 409, "already created"
+                elif records[key] == identity:
+                    encoded = json.dumps(
+                        records[key], sort_keys=True,
+                        separators=(",", ":"),
+                        ensure_ascii=True, allow_nan=False,
+                    ).encode("utf-8")
+                    status = 409
+                    message = json.dumps({
+                        "code": "idempotent_replay", "key": key,
+                        "request_sha256": hashlib.sha256(
+                            encoded
+                        ).hexdigest(),
+                    })
                 else:
-                    status, message = conflict_status, "different payload"
+                    status, message = conflict_status, "different request"
             body = message.encode("utf-8")
             self.send_response(status)
             self.send_header("Content-Length", str(len(body)))
@@ -44,7 +62,12 @@ def run_probe(conflict_status):
         def log_message(self, *args):
             pass
 
-    server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+    return ThreadingHTTPServer(("127.0.0.1", 0), Handler), records
+
+
+def run_probe(conflict_status):
+    """Send a create, a replay, and a conflicting request over local HTTP."""
+    server, records = make_server(conflict_status)
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
     observed = []
