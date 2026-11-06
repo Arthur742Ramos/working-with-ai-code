@@ -178,7 +178,7 @@
     "README.md": "0461dff24c46f031c314ddee94ab3344dc80f13813fc198c8bc38e3bcfb689cc",
     "session.md": "210f57071aaac1b52bfa4924e8c0359d52b5779414e69b65b7bd5c644f4f2ef7",
     "chapter-session.md": "34c426ae07e732c162f02b58b2d40f84e1b1c20a6727c819945027228be5601e",
-    "parity.md": "ee550dc602f73017b1564dc665885b5ec56ab118a7ae5b83f7c9320b574f88b5",
+    "parity.md": "80b7466d78ced21a6f5f03e433441cf4231c79883bc63b24d01b372ad834ebaf",
     "patches/README.md": "2c5da7a1ef33c625d28dae0a991756e175baa741487d3d3c609eeee689b771ea"
   },
   "production_repair_applied": true,
@@ -186,6 +186,7 @@
   "canonical_files_modified": false,
   "review_state": {
     "stage": "complete_independently_reviewed",
+    "post_review_editorial_change": "On 2026-11-06 the chapter response titles were shortened and the parity map was updated. The independent review predates this editorial change; the retained capture and review receipt were not altered.",
     "previous_review": {
       "status": "completed",
       "verdict": "Fail",
