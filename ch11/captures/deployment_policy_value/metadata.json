@@ -109,7 +109,7 @@
       "deployment.json": "53aa995496d8602e6a2ee95b1c7ebf49de4a252c79ba3c4469eb9b8a5346a5d2",
       "incident_triage.py": "efd90d28b662017f8f4356df6b8bb07213cc02b19e11b762f50447b36a097c80",
       "incident.jsonl": "3d1bb42fd59e882fff2fad700a6781267f3f8385b2c3f15609e85d50e339942c",
-      "listing_11_5.txt": "76ec4034ec0fce46598e0d48bffa81f348cf99f274d4782a2a3696839c1a4d41",
+      "listing_11_5.txt": "212ca89a633e3bb62b0c0e20b6da056ec776c872e3e4a2272641473ae6b41768",
       "observation.json": "b44d403ebea323b1c341c4a9148e3fed370b8b9baa24723d3485d96c98cad851",
       "parity.md": "1bd9346be65e75991f5118feec4d0f2775abfb77fe9420f8e497a0c7a9599d93",
       "pipeline.py": "60f17caa596ce43101e2214496602c598936dcbf9c0094138d22574330016e23",
@@ -117,13 +117,13 @@
       "requirements.txt": "26db60f3749b2d582ef13e54530725d1038086c5b72953678670871c2b85e15a",
       "test_deployment_guard.py": "e59c7d7d55c901e77f50ffed70c9e9ae6651d8afc80af27d361ebc1b74cac8a4",
       "test_incident_triage.py": "fc38f2c7ecbabe7093eac22a8b66f009ab5ff3f689748820cbfc411105fab3a7",
-      "test_listing_parity.py": "ef9d56cff37c2b563949137ba1ebb5d1d005e50388cb1e05bfbd4b2390176ceb",
+      "test_listing_parity.py": "45a7ad424a807b40fe0a2c54158836113f026fbf3594b500c2ecd1aa4042f515",
       "test_pipeline.py": "3f87c8ded633161591e93ce6e2289296aa313ac35d42cb5bf729cfa7e36a194a"
     },
     "operational_test_count": 24,
     "listing_parity_test_count": 5,
     "total_test_count": 29,
-    "status": "package_local_refreshed_after_support_contract_changes"
+    "status": "package_local_refreshed_after_editorial_parity_changes"
   },
   "origin_repository_checksums_sha256": {
     "chapters/ch11.md": "f61055c06c90d98796ee2d332d0b6f10cd24d9bd2445107374b97d9f1f17930c",
