@@ -1,4 +1,5 @@
 import inspect
+import json
 from pathlib import Path
 import subprocess
 import sys
@@ -84,19 +85,21 @@ LISTING_11_4 = """\
 """
 
 LISTING_11_5 = """\
-source_revision=<reviewed-commit>
+source_revision=unknown
 target=production/sample-api
-plan_id=plan-104
-plan_digest=<sha256>
-policy_version=rollout-policy-7
-approval_scope=apply plan-104 once
-applied_revision=sample-api:1.8.0
-verification=FAIL error_rate=0.071
-recovery_revision=sample-api:1.7.2
-recovery_status=observed at 14:13Z
+plan_id=unknown
+plan_digest=unknown
+policy_version=unknown
+approval_scope=unknown
+rollout_started=sample-api:1.8.0 [incident.jsonl:1]
+observed_error_rate=0.071 [incident.jsonl:4]
+verification_result=unknown
+recovery_revision=sample-api:1.7.2 [incident.jsonl:6]
+recovery_status=service_recovered 14:13Z [incident.jsonl:6]
+recovery_actor=unknown
 timeline=incident.jsonl:1,3,4,5,6
 open_question=failed request path
-owner=release-team
+owner=unknown
 """
 
 
@@ -157,3 +160,29 @@ def test_listing_11_5_matches_maintained_artifact() -> None:
     artifact = (ROOT / "listing_11_5.txt").read_text()
 
     assert artifact == LISTING_11_5
+    record = dict(line.split("=", 1) for line in artifact.splitlines())
+    events = [
+        json.loads(line)
+        for line in (ROOT / "incident.jsonl").read_text().splitlines()
+    ]
+    assert events[0]["event"] == "rollout_started"
+    assert record["rollout_started"] == (
+        f"{events[0]['revision']} [incident.jsonl:1]"
+    )
+    assert events[3]["event"] == "error_rate_above_limit"
+    assert record["observed_error_rate"] == (
+        f"{events[3]['error_rate']} [incident.jsonl:4]"
+    )
+    assert events[5]["event"] == "service_recovered"
+    assert record["recovery_revision"] == (
+        f"{events[5]['revision']} [incident.jsonl:6]"
+    )
+    assert record["recovery_status"] == (
+        f"{events[5]['event']} {events[5]['timestamp'][11:16]}Z "
+        "[incident.jsonl:6]"
+    )
+    for field in (
+        "source_revision", "plan_id", "plan_digest", "policy_version",
+        "approval_scope", "verification_result", "recovery_actor", "owner",
+    ):
+        assert record[field] == "unknown"
