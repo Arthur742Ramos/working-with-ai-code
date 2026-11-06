@@ -10,7 +10,7 @@ option, not part of the Python source; it rejects blocks over 40 lines.
 
 - `walking_skeleton.py` is the pre-replay implementation printed across Listings 4.2 through 4.5. It deliberately treats every status at or above `400` as a failure; Section 4.5 adds the endpoint-specific `409` rule.
 - `test_skeleton.py` is Listing 4.6, the dry-run discriminator. Run it explicitly with `python3 -m pytest -q test_skeleton.py`; the archival package suite remains unchanged.
-- `teaching/idempotency_probe.py` sends a create, a verified replay, and a conflicting payload to two local HTTP fixtures. Both reject the changed payload, even when its status is `409`. The server computes its receipt from the stored request only after matching the payload. These fixtures do not establish a real service contract.
+- `teaching/idempotency_probe.py` sends a create, a verified replay, and a conflicting payload to two local HTTP fixtures. Both reject the changed payload, even when its status is `409`. The server stores and compares method, path, and payload before issuing a receipt. These fixtures do not establish a real service contract.
 - `importer_current.py` is the maintained implementation after the capture. It requires the endpoint-owned JSON replay signal, matching key, and request fingerprint shown in Listings 4.9 and 4.10. Use this module for new experiments. `test_importer_current.py` covers rejection, retry, and counting behavior.
 - `test_replay_receipt.py` runs the test in Listing 4.11 against `importer_current.py`; the chapter imports the reader's updated `importer.py` instead.
 - `importer.py` is the archival green book-state implementation, not the maintained sender. Its `409` condition matches the exact captured patch printed in the staged chapter.
@@ -101,11 +101,23 @@ The importer has no file reader, production network client, command-line interfa
 The endpoint must atomically associate a successful POST to `/customers` with
 its idempotency key and stored payload. Only an identical replay may receive
 `409` with exactly `code`, `key`, and `request_sha256` fields, where `code` is
-`idempotent_replay`. The SHA-256 input is UTF-8 JSON of `method`, `path`, and
-`json`, serialized with sorted keys, compact separators, ASCII escaping, and
-nonfinite values forbidden. This deliberately small schema rejects extra
-fields too; coordinate any schema change with the client. The fingerprint
-covers every normalized payload field, not just `source_id`.
+`idempotent_replay`. The SHA-256 input is the exact UTF-8 output of Python's
+`json.dumps` for `method`, `path`, and `json`, with `sort_keys=True`,
+`separators=(",", ":")`, `ensure_ascii=True`, and `allow_nan=False`. A service
+using another serializer must reproduce those bytes, including escape spelling;
+equivalent JSON can have a different digest. This deliberately small schema
+rejects extra and duplicate members; coordinate any schema change with the
+client. The fingerprint covers every normalized payload field, not just
+`source_id`.
+
+For both test vectors, the method is `POST`, the path is `/customers`, and
+the payload has `external_id` `C-1` and email `a+b@example.test`. With name
+`A`, the digest is
+`dfa189e70d956d7c4f7f50e5cea4ed40b9c8e324d647ba47230556057b6b0ed3`.
+With name `José`, it is
+`08c83fdd1fc2159f82addc2a1d9212a72cae6a0a59bfe89fab94699915543610`.
+The serializer leaves `+` literal and represents `é` as `\u00e9`. These
+vectors check selected inputs, not every possible string.
 
 Loopback tests use a lock and an in-memory record to demonstrate the contract.
 They do not establish durable storage, authentication, retention, concurrency

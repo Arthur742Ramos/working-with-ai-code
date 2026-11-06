@@ -18,8 +18,8 @@ from importer_current import (
 )
 
 
-def run_probe(conflict_status):
-    """Send a create, a replay, and a conflicting request over local HTTP."""
+def make_server(conflict_status):
+    """Create a fixture that retains the identity of each request."""
     if conflict_status not in (409, 422):
         raise ValueError("conflict status must be 409 or 422")
     records = {}
@@ -30,17 +30,17 @@ def run_probe(conflict_status):
             size = int(self.headers.get("Content-Length", "0"))
             payload = json.loads(self.rfile.read(size))
             key = self.headers["Idempotency-Key"]
+            identity = {
+                "method": self.command, "path": self.path,
+                "json": payload,
+            }
             with lock:
                 if key not in records:
-                    records[key] = payload
+                    records[key] = identity
                     status, message = 201, "created"
-                elif records[key] == payload:
-                    identity = {
-                        "method": "POST", "path": self.path,
-                        "json": records[key],
-                    }
+                elif records[key] == identity:
                     encoded = json.dumps(
-                        identity, sort_keys=True,
+                        records[key], sort_keys=True,
                         separators=(",", ":"),
                         ensure_ascii=True, allow_nan=False,
                     ).encode("utf-8")
@@ -52,7 +52,7 @@ def run_probe(conflict_status):
                         ).hexdigest(),
                     })
                 else:
-                    status, message = conflict_status, "different payload"
+                    status, message = conflict_status, "different request"
             body = message.encode("utf-8")
             self.send_response(status)
             self.send_header("Content-Length", str(len(body)))
@@ -62,7 +62,12 @@ def run_probe(conflict_status):
         def log_message(self, *args):
             pass
 
-    server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+    return ThreadingHTTPServer(("127.0.0.1", 0), Handler), records
+
+
+def run_probe(conflict_status):
+    """Send a create, a replay, and a conflicting request over local HTTP."""
+    server, records = make_server(conflict_status)
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
     observed = []

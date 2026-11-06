@@ -71,6 +71,30 @@ def test_same_key_changed_payload_rejects_old_receipt():
         ))
 
 
+@pytest.mark.parametrize("name", ["code", "key", "request_sha256"])
+@pytest.mark.parametrize("before", [True, False])
+def test_duplicate_receipt_member_is_rejected(name, before):
+    duplicate = json.dumps(name) + ': "unexpected"'
+    valid = json.dumps(signal())[1:-1]
+    members = (duplicate, valid) if before else (valid, duplicate)
+    body = "{" + ", ".join(members) + "}"
+    with pytest.raises(RuntimeError):
+        send_with_retry(ROW, lambda _: ApiResult(409, body))
+
+
+@pytest.mark.parametrize(("name", "expected"), [
+    ("A", "dfa189e70d956d7c4f7f50e5cea4ed40"
+          "b9c8e324d647ba47230556057b6b0ed3"),
+    ("José", "08c83fdd1fc2159f82addc2a1d9212a7"
+             "2cae6a0a59bfe89fab94699915543610"),
+])
+def test_fingerprint_serialization_vectors(name, expected):
+    row = parse_customer({
+        "source_id": "C-1", "email": "a+b@example.test", "name": name,
+    })
+    assert request_fingerprint(build_request(row)) == expected
+
+
 def test_fingerprint_binds_path_and_every_payload_field():
     request = build_request(ROW)
     digest = request_fingerprint(request)

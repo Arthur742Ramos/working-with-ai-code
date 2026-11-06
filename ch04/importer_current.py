@@ -82,11 +82,22 @@ def request_fingerprint(request: Request) -> str:
     return hashlib.sha256(encoded).hexdigest()
 
 
+def unique_members(pairs):
+    fields = {}
+    for name, value in pairs:
+        if name in fields:
+            raise ValueError("duplicate member")
+        fields[name] = value
+    return fields
+
+
 def verified_replay(result, key, fingerprint) -> bool:
     if result.status != 409:
         return False
     try:
-        signal = json.loads(result.body)
+        signal = json.loads(
+            result.body, object_pairs_hook=unique_members,
+        )
     except (ValueError, TypeError, RecursionError):
         return False
     return isinstance(signal, dict) and signal == {
