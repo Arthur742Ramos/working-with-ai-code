@@ -1,6 +1,7 @@
 """Process user events from JSON.
 
 Example policy: naive timestamps are interpreted as UTC.
+Normalized values must fit Python's datetime range.
 This is a human-defined contract, not an emitter audit.
 """
 import json
@@ -11,10 +12,15 @@ logger = logging.getLogger(__name__)
 
 
 def _to_utc(dt):
-    """Normalize to aware UTC."""
+    """Normalize to aware UTC within years 1 through 9999."""
     if dt.tzinfo is None:
         dt = dt.replace(tzinfo=timezone.utc)
-    return dt.astimezone(timezone.utc)
+    try:
+        return dt.astimezone(timezone.utc)
+    except OverflowError as exc:
+        raise ValueError(
+            "timestamp outside supported UTC range"
+        ) from exc
 
 
 def _parse_timestamp(value):
