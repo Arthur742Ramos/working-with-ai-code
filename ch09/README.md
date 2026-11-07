@@ -8,15 +8,19 @@ This internal package keeps the green shared-client alert seam, the complete ret
 - `alerts.py` is the green feature implementation. It routes the existing method, endpoint, and JSON payload through `http_client.call`.
 - `http_client.py` is the complete injectable boundary behind the staged interface excerpt.
 - `test_alerts.py`, `test_http_client.py`, and `test_house_rules.py` check exact routing, credentials, status handling, retries, fail-closed behavior, and the import guard.
-- `retrieval.py` preserves the staged retrieve-then-inject flow and adds a deterministic local store plus `recall_at_k` measurement.
+- `retrieval.py` preserves an earlier retrieve-then-inject implementation as an optional extension, with a deterministic local store and `recall_at_k` measurement.
 - `test_retrieval.py` checks provenance, selection, the four-chunk limit, prompt injection, and partial versus complete recall.
 - `mcp_policy.py` models host-selected resources and prompts plus read, propose, and apply tool postures. It rejects the lethal trifecta within one tool or across the host's composed toolset.
 - `test_mcp_policy.py` checks host selection, all three postures, explicit approval, target allowlists, and lethal-trifecta containment.
-- `parity.md` maps every staged code and session surface to its package-local maintained source and records intentional differences.
+- `parity.md` preserves the earlier staged-code and session mapping. Its retrieval listing labels are historical; the current chapter uses the source-selection trace described below.
 - `test_package_parity.py` checks the staged rule, alert repair, parity map, replay locality, and pytest discovery boundary.
 - `pytest.ini` limits top-level discovery to maintained green tests and excludes capture internals.
 - `run_checks.py` replays the historical capture and checks the current package.
 - `captures/house_rule_seam/` preserves the immutable direct-transport red state, exact three-line repair, raw evidence, and package-local replay runner.
+
+## Current retrieval example
+
+The optional [executable supplement](teaching/README.md) runs section 9.3's source-selection trace with the same records, dates and query. Selecting both required sources gives recall `1.0`; selecting one gives `0.5` and fails the evidence check. The chapter prints the trace, while the supplement supplies the full implementation. Neither generates a model answer.
 
 ## Verify the final package
 

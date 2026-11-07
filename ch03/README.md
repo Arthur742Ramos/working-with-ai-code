@@ -14,7 +14,7 @@ explicit empty list remains an empty batch.
 
 - `event_processor.py` is the green final implementation.
 - `event_processor_initial.py` is the intentionally flawed starting module.
-- `event_processor_ship_blockers.py` preserves Listing 3.6's intermediate
+- `event_processor_ship_blockers.py` preserves Listing 3.3's intermediate
   after-state, including the previously accepted missing-events guard.
 - `rate_limit_decorator.py` and `rate_limit_redis.py` are the illustrative
   Branch A and Branch B artifacts from the checkpoint-and-branch example.

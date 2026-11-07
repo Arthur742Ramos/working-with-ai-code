@@ -70,12 +70,12 @@ simultaneous state changes.
   unsupported `sqlite3.Row.get` call on a real row.
 - Listing 10.5: [`batch_case/probe_atomicity.py`](batch_case/probe_atomicity.py)
   installs a trigger that rejects the second update.
-- Listings 10.6 and 10.7:
-  [`batch_case/reminders/batch_service.py`](batch_case/reminders/batch_service.py)
-  validate the whole batch and prepare its updates before one save.
-- Listing 10.8:
+- Listing 10.6:
   [`batch_case/reminders/repository.py`](batch_case/reminders/repository.py)
   owns the batch transaction and rollback.
+- Listings 10.7 and 10.8:
+  [`batch_case/reminders/batch_service.py`](batch_case/reminders/batch_service.py)
+  validate the whole batch and prepare its updates before one save.
 - Listing 10.9:
   [`batch_case/reminders/batch_handler.py`](batch_case/reminders/batch_handler.py)
   translates batch requests and outcomes.
