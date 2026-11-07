@@ -75,10 +75,20 @@ python3 -m pytest -qq -p no:cacheprovider
 ```
 
 `pytest.ini` limits discovery to `test_event_processor.py` and excludes
-`captures/`. The expected result is nine passing tests: seven behavior tests
-plus one executable-command test for each wrapper.
+`captures/`. The expected result is 20 passing cases, including the two
+executable-command checks.
 
-The initial happy-path check is separate from the nine-test final suite. Run
+The maintained timestamp contract accepts UTC values from
+`0001-01-01T00:00:00+00:00` through
+`9999-12-31T23:59:59.999999+00:00`. Offset normalization outside that range
+raises `ValueError`: invalid event timestamps are logged and skipped, while
+invalid window bounds stop the call before any output is written. Tests cover
+both overflow directions, the exact accepted endpoints, ordinary offsets,
+naive-as-UTC input, and malformed values. These are follow-up checks on the
+maintained implementation; they do not change the missing-events capture or
+extend what its recorded results prove.
+
+The initial happy-path check is separate from the maintained final suite. Run
 it explicitly from this directory:
 
 ```bash
@@ -123,7 +133,7 @@ No command requires the repository root, canonical chapter code, another chapter
 - File reads and writes do not select UTF-8 explicitly.
 - Output replacement is not atomic.
 - Empty strings are accepted as identifiers and event types; a real input contract must decide whether to reject them.
-- The maintained suite does not cover every malformed per-event field, the naive-as-UTC policy, every skipped-event detail, summary logging, or every output failure.
+- The maintained suite does not cover every malformed per-event field, every skipped-event detail, summary logging, or every output failure.
 - The capture proves only the bounded missing-versus-empty repair. It does not
   prove the later robustness changes by itself.
 - The two branch files are design artifacts, not deployment-ready limiters.

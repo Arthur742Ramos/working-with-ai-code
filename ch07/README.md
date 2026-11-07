@@ -11,7 +11,7 @@ This self-contained package keeps the bounded tool-use loop, the final JSON vali
 - `teaching/orchestrate_adapters.py` coordinates three worker requests, creates scoped adapter files in a temporary workspace, and checks the assembled result. Offline workers are scripted; live mode sends separate requests to a configured chat-completions-compatible endpoint.
 - `validator.py` is the maintained green after-state exercised by the package tests. It is support code, not a separate numbered listing.
 - `cli.py` is the runnable command-line wrapper for the validator. It is support code, not a numbered listing.
-- Tables 7.1 through 7.5 describe stop conditions, workflow choice, worker contracts, failure routing, and autonomy postures. They are conceptual decision aids and have no executable table artifact in this package.
+- Tables 7.1 through 7.6 describe stop conditions, workflow choice, worker contracts, failure routing, recovery budgets, and autonomy postures. They are conceptual decision aids and have no executable table artifact in this package.
 
 ## Files
 
@@ -115,5 +115,5 @@ Replay rebuilds disposable red and repaired states, compares them with the store
 - `run_agent` limits tools and steps, but it does not enforce path or argument policy, spend caps, wall-clock deadlines, repeated-failure stops, or external success checks.
 - A model response without a tool call ends `run_agent`; the caller must still verify any completion claim.
 - The validator deliberately rejects `float` subclasses, integers used as floats, decimal objects, strings, and coercion. The final suite now tests the subclass boundary explicitly.
-- The capture's original focused test names the four cases retained in the printed transcript. The later top-level subclass test strengthens the final package without rewriting that red evidence.
+- The printed strengthened replay and its focused check cover five values, including a float subclass. The top-level suite also tests that boundary; the chapter distinguishes the strengthened replay from the original agent session.
 - The minimal loop has no networked model adapter or production sandbox. Its callers supply `ask_model` and `run_tool` and own their security boundaries; the separate orchestration example has an optional chat endpoint, not a sandbox.

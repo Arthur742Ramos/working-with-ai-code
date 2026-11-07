@@ -111,8 +111,8 @@ jobs:
         if: ${{ !cancelled() && steps.runtime.outcome == 'success' }}
         working-directory: ch06
         run: |
-          python cli.py --schema schema.json --config config.json
-          if invalid_output=$(python cli.py --schema schema.json --config invalid_config.json); then
+          python validate_config.py --schema schema.json --config config.json
+          if invalid_output=$(python validate_config.py --schema schema.json --config invalid_config.json); then
             echo 'Invalid config unexpectedly passed' >&2
             exit 1
           else
@@ -121,6 +121,7 @@ jobs:
             test "$invalid_output" = 'service.port: expected int'
           fi
           python -m pytest -q -p no:cacheprovider
+          python -m pytest -q -p no:cacheprovider test_cli.py
           python test_bool_is_not_accepted_as_int.py validator.py
           python captures/boolean_as_integer_role_handoff/run_capture.py
       - name: Check tracked-file preservation and capture cleanup

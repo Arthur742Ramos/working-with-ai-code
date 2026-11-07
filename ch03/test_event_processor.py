@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from event_processor import process_events
+from event_processor import _parse_timestamp, process_events
 
 PACKAGE_ROOT = Path(__file__).resolve().parent
 EXPECTED_ERROR = (
@@ -47,6 +47,61 @@ def test_bad_timestamp_is_skipped(tmp_path):
     summary = _run(tmp_path, events)
     assert summary["total_events"] == 1
     assert "u2" not in summary["per_user"]
+
+
+@pytest.mark.parametrize("timestamp", [
+    "0001-01-01T00:00:00+01:00",
+    "9999-12-31T23:59:59-01:00",
+])
+def test_utc_overflow_is_skipped(
+    tmp_path, caplog, timestamp,
+):
+    events = [
+        {"user_id": "u1", "type": "click",
+         "timestamp": "2024-01-15T10:00:00Z"},
+        {"user_id": "u2", "type": "view",
+         "timestamp": timestamp},
+    ]
+    summary = _run(tmp_path, events)
+    assert summary["total_events"] == 1
+    assert "u2" not in summary["per_user"]
+    assert summary["skipped_events"] == 0
+    assert "outside supported UTC range" in caplog.text
+
+
+@pytest.mark.parametrize("timestamp, expected", [
+    ("0001-01-01T00:00:00Z",
+     datetime.min.replace(tzinfo=UTC)),
+    ("9999-12-31T23:59:59.999999Z",
+     datetime.max.replace(tzinfo=UTC)),
+    ("2024-01-15T10:30:00+05:00",
+     datetime(2024, 1, 15, 5, 30, tzinfo=UTC)),
+    ("2024-01-15T10:30:00",
+     datetime(2024, 1, 15, 10, 30, tzinfo=UTC)),
+])
+def test_supported_utc_timestamp(timestamp, expected):
+    assert _parse_timestamp(timestamp) == expected
+
+
+@pytest.mark.parametrize("timestamp", [
+    "not-a-date", None, 123,
+])
+def test_malformed_timestamp_is_rejected(timestamp):
+    with pytest.raises((ValueError, TypeError)):
+        _parse_timestamp(timestamp)
+
+
+@pytest.mark.parametrize("bound, timestamp", [
+    ("start", "0001-01-01T00:00:00+01:00"),
+    ("end", "9999-12-31T23:59:59-01:00"),
+])
+def test_window_overflow_is_rejected(tmp_path, bound,
+                                     timestamp):
+    limits = {bound: datetime.fromisoformat(timestamp)}
+    with pytest.raises(ValueError,
+                       match="outside supported UTC range"):
+        _run(tmp_path, [], **limits)
+    assert not (tmp_path / "out.json").exists()
 
 
 def test_duplicate_types_collapse(tmp_path):
