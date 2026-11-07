@@ -27,9 +27,12 @@ responsible for its content and maintenance.
 
 ## Run the checks
 
-Use Python 3.11 or newer and install the chapter's listed requirements in an
-isolated environment when needed. Run checks from the chapter directory; for
-example, from the repository root:
+The maintained examples target Python 3.11 or newer. Install the chapter's
+listed requirements in an isolated environment when needed. Historical capture
+replays compare recorded diagnostics and can require a narrower runtime;
+see each chapter guide, including the [Chapter 12 replay compatibility
+notes](ch12/README.md#replay-compatibility). Run checks from the chapter
+directory; for example, from the repository root:
 
 ```sh
 (cd ch02 && python3 -m pytest -q test_pr_generator.py)
