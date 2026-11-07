@@ -4,15 +4,15 @@ This internal package keeps the staged customer importer, the reconstructed migr
 
 ## Contents
 
-The print fences for Listings 4.4, 4.5, 4.9, 4.10, and 4.11 use `python keep-together` to keep
+The print fences for Listings 4.4, 4.5, 4.10, 4.11, and 4.12 use `python keep-together` to keep
 each compact block on one page. This is a converter layout
-option, not part of the Python source; it rejects blocks over 40 lines.
+option, not part of the Python source; it rejects blocks over 50 lines.
 
 - `walking_skeleton.py` is the pre-replay implementation printed across Listings 4.2 through 4.5. It deliberately treats every status at or above `400` as a failure; Section 4.5 adds the endpoint-specific `409` rule.
 - `test_skeleton.py` is Listing 4.6, the dry-run discriminator. Run it explicitly with `python3 -m pytest -q test_skeleton.py`; the archival package suite remains unchanged.
 - `teaching/idempotency_probe.py` sends a create, a verified replay, and a conflicting payload to two local HTTP fixtures. Both reject the changed payload, even when its status is `409`. The server stores and compares method, path, and payload before issuing a receipt. These fixtures do not establish a real service contract.
-- `importer_current.py` is the maintained implementation after the capture. It requires the endpoint-owned JSON replay signal, matching key, and request fingerprint shown in Listings 4.9 and 4.10. Use this module for new experiments. `test_importer_current.py` covers rejection, retry, and counting behavior.
-- `test_replay_receipt.py` runs the test in Listing 4.11 against `importer_current.py`; the chapter imports the reader's updated `importer.py` instead.
+- `importer_current.py` is the maintained implementation after the capture. It requires the endpoint-owned JSON replay signal, matching key, and request fingerprint shown in Listings 4.10 and 4.11. Use this module for new experiments. `test_importer_current.py` covers rejection, retry, and counting behavior.
+- `test_replay_receipt.py` runs the test in Listing 4.12 against `importer_current.py`; the chapter imports the reader's updated `importer.py` instead.
 - `importer.py` is the archival green book-state implementation, not the maintained sender. Its `409` condition matches the exact captured patch printed in the staged chapter.
 - `test_importer_package.py` covers parsing, normalization, stable identity, retry behavior, dry run, and the endpoint-specific replay policy. Its distinct module name prevents collision with the capture's retained `tests/test_importer.py`.
 - `test_capture_certification.py` runs disposable package copies to enforce `.work/` cleanup after success, preflight failure, and runtime failure. It also enforces the completed independent-review stage, active verdict, attributable artifact, and preserved historical session language.

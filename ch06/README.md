@@ -80,10 +80,10 @@ or replace the top-level green implementation.
 
 - Listing 6.1 matches `listing_6_1.py`. It uses `ValidationError` directly for readability and retains the captured before-state's permissive `int` predicate. The captured fixture and top-level green `validator.py` retain the original `E` alias; the green implementation uses the accepted strict predicate. The listing file is a later presentation artifact and is outside the historical replay checksums.
 - Listing 6.2 excerpts four contract-derived cases from top-level `test_validator.py`.
-- Listings 6.3 and 6.4 together match top-level `test_bool_is_not_accepted_as_int.py`. The capture copy is behaviorally identical but retains the original capture docstring and usage-line wrapping.
-- Listing 6.5 matches top-level `cli.py` with no intentional code difference.
+- Listings 6.4 and 6.5 together match top-level `test_bool_is_not_accepted_as_int.py`. The capture copy is behaviorally identical but retains the original capture docstring and usage-line wrapping.
+- Listing 6.3 matches top-level `cli.py` with no intentional code difference.
 
-See `captures/boolean_as_integer_role_handoff/parity.md` for the complete printed-artifact, command-normalization, evidence, and certification mapping. The package-level independent review is retained at `captures/boolean_as_integer_role_handoff/evidence/independent-review.md`; it is separate from the verifier-role receipt printed in the chapter.
+The current listing numbers above supersede those in the preserved `captures/boolean_as_integer_role_handoff/parity.md`; its command-normalization, evidence, and certification records are unchanged. The package-level independent review is retained at `captures/boolean_as_integer_role_handoff/evidence/independent-review.md`; it is separate from the verifier-role receipt printed in the chapter.
 
 ## Remaining limitations
 

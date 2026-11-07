@@ -1,4 +1,4 @@
-"""Current printed-listing checks, separate from the historical capture suite."""
+"""Retrieval-supplement checks, separate from the historical capture suite."""
 
 import hashlib
 from pathlib import Path
@@ -8,7 +8,7 @@ import sys
 
 
 DEMO = Path(__file__).with_name("retrieval_demo.py")
-# Exact Listings 9.4–9.5, joined with one blank line and a final newline.
+# Retained implementation now supplements the section 9.3 source-selection trace.
 PRINTED_SHA256 = (
     "fb58606e17fd0caee1f9fa74eadd765fb5b9c317b87991722bdef5b395110084"
 )
@@ -45,7 +45,7 @@ def test_k_one_fails_the_required_source_assertion(tmp_path):
         capture_output=True, text=True, check=False,
     )
     assert result.returncode == 1
-    # Only k is mutated; the printed example's display label is unchanged.
+    # Only k is mutated; the supplement's fixed display label is unchanged.
     assert result.stdout == (
         "['rule-current']\nrequired-source recall@2: 0.5\n"
     )
