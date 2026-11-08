@@ -15,7 +15,7 @@ printed examples where a teaching surface changed.
 | 9 | Source-selection trace in section 9.3 | `ch09/teaching/retrieval_demo.py` runs the trace as an optional supplement, using the same records, dates and query. Two required sources give recall 1.0; one gives 0.5 and fails the evidence check. `ch09/retrieval.py` and the sealed package parity record retain the earlier store/model extension. |
 | 10 | Listings 10.4–10.10 | `ch10/teaching/row_probe.py` (10.4, SQLite row probe); `ch10/batch_case/probe_atomicity.py` (10.5, second-write failure trigger); `ch10/batch_case/reminders/repository.py` (10.6, transaction); `ch10/batch_case/reminders/batch_service.py` (10.7–10.8, validation and service); `ch10/batch_case/reminders/batch_handler.py` (10.9, request boundary); `ch10/manual_check.py` (10.10, response and storage). |
 | 11 | Complete standalone policy probe in Listing 11.1 | `ch11/teaching/policy_probe.py` includes the setup, policy branch, and printed result. Accepted 1 and rejected 2/Boolean are checked. `ch11/teaching/README.md` describes the current probe; the sealed top-level ledger retains the branch-only capture-era presentation. |
-| Appendix A | Complete parser and test listings | `appA/parser.py` and `appA/test_parser.py` are the printed starting fixture. `appA/verify_trial.py` checks its expected one-test failure and four unchanged tests passing after a temporary reference repair. |
+| Appendix A | Parser and cross-module access trials | `appA/parser.py` and `appA/test_parser.py` reproduce the parser trial. `appA/access_trial/` contains the printed store, service and tests. Each verifier checks the expected failure and a temporary reference repair. |
 
 Run each chapter's maintained commands from its README. For the additional standalone examples:
 
@@ -28,6 +28,7 @@ python3 ch09/teaching/retrieval_demo.py
 python3 ch10/teaching/row_probe.py
 python3 ch11/teaching/policy_probe.py
 python3 appA/verify_trial.py
+python3 appA/verify_access_trial.py
 ```
 
 The Chapter 5 hollow-assertion example intentionally fails one test:
@@ -40,7 +41,8 @@ Expected: one failed and one passed test. The failure demonstrates the behavior
 that the weak assertions accepted. The commands above need no live model or
 external service.
 
-The Appendix A starting fixture also fails intentionally: direct
-`python3 -m unittest -v test_parser` from `appA/` reports one failure in four
-tests. Use its verifier above as the green check; it never modifies the printed
-fixture.
+Both Appendix A starting fixtures fail intentionally: direct
+`python3 -m unittest -v test_parser` from `appA/` and
+`python3 -m unittest -v test_access` from `appA/access_trial/` each report one
+failure in four tests. Use the verifiers above as green checks; they do not
+modify the printed fixtures.
