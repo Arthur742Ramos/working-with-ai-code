@@ -1,19 +1,25 @@
-# Appendix A: parser trial
+# Appendix A: comparison trials
 
-`parser.py` and `test_parser.py` reproduce the two printed Python listings.
-The starting parser deliberately accepts negative counts, so running
+`parser.py` and `test_parser.py` reproduce the first printed trial. The
+starting parser deliberately accepts negative counts, so running
 `python3 -m unittest -v test_parser` from this directory reports four tests
-with one expected failure (`ValueError not raised`). This is an intentionally
-red fixture, not a test to include in a green chapter suite.
+with one expected failure (`ValueError not raised`).
+
+`access_trial/` reproduces the printed store, service, and tests for a
+cross-module owner check. From that directory, run
+`python3 -m unittest -v test_access`: three tests pass and the cross-owner
+case fails. Both trials are intentionally red starting fixtures.
 
 From the companion repository root, run:
 
 ```sh
 python3 appA/verify_trial.py
+python3 appA/verify_access_trial.py
 ```
 
-The verifier copies the listings into a temporary directory, checks that only
-the negative-count test fails, then applies a reference repair to the temporary
-parser. It reruns the same four tests unchanged and checks another negative
-input. The checked-in starting fixture remains red. No book checkout, network
-connection, model provider, or third-party Python package is needed.
+Each verifier copies its fixture into a temporary directory, checks the
+expected failure, applies a reference repair, and runs the unchanged tests.
+It also checks another input. The starting files remain red. The trials use
+only Python's standard library; no model provider, network access, or book
+checkout is needed. The access fixture assumes a trusted actor ID and does
+not implement authentication, a database, or concurrent access.
