@@ -79,7 +79,9 @@ simultaneous state changes.
 - Listing 10.9:
   [`batch_case/reminders/batch_handler.py`](batch_case/reminders/batch_handler.py)
   translates batch requests and outcomes.
-- Listing 10.10: [`manual_check.py`](manual_check.py) compares local responses
+- Listing 10.10: [`teaching/sqlite_atomicity_demo.py`](teaching/sqlite_atomicity_demo.py)
+  reproduces the partial commit and atomic rollback in a temporary database.
+- Listing 10.11: [`manual_check.py`](manual_check.py) compares local responses
   with stored values.
 
 Run `python3 teaching/row_probe.py` for the standalone Listing 10.4 probe.
