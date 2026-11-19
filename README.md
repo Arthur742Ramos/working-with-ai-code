@@ -3,7 +3,7 @@
 This public companion contains twelve runnable chapter packages and
 Appendix A comparison trials. Each chapter guide covers its dependencies, checks,
 captured-session replay, and limits. [PRINTED_EXAMPLES.md](PRINTED_EXAMPLES.md)
-maps the current teaching additions to their source.
+maps printed examples to runnable sources.
 
 This repository was maintained with help from AI tools: Claude Code, GitHub
 Copilot, and Codex. The human author reviewed the published work and remains
@@ -23,7 +23,7 @@ responsible for its content and maintenance.
 | Chapter 10: Software engineering: from idea to review-ready code | [README](ch10/README.md) |
 | Chapter 11: Taking AI-assisted changes to production | [README](ch11/README.md) |
 | Chapter 12: Measuring and governing AI-assisted work | [README](ch12/README.md) |
-| Appendix A: Comparing agentic tools | [README](appA/README.md) |
+| Appendix A: Agentic and AI tools | [README](appA/README.md) |
 
 ## Run the checks
 

@@ -1,8 +1,11 @@
-name: Chapter 2-11 validation
+name: Chapter and appendix validation
 
 on:
   pull_request:
     paths:
+      - 'README.md'
+      - 'PRINTED_EXAMPLES.md'
+      - 'ch01/**'
       - 'ch02/**'
       - 'ch03/**'
       - 'ch04/**'
@@ -13,11 +16,16 @@ on:
       - 'ch09/**'
       - 'ch10/**'
       - 'ch11/**'
+      - 'ch12/**'
+      - 'appA/**'
       - 'tests/**'
       - '.github/workflows/chapter-validation.yml'
   push:
     branches: [main]
     paths:
+      - 'README.md'
+      - 'PRINTED_EXAMPLES.md'
+      - 'ch01/**'
       - 'ch02/**'
       - 'ch03/**'
       - 'ch04/**'
@@ -28,6 +36,8 @@ on:
       - 'ch09/**'
       - 'ch10/**'
       - 'ch11/**'
+      - 'ch12/**'
+      - 'appA/**'
       - 'tests/**'
       - '.github/workflows/chapter-validation.yml'
   workflow_dispatch:
@@ -184,3 +194,53 @@ jobs:
         run: |
           git diff --exit-code -- ch07 ch08 ch09 ch10 ch11
           python -c "from pathlib import Path; work = [p for ch in range(7,12) for p in Path(f'ch{ch:02}').rglob('.work*') if p.is_dir()]; assert not work, work"
+
+  bookend-checks:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    defaults:
+      run:
+        shell: bash
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PY_COLORS: '0'
+      NO_COLOR: '1'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          set-safe-directory: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          # Chapter 12's strict replay is verified on Linux with this runtime.
+          python-version: '3.13.5'
+          architecture: x64
+      - name: Install Chapter 1 dependencies in an isolated environment
+        run: |
+          python -m venv "$RUNNER_TEMP/bookend-validation"
+          "$RUNNER_TEMP/bookend-validation/bin/python" -m pip install --disable-pip-version-check -r ch01/requirements.txt
+          echo "$RUNNER_TEMP/bookend-validation/bin" >> "$GITHUB_PATH"
+          command -v patch
+          command -v diff
+      - name: Chapter 1 focused, broader and non-recording replay
+        working-directory: ch01
+        run: |
+          python tests/focused_test.py
+          python tests/broader_test.py
+          python captures/fallback_observability/run_capture.py
+      - name: Chapter 12 metric and non-recording verifiers
+        working-directory: ch12
+        run: |
+          python -m unittest -v test_workflow_metrics
+          python captures/benchmark_denominator/run_capture.py
+          python verify_behavior.py
+          python -B -m unittest -v test_verify_behavior
+      - name: Appendix comparison trials
+        run: |
+          python appA/verify_trial.py
+          python appA/verify_access_trial.py
+      - name: Check bookend preservation and cleanup
+        if: always()
+        run: |
+          git diff --exit-code -- ch01 ch12 appA
+          python -c "from pathlib import Path; work = [p for ch in ('ch01', 'ch12') for p in Path(ch).rglob('.work*') if p.is_dir()]; assert not work, work"

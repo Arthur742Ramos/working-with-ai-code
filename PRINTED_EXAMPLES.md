@@ -1,11 +1,13 @@
-# Current printed-example supplements
+# Printed examples and supplements
 
-These additions accompany the current chapter packages. Captured sessions
-retain their original wording and evidence; this map identifies the current
-printed examples where a teaching surface changed.
+This map connects each chapter's current examples to the runnable packages.
+Captured sessions retain their original wording and evidence, even when a
+later chapter revision changes a listing or its presentation.
 
 | Chapter | Current printed surface | Runnable source and check |
 |---|---|---|
+| 1 | Fallback-observability repair in Listings 1.1–1.4 | `ch01/captures/fallback_observability/` contains the starting application, exact patch, and recorded red and green results. `ch01/app.py` and the focused and broader tests check the maintained repair. |
+| 2 | Offline PR-description generator in Listings 2.2–2.9 | `ch02/local_fixture.py`, `ch02/schema.py`, and `ch02/pr_generator.py` provide the deterministic generator and bounded retry. `ch02/anthropic_adapter.py` is the optional live-provider boundary; `ch02/run_checks.py` separates the recorded repair from the later fixture correction. |
 | 3 | Starting processor and missing-events guard in Listings 3.1–3.2 | `ch03/test_baseline.py` checks the starting happy path; `ch03/captures/event_processor_missing_events/run_capture.py` replays the recorded guard. The later `ch03/event_processor.py` implementation and its tests extend the printed example. |
 | 4 | Listing 4.6 dry-run discriminator and optional endpoint probe | `ch04/test_skeleton.py` checks the assembled pre-replay Listings 4.2–4.5. `ch04/teaching/idempotency_probe.py` compares replay and conflicting-payload behavior on local HTTP fixtures. The original capture stays unchanged. |
 | 5 | Listings 5.2, 5.3 and the separate logging follow-up in 5.6 | `teaching/ch05/timestamp_parser.py` and `teaching/ch05/test_order_assertions.py` supply the parser and intentionally failing weak-assertion example. `ch05/corrections/missing_product_logging/request-logging.diff` and `ch05/tests/test_request_logging.py` preserve the logging correction and its four-check result separately from the captured policy repair. |
@@ -14,7 +16,8 @@ printed examples where a teaching surface changed.
 | 8 | Draft, conserving intermediate, repaired allocation | `ch08/teaching/draft_allocation.py`, `ch08/test_allocation.py`, `ch08/test_golden.py`, and `ch08/captures/lost_cent_allocation/run_capture.py`. |
 | 9 | Source-selection trace in section 9.3 | `ch09/teaching/retrieval_demo.py` runs the trace as an optional supplement, using the same records, dates and query. Two required sources give recall 1.0; one gives 0.5 and fails the evidence check. `ch09/retrieval.py` and the sealed package parity record retain the earlier store/model extension. |
 | 10 | Listings 10.4–10.11 | `ch10/teaching/row_probe.py` (10.4, SQLite row probe); `ch10/batch_case/probe_atomicity.py` (10.5, second-write failure trigger); `ch10/batch_case/reminders/repository.py` (10.6, transaction); `ch10/batch_case/reminders/batch_service.py` (10.7–10.8, validation and service); `ch10/batch_case/reminders/batch_handler.py` (10.9, request boundary); `ch10/teaching/sqlite_atomicity_demo.py` (10.10, optional transaction demonstration); `ch10/manual_check.py` (10.11, response and storage). |
-| 11 | Complete standalone policy probe in Listing 11.1 | `ch11/teaching/policy_probe.py` includes the setup, policy branch, and printed result. Accepted 1 and rejected 2/Boolean are checked. `ch11/teaching/README.md` describes the current probe; the sealed top-level ledger retains the branch-only capture-era presentation. |
+| 11 | Complete standalone policy probe in Listing 11.1 | `ch11/teaching/policy_probe.py` includes the setup, policy branch, and printed result. Accepted 1 and rejected 2/Boolean are checked. `ch11/teaching/README.md` describes the current probe. The checksum-protected `ch11/README.md` and `ch11/parity.md` retain the earlier branch-only listing mapping and do not describe the complete current listing. |
+| 12 | Denominator repair in Listings 12.1–12.3 | `ch12/captures/benchmark_denominator/` holds the starting metric, exact patch, and recorded checks. `ch12/workflow_metrics.py` and `ch12/test_workflow_metrics.py` provide the maintained implementation and tests; `ch12/README.md` explains replay compatibility. |
 | Appendix A | Parser and cross-module access trials | `appA/parser.py` and `appA/test_parser.py` reproduce the parser trial. `appA/access_trial/` contains the printed store, service and tests. Each verifier checks the expected failure and a temporary reference repair. |
 
 Run each chapter's maintained commands from its README. For the additional standalone examples:
