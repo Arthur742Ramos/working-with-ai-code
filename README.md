@@ -1,6 +1,6 @@
 # Working with AI: companion code
 
-This public companion contains twelve runnable chapter packages and an
+This public companion contains twelve runnable chapter packages and
 Appendix A comparison trials. Each chapter guide covers its dependencies, checks,
 captured-session replay, and limits. [PRINTED_EXAMPLES.md](PRINTED_EXAMPLES.md)
 maps the current teaching additions to their source.

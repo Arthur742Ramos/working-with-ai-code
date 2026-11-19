@@ -1,6 +1,6 @@
 # Chapter 3 support package
 
-This internal package contains the full event-processor review example and two
+This package contains the full event-processor review example and two
 rate-limiter branch artifacts. It also includes executable versions of the
 printed focused and broader commands, with one verified missing-events capture.
 
@@ -14,8 +14,8 @@ explicit empty list remains an empty batch.
 
 - `event_processor.py` is the green final implementation.
 - `event_processor_initial.py` is the intentionally flawed starting module.
-- `event_processor_ship_blockers.py` preserves Listing 3.3's intermediate
-  after-state, including the previously accepted missing-events guard.
+- `event_processor_ship_blockers.py` preserves an intermediate after-state from
+  the extended example, including the previously accepted missing-events guard.
 - `rate_limit_decorator.py` and `rate_limit_redis.py` are the illustrative
   Branch A and Branch B artifacts from the checkpoint-and-branch example.
 - `focused_test.py` runs the focused checks against a named module.
@@ -119,6 +119,10 @@ stored evidence. It verifies the exact patch and runs the archived support
 suite. The current implementation has separate tests for non-string fields.
 A `finally` block removes the working directory after success
 or failure. Default replay leaves the stored evidence unchanged.
+
+The current chapter calls the missing-events guard Listing 3.2. The retained
+capture documentation also mentions Listing 3.5, the number used in an
+intervening draft. That historical wording remains with the reviewed evidence.
 
 ## Dependencies
 
